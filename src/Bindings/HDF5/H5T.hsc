@@ -5,7 +5,7 @@
 module Bindings.HDF5.H5T where
 #strict_import
 
-import Foreign.Ptr.InOut
+import Foreign.Ptr.Conventions
 
 import Bindings.HDF5.H5
 import Bindings.HDF5.H5I

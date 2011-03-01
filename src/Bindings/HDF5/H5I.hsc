@@ -6,7 +6,7 @@ module Bindings.HDF5.H5I where
 
 import Bindings.HDF5.H5
 
-import Foreign.Ptr.InOut
+import Foreign.Ptr.Conventions
 
 
 #newtype H5I_type_t

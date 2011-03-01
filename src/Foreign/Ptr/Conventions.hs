@@ -1,4 +1,4 @@
-module Foreign.Ptr.InOut where
+module Foreign.Ptr.Conventions where
 
 import Foreign.Marshal
 import Foreign.Ptr

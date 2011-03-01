@@ -5,7 +5,7 @@ module Bindings.HDF5.H5 where
 #strict_import
 
 import Data.Version
-import Foreign.Ptr.InOut
+import Foreign.Ptr.Conventions
 
 #num H5_VERS_MAJOR
 #num H5_VERS_MINOR

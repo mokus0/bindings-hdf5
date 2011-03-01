@@ -8,7 +8,7 @@ import Bindings.HDF5.H5
 import Bindings.HDF5.H5I
 import Bindings.HDF5.H5T
 
-import Foreign.Ptr.InOut
+import Foreign.Ptr.Conventions
 
 h5l_MAX_LINK_NAME_LEN :: Word32
 h5l_MAX_LINK_NAME_LEN = #const H5L_MAX_LINK_NAME_LEN
