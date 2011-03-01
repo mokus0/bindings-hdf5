@@ -6,6 +6,8 @@
 static struct {
     char *from, *to;
 } hardcoded_mangles[] = {
+    {"size_t",  "CSize"},
+    {"ssize_t", "CSSize"},
     {NULL, NULL},
 };
 

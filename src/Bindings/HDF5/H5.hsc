@@ -5,6 +5,7 @@ module Bindings.HDF5.H5 where
 #strict_import
 
 import Data.Version
+import Foreign.Ptr.InOut
 
 #num H5_VERS_MAJOR
 #num H5_VERS_MINOR
@@ -35,7 +36,12 @@ instance Eq HBool_t where
 
 #newtype htri_t
 
+instance Eq HTri_t where
+    HTri_t x == HTri_t y
+        = compare x 0 == compare y 0
+
 #newtype ssize_t
+    deriving (Eq, Ord)
 
 h5_SIZEOF_SSIZE_T :: CSize
 h5_SIZEOF_SSIZE_T = #const H5_SIZEOF_SSIZE_T
@@ -89,5 +95,5 @@ h5_PRINTF_HADDR_FMT = #const_str H5_PRINTF_HADDR_FMT
 #ccall H5dont_atexit            , IO <herr_t>
 #ccall H5garbage_collect        , IO <herr_t>
 #ccall H5set_free_list_limits   , CInt -> CInt -> CInt -> CInt -> CInt -> CInt -> IO <herr_t>
-#ccall H5get_libversion         , Ptr CUInt -> Ptr CUInt -> Ptr CUInt -> IO <herr_t>
+#ccall H5get_libversion         , Out CUInt -> Out CUInt -> Out CUInt -> IO <herr_t>
 #ccall H5check_version          , CUInt -> CUInt -> CUInt -> IO <herr_t>

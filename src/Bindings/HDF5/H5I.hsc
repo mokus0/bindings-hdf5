@@ -6,6 +6,9 @@ module Bindings.HDF5.H5I where
 
 import Bindings.HDF5.H5
 
+import Foreign.Ptr.InOut
+
+
 #newtype H5I_type_t
     deriving Eq
 #newtype_const H5I_type_t, H5I_UNINIT
@@ -25,17 +28,19 @@ import Bindings.HDF5.H5
 #newtype_const H5I_type_t, H5I_ERROR_STACK
 #num H5I_NTYPES
 
+-- TODO: I think HId_t should be parameterised over the element type and 
+-- possibly also dimensionality of the dataset
 #newtype hid_t
 h5_SIZEOF_HID_T :: CSize
 h5_SIZEOF_HID_T = #const H5_SIZEOF_HID_T
 
 #newtype_const hid_t, H5I_INVALID_HID
 
-type H5I_free_t        a = FunPtr (Ptr a -> IO HErr_t)
-type H5I_search_func_t a = FunPtr (Ptr a -> HId_t -> Ptr a -> IO CInt)
+type H5I_free_t        a = FunPtr (In a -> IO HErr_t)
+type H5I_search_func_t a = FunPtr (In a -> HId_t -> In a -> IO CInt)
    
 -- hid_t H5Iregister(H5I_type_t type, const void *object);
-#ccall H5Iregister , <H5I_type_t> -> Ptr a -> IO <hid_t>
+#ccall H5Iregister , <H5I_type_t> -> In a -> IO <hid_t>
 
 -- void *H5Iobject_verify(hid_t id, H5I_type_t id_type);
 #ccall H5Iobject_verify , <hid_t> -> <H5I_type_t> -> IO (Ptr a)
@@ -50,7 +55,7 @@ type H5I_search_func_t a = FunPtr (Ptr a -> HId_t -> Ptr a -> IO CInt)
 #ccall H5Iget_file_id , <hid_t> -> IO <hid_t>
 
 -- ssize_t H5Iget_name(hid_t id, char *name/*out*/, size_t size);
-#ccall H5Iget_name, <hid_t> -> Ptr Char -> CSize -> IO CSize
+#ccall H5Iget_name, <hid_t> -> Out0 CChar -> <size_t> -> IO <ssize_t>
 
 -- int H5Iinc_ref(hid_t id);
 -- int H5Idec_ref(hid_t id);
@@ -60,7 +65,7 @@ type H5I_search_func_t a = FunPtr (Ptr a -> HId_t -> Ptr a -> IO CInt)
 #ccall H5Iget_ref, <hid_t> -> IO CInt
 
 -- H5I_type_t H5Iregister_type(size_t hash_size, unsigned reserved, H5I_free_t free_func);
-#ccall H5Iregister_type, CSize -> CUInt -> <H5I_free_t> a -> IO <H5I_type_t>
+#ccall H5Iregister_type, <size_t> -> CUInt -> <H5I_free_t> a -> IO <H5I_type_t>
 
 -- herr_t H5Iclear_type(H5I_type_t type, hbool_t force);
 #ccall H5Iclear_type, <H5I_type_t> -> <hbool_t> -> IO <herr_t>
@@ -76,10 +81,10 @@ type H5I_search_func_t a = FunPtr (Ptr a -> HId_t -> Ptr a -> IO CInt)
 #ccall H5Iget_type_ref, <H5I_type_t> -> IO CInt
 
 -- void *H5Isearch(H5I_type_t type, H5I_search_func_t func, void *key);
-#ccall H5Isearch, <H5I_type_t> -> <H5I_search_func_t> a -> Ptr a -> IO (Ptr a)
+#ccall H5Isearch, <H5I_type_t> -> <H5I_search_func_t> a -> In a -> IO (Ptr a)
 
 -- herr_t H5Inmembers(H5I_type_t type, hsize_t *num_members);
-#ccall H5Inmembers, <H5I_type_t> -> Ptr <hsize_t> -> IO <herr_t>
+#ccall H5Inmembers, <H5I_type_t> -> Out <hsize_t> -> IO <herr_t>
 
 -- htri_t H5Itype_exists(H5I_type_t type);
 #ccall H5Itype_exists, <H5I_type_t> -> IO <htri_t>

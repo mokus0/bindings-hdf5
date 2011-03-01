@@ -5,6 +5,8 @@
 module Bindings.HDF5.H5T where
 #strict_import
 
+import Foreign.Ptr.InOut
+
 import Bindings.HDF5.H5
 import Bindings.HDF5.H5I
 
@@ -154,9 +156,11 @@ type H5T_conv_t a b = FunPtr
     (HId_t -> HId_t -> Ptr H5T_cdata_t 
     -> CSize -> CSize -> CSize -> Ptr a -> Ptr b -> HId_t
     -> IO HErr_t)
+    -- TODO: figure out whether these Ptrs are in or out parameters, and 
+    -- what they are pointers to
 
 type H5T_conv_except_func_t a userData = FunPtr
-    (H5T_conv_except_t -> HId_t -> HId_t -> Ptr a -> Ptr a -> Ptr userData
+    (H5T_conv_except_t -> HId_t -> HId_t -> In a -> In a -> Ptr userData
     -> IO H5T_conv_ret_t)
 
 #cinline H5T_IEEE_F32BE,        <hid_t>
@@ -304,119 +308,234 @@ h5t_MIPS_F64 = h5t_IEEE_F64BE
 #cinline H5T_NATIVE_UINT_FAST64,    <hid_t>
 
 -- /* Operations defined on all datatypes */
--- H5_DLL hid_t H5Tcreate(H5T_class_t type, size_t size);
-#ccall H5Tcreate, H5T_class_t -> CSize -> IO <hid_t>
+-- hid_t H5Tcreate(H5T_class_t type, size_t size);
+#ccall H5Tcreate, H5T_class_t -> <size_t> -> IO <hid_t>
 
--- H5_DLL hid_t H5Tcopy(hid_t type_id);
+-- hid_t H5Tcopy(hid_t type_id);
 #ccall H5Tcopy, <hid_t> -> IO <hid_t>
 
--- H5_DLL herr_t H5Tclose(hid_t type_id);
+-- herr_t H5Tclose(hid_t type_id);
 #ccall H5Tclose, <hid_t> -> <herr_t>
 
--- H5_DLL htri_t H5Tequal(hid_t type1_id, hid_t type2_id);
+-- htri_t H5Tequal(hid_t type1_id, hid_t type2_id);
 #ccall H5Tequal, <hid_t> -> <hid_t> -> IO <htri_t>
 
--- H5_DLL herr_t H5Tlock(hid_t type_id);
+-- herr_t H5Tlock(hid_t type_id);
 #ccall H5Tlock, <hid_t> -> IO <herr_t>
 
--- H5_DLL herr_t H5Tcommit2(hid_t loc_id, const char *name, hid_t type_id,
+-- herr_t H5Tcommit2(hid_t loc_id, const char *name, hid_t type_id,
 --     hid_t lcpl_id, hid_t tcpl_id, hid_t tapl_id);
 #ccall H5Tcommit2, <hid_t> -> CString -> <hid_t> -> <hid_t> -> <hid_t> -> <hid_t> -> IO <herr_t>
 
--- H5_DLL hid_t H5Topen2(hid_t loc_id, const char *name, hid_t tapl_id);
+-- hid_t H5Topen2(hid_t loc_id, const char *name, hid_t tapl_id);
 #ccall H5Topen2, <hid_t> -> CString -> <hid_t> -> IO <hid_t>
 
--- H5_DLL herr_t H5Tcommit_anon(hid_t loc_id, hid_t type_id, hid_t tcpl_id, hid_t tapl_id);
--- H5_DLL hid_t H5Tget_create_plist(hid_t type_id);
--- H5_DLL htri_t H5Tcommitted(hid_t type_id);
--- H5_DLL herr_t H5Tencode(hid_t obj_id, void *buf, size_t *nalloc);
--- H5_DLL hid_t H5Tdecode(const void *buf);
--- 
+-- herr_t H5Tcommit_anon(hid_t loc_id, hid_t type_id, hid_t tcpl_id, hid_t tapl_id);
+#ccall H5Tcommit_anon, <hid_t> -> <hid_t> -> <hid_t> -> <hid_t> -> IO <herr_t>
+
+-- hid_t H5Tget_create_plist(hid_t type_id);
+#ccall H5Tget_create_plist, <hid_t> -> IO <hid_t>
+
+-- htri_t H5Tcommitted(hid_t type_id);
+#ccall H5Tcommitted, <hid_t> -> IO <htri_t>
+
+-- herr_t H5Tencode(hid_t obj_id, void *buf, size_t *nalloc);
+#ccall H5Tencode, <hid_t> -> In a -> InOut <size_t> -> IO <herr_t>
+
+-- hid_t H5Tdecode(const void *buf);
+#ccall H5Tdecode, In a -> IO <hid_t>
+
 -- /* Operations defined on compound datatypes */
--- H5_DLL herr_t H5Tinsert(hid_t parent_id, const char *name, size_t offset,
+-- herr_t H5Tinsert(hid_t parent_id, const char *name, size_t offset,
 -- 			 hid_t member_id);
--- H5_DLL herr_t H5Tpack(hid_t type_id);
--- 
+#ccall H5Tinsert, <hid_t> -> CString -> <size_t> -> <hid_t> -> IO <herr_t>
+
+-- herr_t H5Tpack(hid_t type_id);
+#ccall H5Tpack, <hid_t> -> IO <herr_t>
+
 -- /* Operations defined on enumeration datatypes */
--- H5_DLL hid_t H5Tenum_create(hid_t base_id);
--- H5_DLL herr_t H5Tenum_insert(hid_t type, const char *name, const void *value);
--- H5_DLL herr_t H5Tenum_nameof(hid_t type, const void *value, char *name/*out*/,
+-- hid_t H5Tenum_create(hid_t base_id);
+#ccall H5Tenum_create, <hid_t> -> IO <hid_t>
+
+-- herr_t H5Tenum_insert(hid_t type, const char *name, const void *value);
+#ccall H5Tenum_insert, <hid_t> -> CString -> In a -> IO <herr_t>
+
+-- herr_t H5Tenum_nameof(hid_t type, const void *value, char *name/*out*/,
 -- 			     size_t size);
--- H5_DLL herr_t H5Tenum_valueof(hid_t type, const char *name,
+#ccall H5Tenum_nameof, <hid_t> -> CString -> Out0 CChar -> <size_t> -> IO <herr_t>
+
+-- herr_t H5Tenum_valueof(hid_t type, const char *name,
 -- 			      void *value/*out*/);
+#ccall H5Tenum_valueof, <hid_t> -> CString -> Out a -> IO <herr_t>
+
 -- 
 -- /* Operations defined on variable-length datatypes */
--- H5_DLL hid_t H5Tvlen_create(hid_t base_id);
+-- hid_t H5Tvlen_create(hid_t base_id);
+#ccall H5Tvlen_create, <hid_t> -> IO <hid_t>
+
 -- 
 -- /* Operations defined on array datatypes */
--- H5_DLL hid_t H5Tarray_create2(hid_t base_id, unsigned ndims,
+-- hid_t H5Tarray_create2(hid_t base_id, unsigned ndims,
 --             const hsize_t dim[/* ndims */]);
--- H5_DLL int H5Tget_array_ndims(hid_t type_id);
--- H5_DLL int H5Tget_array_dims2(hid_t type_id, hsize_t dims[]);
+#ccall H5Tarray_create2, <hid_t> -> CUInt -> <hsize_t> -> IO <hid_t>
+
+-- int H5Tget_array_ndims(hid_t type_id);
+#ccall H5Tget_array_ndims, <hid_t> -> IO CInt
+
+-- int H5Tget_array_dims2(hid_t type_id, hsize_t dims[]);
+#ccall H5Tget_array_dims2, <hid_t> -> <hsize_t> -> IO CInt
+
 -- 
 -- /* Operations defined on opaque datatypes */
--- H5_DLL herr_t H5Tset_tag(hid_t type, const char *tag);
--- H5_DLL char *H5Tget_tag(hid_t type);
+-- herr_t H5Tset_tag(hid_t type, const char *tag);
+#ccall H5Tset_tag, <hid_t> -> CString -> IO <herr_t>
+
+-- char *H5Tget_tag(hid_t type);
+#ccall H5Tget_tag, <hid_t> -> IO CString
+
 -- 
 -- /* Querying property values */
--- H5_DLL hid_t H5Tget_super(hid_t type);
--- H5_DLL H5T_class_t H5Tget_class(hid_t type_id);
--- H5_DLL htri_t H5Tdetect_class(hid_t type_id, H5T_class_t cls);
--- H5_DLL size_t H5Tget_size(hid_t type_id);
--- H5_DLL H5T_order_t H5Tget_order(hid_t type_id);
--- H5_DLL size_t H5Tget_precision(hid_t type_id);
--- H5_DLL int H5Tget_offset(hid_t type_id);
--- H5_DLL herr_t H5Tget_pad(hid_t type_id, H5T_pad_t *lsb/*out*/,
+-- hid_t H5Tget_super(hid_t type);
+#ccall H5Tget_super, <hid_t> -> IO <hid_t>
+
+-- H5T_class_t H5Tget_class(hid_t type_id);
+#ccall H5Tget_class, <hid_t> -> IO <H5T_class_t>
+
+-- htri_t H5Tdetect_class(hid_t type_id, H5T_class_t cls);
+#ccall H5Tdetect_class, <hid_t> -> <H5T_class_t> -> IO <htri_t>
+
+-- size_t H5Tget_size(hid_t type_id);
+#ccall H5Tget_size, <hid_t> -> IO <size_t>
+
+-- H5T_order_t H5Tget_order(hid_t type_id);
+#ccall H5Tget_order, <hid_t> -> IO H5T_order_t
+
+-- size_t H5Tget_precision(hid_t type_id);
+#ccall H5Tget_precision, <hid_t> -> IO <size_t>
+
+-- int H5Tget_offset(hid_t type_id);
+#ccall H5Tget_offset, <hid_t> -> IO CInt
+
+-- herr_t H5Tget_pad(hid_t type_id, H5T_pad_t *lsb/*out*/,
 -- 			  H5T_pad_t *msb/*out*/);
--- H5_DLL H5T_sign_t H5Tget_sign(hid_t type_id);
--- H5_DLL herr_t H5Tget_fields(hid_t type_id, size_t *spos/*out*/,
+#ccall H5Tget_pad, <hid_t> -> Out <H5T_pad_t> -> Out <H5T_pad_t> -> IO <herr_t>
+
+-- H5T_sign_t H5Tget_sign(hid_t type_id);
+#ccall H5Tget_sign, <hid_t> -> IO <H5T_sign_t>
+
+-- herr_t H5Tget_fields(hid_t type_id, size_t *spos/*out*/,
 -- 			     size_t *epos/*out*/, size_t *esize/*out*/,
 -- 			     size_t *mpos/*out*/, size_t *msize/*out*/);
--- H5_DLL size_t H5Tget_ebias(hid_t type_id);
--- H5_DLL H5T_norm_t H5Tget_norm(hid_t type_id);
--- H5_DLL H5T_pad_t H5Tget_inpad(hid_t type_id);
--- H5_DLL H5T_str_t H5Tget_strpad(hid_t type_id);
--- H5_DLL int H5Tget_nmembers(hid_t type_id);
--- H5_DLL char *H5Tget_member_name(hid_t type_id, unsigned membno);
--- H5_DLL int H5Tget_member_index(hid_t type_id, const char *name);
--- H5_DLL size_t H5Tget_member_offset(hid_t type_id, unsigned membno);
--- H5_DLL H5T_class_t H5Tget_member_class(hid_t type_id, unsigned membno);
--- H5_DLL hid_t H5Tget_member_type(hid_t type_id, unsigned membno);
--- H5_DLL herr_t H5Tget_member_value(hid_t type_id, unsigned membno, void *value/*out*/);
--- H5_DLL H5T_cset_t H5Tget_cset(hid_t type_id);
--- H5_DLL htri_t H5Tis_variable_str(hid_t type_id);
--- H5_DLL hid_t H5Tget_native_type(hid_t type_id, H5T_direction_t direction);
+#ccall H5Tget_fields, <hid_t> -> Out <size_t> -> Out <size_t> -> Out <size_t> -> Out <size_t> -> Out <size_t> -> IO <herr_t>
+
+-- size_t H5Tget_ebias(hid_t type_id);
+#ccall H5Tget_ebias, <hid_t> -> IO <size_t>
+
+-- H5T_norm_t H5Tget_norm(hid_t type_id);
+#ccall H5Tget_norm, <hid_t> -> IO <H5T_norm_t>
+
+-- H5T_pad_t H5Tget_inpad(hid_t type_id);
+#ccall H5Tget_inpad, <hid_t> -> IO <H5T_pad_t>
+
+-- H5T_str_t H5Tget_strpad(hid_t type_id);
+#ccall H5Tget_strpad, <hid_t> -> IO <H5T_str_t>
+
+-- int H5Tget_nmembers(hid_t type_id);
+#ccall H5Tget_nmembers, <hid_t> -> IO CInt
+
+-- char *H5Tget_member_name(hid_t type_id, unsigned membno);
+#ccall H5Tget_member_name, <hid_t> -> CUInt -> IO CString
+
+-- int H5Tget_member_index(hid_t type_id, const char *name);
+#ccall H5Tget_member_index, <hid_t> -> CString -> IO CInt
+
+-- size_t H5Tget_member_offset(hid_t type_id, unsigned membno);
+#ccall H5Tget_member_offset, <hid_t> -> CUInt -> IO <size_t>
+
+-- H5T_class_t H5Tget_member_class(hid_t type_id, unsigned membno);
+#ccall H5Tget_member_class, <hid_t> -> CUInt -> IO <H5T_class_t>
+
+-- hid_t H5Tget_member_type(hid_t type_id, unsigned membno);
+#ccall H5Tget_member_type, <hid_t> -> CUInt -> IO <hid_t>
+
+-- herr_t H5Tget_member_value(hid_t type_id, unsigned membno, void *value/*out*/);
+#ccall H5Tget_member_value, <hid_t> -> CUInt -> Out a -> IO <herr_t>
+
+-- H5T_cset_t H5Tget_cset(hid_t type_id);
+#ccall H5Tget_cset, <hid_t> -> IO <H5T_cset_t>
+
+-- htri_t H5Tis_variable_str(hid_t type_id);
+#ccall H5Tis_variable_str, <hid_t> -> IO <htri_t>
+
+-- hid_t H5Tget_native_type(hid_t type_id, H5T_direction_t direction);
+#ccall H5Tget_native_type, <hid_t> -> <H5T_direction_t> -> IO <hid_t>
+
 -- 
 -- /* Setting property values */
--- H5_DLL herr_t H5Tset_size(hid_t type_id, size_t size);
--- H5_DLL herr_t H5Tset_order(hid_t type_id, H5T_order_t order);
--- H5_DLL herr_t H5Tset_precision(hid_t type_id, size_t prec);
--- H5_DLL herr_t H5Tset_offset(hid_t type_id, size_t offset);
--- H5_DLL herr_t H5Tset_pad(hid_t type_id, H5T_pad_t lsb, H5T_pad_t msb);
--- H5_DLL herr_t H5Tset_sign(hid_t type_id, H5T_sign_t sign);
--- H5_DLL herr_t H5Tset_fields(hid_t type_id, size_t spos, size_t epos,
+-- herr_t H5Tset_size(hid_t type_id, size_t size);
+#ccall H5Tset_size, <hid_t> -> <size_t> -> IO <herr_t>
+
+-- herr_t H5Tset_order(hid_t type_id, H5T_order_t order);
+#ccall H5Tset_order, <hid_t> -> <H5T_order_t> -> IO <herr_t>
+
+-- herr_t H5Tset_precision(hid_t type_id, size_t prec);
+#ccall H5Tset_precision, <hid_t> -> <size_t> -> IO <herr_t>
+
+-- herr_t H5Tset_offset(hid_t type_id, size_t offset);
+#ccall H5Tset_offset, <hid_t> -> <size_t> -> IO <herr_t>
+
+-- herr_t H5Tset_pad(hid_t type_id, H5T_pad_t lsb, H5T_pad_t msb);
+#ccall H5Tset_pad, <hid_t> -> <H5T_pad_t> -> <H5T_pad_t> -> IO <herr_t>
+
+-- herr_t H5Tset_sign(hid_t type_id, H5T_sign_t sign);
+#ccall H5Tset_sign, <hid_t> -> <H5T_sign_t> -> IO <herr_t>
+
+-- herr_t H5Tset_fields(hid_t type_id, size_t spos, size_t epos,
 -- 			     size_t esize, size_t mpos, size_t msize);
--- H5_DLL herr_t H5Tset_ebias(hid_t type_id, size_t ebias);
--- H5_DLL herr_t H5Tset_norm(hid_t type_id, H5T_norm_t norm);
--- H5_DLL herr_t H5Tset_inpad(hid_t type_id, H5T_pad_t pad);
--- H5_DLL herr_t H5Tset_cset(hid_t type_id, H5T_cset_t cset);
--- H5_DLL herr_t H5Tset_strpad(hid_t type_id, H5T_str_t strpad);
+#ccall H5Tset_fields, <hid_t> -> <size_t> -> <size_t> -> <size_t> -> <size_t> -> <size_t> -> IO <herr_t>
+
+-- herr_t H5Tset_ebias(hid_t type_id, size_t ebias);
+#ccall H5Tset_ebias, <hid_t> -> <size_t> -> IO <herr_t>
+
+-- herr_t H5Tset_norm(hid_t type_id, H5T_norm_t norm);
+#ccall H5Tset_norm, <hid_t> -> <H5T_norm_t> -> IO <herr_t>
+
+-- herr_t H5Tset_inpad(hid_t type_id, H5T_pad_t pad);
+#ccall H5Tset_inpad, <hid_t> -> <H5T_pad_t> -> IO <herr_t>
+
+-- herr_t H5Tset_cset(hid_t type_id, H5T_cset_t cset);
+#ccall H5Tset_cset, <hid_t> -> <H5T_cset_t> -> IO <herr_t>
+
+-- herr_t H5Tset_strpad(hid_t type_id, H5T_str_t strpad);
+#ccall H5Tset_strpad, <hid_t> -> <H5T_str_t> -> IO <herr_t>
+
 -- 
 -- /* Type conversion database */
--- H5_DLL herr_t H5Tregister(H5T_pers_t pers, const char *name, hid_t src_id,
+-- herr_t H5Tregister(H5T_pers_t pers, const char *name, hid_t src_id,
 -- 			   hid_t dst_id, H5T_conv_t func);
--- H5_DLL herr_t H5Tunregister(H5T_pers_t pers, const char *name, hid_t src_id,
+#ccall H5Tregister, <H5T_pers_t> -> CString -> <hid_t> -> <hid_t> -> H5T_conv_t a b -> IO <herr_t>
+
+-- herr_t H5Tunregister(H5T_pers_t pers, const char *name, hid_t src_id,
 -- 			     hid_t dst_id, H5T_conv_t func);
--- H5_DLL H5T_conv_t H5Tfind(hid_t src_id, hid_t dst_id, H5T_cdata_t **pcdata);
--- H5_DLL htri_t H5Tcompiler_conv(hid_t src_id, hid_t dst_id);
--- H5_DLL herr_t H5Tconvert(hid_t src_id, hid_t dst_id, size_t nelmts,
+#ccall H5Tunregister, <H5T_pers_t> -> CString -> <hid_t> -> <hid_t> -> H5T_conv_t a b -> IO <herr_t>
+
+-- TODO: check docs on this funtion and figure out what its type should be
+-- H5T_conv_t H5Tfind(hid_t src_id, hid_t dst_id, H5T_cdata_t **pcdata);
+#ccall H5Tfind, <hid_t> -> <hid_t> -> Out (Ptr H5T_cdata_t) -> IO (H5T_conv_t a b)
+
+-- htri_t H5Tcompiler_conv(hid_t src_id, hid_t dst_id);
+#ccall H5Tcompiler_conv, <hid_t> -> <hid_t> -> IO <htri_t>
+
+-- herr_t H5Tconvert(hid_t src_id, hid_t dst_id, size_t nelmts,
 -- 			  void *buf, void *background, hid_t plist_id);
+#ccall H5Tconvert, <hid_t> -> <hid_t> -> <size_t> -> Ptr a -> Ptr b -> <hid_t> -> IO <herr_t>
+
 -- 
 -- /* Symbols defined for compatibility with previous versions of the HDF5 API.
 --  *
 --  * Use of these symbols is deprecated.
 --  */
--- #ifndef H5_NO_DEPRECATED_SYMBOLS
+#ifndef H5_NO_DEPRECATED_SYMBOLS
 -- 
 -- /* Macros */
 -- 
@@ -425,12 +544,20 @@ h5t_MIPS_F64 = h5t_IEEE_F64BE
 -- 
 -- 
 -- /* Function prototypes */
--- H5_DLL herr_t H5Tcommit1(hid_t loc_id, const char *name, hid_t type_id);
--- H5_DLL hid_t H5Topen1(hid_t loc_id, const char *name);
--- H5_DLL hid_t H5Tarray_create1(hid_t base_id, int ndims,
+-- herr_t H5Tcommit1(hid_t loc_id, const char *name, hid_t type_id);
+#ccall H5Tcommit1, <hid_t> -> CString -> <hid_t> -> IO <herr_t>
+
+-- hid_t H5Topen1(hid_t loc_id, const char *name);
+#ccall H5Topen1, <hid_t> -> CString -> IO <hid_t>
+
+-- hid_t H5Tarray_create1(hid_t base_id, int ndims,
 --             const hsize_t dim[/* ndims */],
 --             const int perm[/* ndims */]);
--- H5_DLL int H5Tget_array_dims1(hid_t type_id, hsize_t dims[], int perm[]);
+#ccall H5Tarray_create1, <hid_t> -> CInt -> <hsize_t> -> CInt -> IO <hid_t>
+
+-- int H5Tget_array_dims1(hid_t type_id, hsize_t dims[], int perm[]);
+#ccall H5Tget_array_dims1, <hid_t> -> OutArray <hsize_t> -> OutArray CInt -> IO CInt
+
 -- 
--- #endif /* H5_NO_DEPRECATED_SYMBOLS */
+#endif /* H5_NO_DEPRECATED_SYMBOLS */
 
