@@ -56,6 +56,7 @@ h5_SIZEOF_HSIZE_T  = #const H5_SIZEOF_HSIZE_T
 h5_SIZEOF_HSSIZE_T = #const H5_SIZEOF_HSSIZE_T
 
 #newtype haddr_t
+    deriving (Eq, Ord)
 #newtype_const haddr_t, HADDR_UNDEF
 
 h5_SIZEOF_HADDR_T :: CSize
