@@ -1,0 +1,38 @@
+name:                   bindings-hdf5
+version:                0.0.0.1
+stability:              experimental
+
+cabal-version:          >= 1.2
+build-type:             Simple
+
+author:                 James Cook <mokus@deepbondi.net>
+maintainer:             James Cook <mokus@deepbondi.net>
+license:                PublicDomain
+homepage:               https://github.com/mokus0/bindings-hdf5
+
+category:               FFI
+synopsis:               Bindings to HDF5
+description:            Bindings to HDF5
+
+Library
+  hs-source-dirs:       src
+  extensions:           ForeignFunctionInterface
+  
+  exposed-modules:      Bindings.HDF5
+                        Bindings.HDF5.H5
+                        Bindings.HDF5.H5A
+                        Bindings.HDF5.H5I
+                        Bindings.HDF5.H5L
+                        Bindings.HDF5.H5O
+                        Bindings.HDF5.H5T
+                        Bindings.HDF5.Util
+  
+  c-sources:            cbits/H5T_inline.c
+  
+  build-depends:        base >= 3 && <5,
+                        bindings-DSL >= 1.0.9 && < 1.1
+
+  include-dirs:         include
+                        /Users/mokus/Downloads/hdf5-1.8.6/hdf5/include
+  extra-lib-dirs:       /Users/mokus/Downloads/hdf5-1.8.6/hdf5/lib
+  extra-libraries:      hdf5
