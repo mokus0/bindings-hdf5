@@ -31,6 +31,7 @@ import Foreign.Ptr.Conventions
 -- TODO: I think HId_t should be parameterised over the element type and 
 -- possibly also dimensionality of the dataset
 #newtype hid_t
+    deriving Eq
 h5_SIZEOF_HID_T :: CSize
 h5_SIZEOF_HID_T = #const H5_SIZEOF_HID_T
 
