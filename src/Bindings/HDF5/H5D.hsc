@@ -84,27 +84,54 @@ type H5D_operator_t a b = FunPtr (Ptr a -> HId_t -> CUInt -> In HSize_t -> Ptr b
 #ccall H5Dget_create_plist, <hid_t> -> IO <hid_t>
 
 -- hid_t H5Dget_access_plist(hid_t dset_id);
+#ccall H5Dget_access_plist, <hid_t> -> IO <hid_t>
+
 -- hsize_t H5Dget_storage_size(hid_t dset_id);
+#ccall H5Dget_storage_size, <hid_t> -> IO <hsize_t>
+
 -- haddr_t H5Dget_offset(hid_t dset_id);
+#ccall H5Dget_offset, <hid_t> -> IO <haddr_t>
+
 -- herr_t H5Dread(hid_t dset_id, hid_t mem_type_id, hid_t mem_space_id,
 -- 			hid_t file_space_id, hid_t plist_id, void *buf/*out*/);
+#ccall H5Dread, <hid_t> -> <hid_t> -> <hid_t> -> <hid_t> -> <hid_t> -> OutArray a -> IO <herr_t>
+
 -- herr_t H5Dwrite(hid_t dset_id, hid_t mem_type_id, hid_t mem_space_id,
 -- 			 hid_t file_space_id, hid_t plist_id, const void *buf);
+#ccall H5Dwrite, <hid_t> -> <hid_t> -> <hid_t> -> <hid_t> -> <hid_t> -> InArray a -> IO <herr_t>
+
 -- herr_t H5Diterate(void *buf, hid_t type_id, hid_t space_id,
 --             H5D_operator_t op, void *operator_data);
+#ccall H5Diterate, Ptr a -> <hid_t> -> <hid_t> -> H5D_operator_t a b -> Ptr b -> IO <herr_t>
+
 -- herr_t H5Dvlen_reclaim(hid_t type_id, hid_t space_id, hid_t plist_id, void *buf);
+#ccall H5Dvlen_reclaim, <hid_t> -> <hid_t> -> <hid_t> -> Ptr a -> IO <herr_t>
+
 -- herr_t H5Dvlen_get_buf_size(hid_t dataset_id, hid_t type_id, hid_t space_id, hsize_t *size);
+#ccall H5Dvlen_get_buf_size, <hid_t> -> <hid_t> -> <hid_t> -> Out <hsize_t> -> IO <herr_t>
+
 -- herr_t H5Dfill(const void *fill, hid_t fill_type, void *buf,
 --         hid_t buf_type, hid_t space);
+#ccall H5Dfill, Ptr a -> <hid_t> -> Ptr b -> <hid_t> -> <hid_t> -> IO <herr_t>
+
 -- herr_t H5Dset_extent(hid_t dset_id, const hsize_t size[]);
+#ccall H5Dset_extent, <hid_t> -> InArray <hsize_t> -> IO <herr_t>
+
 -- herr_t H5Ddebug(hid_t dset_id);
+#ccall H5Ddebug, <hid_t> -> IO <herr_t>
+
 
 #ifndef H5_NO_DEPRECATED_SYMBOLS
 
 -- /* Function prototypes */
 -- hid_t H5Dcreate1(hid_t file_id, const char *name, hid_t type_id,
 --     hid_t space_id, hid_t dcpl_id);
+#ccall H5Dcreate1, <hid_t> -> CString -> <hid_t> -> <hid_t> -> <hid_t> -> IO <hid_t>
+
 -- hid_t H5Dopen1(hid_t file_id, const char *name);
+#ccall H5Dopen1, <hid_t> -> CString -> IO <hid_t>
+
 -- herr_t H5Dextend(hid_t dset_id, const hsize_t size[]);
+#ccall H5Dextend, <hid_t> -> InArray <hsize_t> -> IO <herr_t>
 
 #endif /* H5_NO_DEPRECATED_SYMBOLS */
