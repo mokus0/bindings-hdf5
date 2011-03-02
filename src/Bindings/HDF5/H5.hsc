@@ -22,6 +22,8 @@ vers = Version
 
 h5_VERS_INFO = #const_str H5_VERS_INFO
 
+#cinline H5check, <herr_t>
+
 #newtype herr_t
 
 #newtype hbool_t
