@@ -23,6 +23,7 @@ Library
                         Bindings.HDF5.H5A
                         Bindings.HDF5.H5AC
                         Bindings.HDF5.H5C
+                        Bindings.HDF5.H5D
                         Bindings.HDF5.H5I
                         Bindings.HDF5.H5L
                         Bindings.HDF5.H5O

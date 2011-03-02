@@ -73,7 +73,7 @@ type H5A_operator2_t a = FunPtr (HId_t -> CString -> In H5A_info_t -> InOut a ->
 #ccall H5Aget_storage_size, <hid_t> -> IO <hsize_t>
 
 -- herr_t  H5Aget_info(hid_t attr_id, H5A_info_t *ainfo /*out*/);
-#ccall H5A_info_t, <hid_t> -> Out <H5A_info_t> -> IO <herr_t>
+#ccall H5Aget_info, <hid_t> -> Out <H5A_info_t> -> IO <herr_t>
 
 -- herr_t  H5Aget_info_by_name(hid_t loc_id, const char *obj_name,
 --     const char *attr_name, H5A_info_t *ainfo /*out*/, hid_t lapl_id);
