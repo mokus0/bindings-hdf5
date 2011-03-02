@@ -21,6 +21,8 @@ Library
   exposed-modules:      Bindings.HDF5
                         Bindings.HDF5.H5
                         Bindings.HDF5.H5A
+                        Bindings.HDF5.H5AC
+                        Bindings.HDF5.H5C
                         Bindings.HDF5.H5I
                         Bindings.HDF5.H5L
                         Bindings.HDF5.H5O

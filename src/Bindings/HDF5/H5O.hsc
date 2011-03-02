@@ -73,6 +73,7 @@ import Foreign.Ptr.Conventions
 #stoptype
 
 #newtype H5O_msg_crt_idx_t
+    deriving Eq
 
 type H5O_iterate_t a = FunPtr (HId_t -> CString -> In H5O_info_t -> Ptr a -> IO HErr_t)
 
