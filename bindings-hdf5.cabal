@@ -30,6 +30,7 @@ Library
                         Bindings.HDF5.H5G
                         Bindings.HDF5.H5I
                         Bindings.HDF5.H5L
+                        Bindings.HDF5.H5MM
                         Bindings.HDF5.H5O
                         Bindings.HDF5.H5T
                         Bindings.HDF5.Util
