@@ -48,7 +48,8 @@ inline int isH5Name(char *s) {
 #define mangle_ptrid(name)          concat("p_", name)
 #define mangle_famaccess(name)      mangle_ptrid(name)
 #define mangle_unionupdate(name)    concat("u_", name)
-
+#define mangle_wrapper(name)        concat("mk_",name)
+#define mangle_dynamic(name)        concat("mK_",name)
 
 #define hsc_mangle(as,name)         printf("%s", mangle_ ## as(name));
 

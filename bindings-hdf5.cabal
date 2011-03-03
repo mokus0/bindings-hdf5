@@ -32,7 +32,9 @@ Library
                         Bindings.HDF5.H5L
                         Bindings.HDF5.H5MM
                         Bindings.HDF5.H5O
+                        Bindings.HDF5.H5P
                         Bindings.HDF5.H5T
+                        Bindings.HDF5.H5Z
                         Bindings.HDF5.Util
                         Foreign.Ptr.Conventions
   
