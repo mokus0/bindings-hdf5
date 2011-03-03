@@ -42,6 +42,7 @@ Library
                         cbits/H5E_inline.c
                         cbits/H5FD_inline.c
                         cbits/H5G_inline.c
+                        cbits/H5P_inline.c
                         cbits/H5T_inline.c
   
   build-depends:        base >= 3 && <5,
