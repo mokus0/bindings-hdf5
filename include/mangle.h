@@ -8,6 +8,7 @@ static struct {
 } hardcoded_mangles[] = {
     {"size_t",  "CSize"},
     {"ssize_t", "CSSize"},
+    {"time_t",  "CTime"},
     {NULL, NULL},
 };
 

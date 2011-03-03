@@ -62,10 +62,10 @@ import Foreign.Ptr.Conventions
 #field addr,            <haddr_t>
 #field type,            <H5O_type_t>
 #field rc,              CUInt
-#field atime,           CTime
-#field mtime,           CTime
-#field ctime,           CTime
-#field btime,           CTime
+#field atime,           <time_t>
+#field mtime,           <time_t>
+#field ctime,           <time_t>
+#field btime,           <time_t>
 #field num_attrs,       <hsize_t>
 #field hdr,             <H5O_hdr_info_t>
 #field meta_size.obj,   <H5_ih_info_t>

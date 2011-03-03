@@ -27,6 +27,7 @@ Library
                         Bindings.HDF5.H5E
                         Bindings.HDF5.H5F
                         Bindings.HDF5.H5FD
+                        Bindings.HDF5.H5G
                         Bindings.HDF5.H5I
                         Bindings.HDF5.H5L
                         Bindings.HDF5.H5O
@@ -37,6 +38,7 @@ Library
   c-sources:            cbits/H5_inline.c
                         cbits/H5E_inline.c
                         cbits/H5FD_inline.c
+                        cbits/H5G_inline.c
                         cbits/H5T_inline.c
   
   build-depends:        base >= 3 && <5,
