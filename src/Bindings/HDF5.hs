@@ -13,6 +13,8 @@ module Bindings.HDF5
     , module Bindings.HDF5.H5MM
     , module Bindings.HDF5.H5O
     , module Bindings.HDF5.H5P
+    , module Bindings.HDF5.H5R
+    , module Bindings.HDF5.H5S
     , module Bindings.HDF5.H5T
     , module Bindings.HDF5.H5Z
     ) where
@@ -31,5 +33,7 @@ import Bindings.HDF5.H5L
 import Bindings.HDF5.H5MM
 import Bindings.HDF5.H5O
 import Bindings.HDF5.H5P
+import Bindings.HDF5.H5R
+import Bindings.HDF5.H5S
 import Bindings.HDF5.H5T
 import Bindings.HDF5.H5Z
