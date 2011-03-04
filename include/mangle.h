@@ -9,6 +9,7 @@ static struct {
     {"size_t",  "CSize"},
     {"ssize_t", "CSSize"},
     {"time_t",  "CTime"},
+    {"off_t",   "COff"},
     {NULL, NULL},
 };
 

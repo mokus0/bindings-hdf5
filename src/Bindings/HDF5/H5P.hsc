@@ -16,6 +16,7 @@ import Bindings.HDF5.H5T
 import Bindings.HDF5.H5Z
 
 import Foreign.Ptr.Conventions
+import System.Posix.Types (COff)
 
 #cinline H5P_ROOT,                          <hid_t>
 #cinline H5P_OBJECT_CREATE,                 <hid_t>
@@ -370,76 +371,154 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> Ptr a -> IO HErr_t)
 
 -- /* Dataset creation property list (DCPL) routines */
 -- herr_t H5Pset_layout(hid_t plist_id, H5D_layout_t layout);
+#ccall H5Pset_layout, <hid_t> -> <H5D_layout_t> -> IO <herr_t>
+
 -- H5D_layout_t H5Pget_layout(hid_t plist_id);
+#ccall H5Pget_layout, <hid_t> -> IO <H5D_layout_t>
+
 -- herr_t H5Pset_chunk(hid_t plist_id, int ndims, const hsize_t dim[/*ndims*/]);
+#ccall H5Pset_chunk, <hid_t> -> CInt -> InArray <hsize_t> -> IO <herr_t>
+
 -- int H5Pget_chunk(hid_t plist_id, int max_ndims, hsize_t dim[]/*out*/);
+#ccall H5Pget_chunk, <hid_t> -> CInt -> OutArray <hsize_t> -> IO CInt
+
 -- herr_t H5Pset_external(hid_t plist_id, const char *name, off_t offset,
 --           hsize_t size);
+#ccall H5Pset_external, <hid_t> -> CString -> <off_t> -> <hsize_t> -> IO <herr_t>
+
 -- int H5Pget_external_count(hid_t plist_id);
+#ccall H5Pget_external_count, <hid_t> -> IO CInt
+
 -- herr_t H5Pget_external(hid_t plist_id, unsigned idx, size_t name_size,
 --           char *name/*out*/, off_t *offset/*out*/,
 --           hsize_t *size/*out*/);
+#ccall H5Pget_external, <hid_t> -> CUInt -> <size_t> -> OutArray CChar -> Out <off_t> -> Out <hsize_t> -> IO <herr_t>
+
 -- herr_t H5Pset_szip(hid_t plist_id, unsigned options_mask, unsigned pixels_per_block);
+#ccall H5Pset_szip, <hid_t> -> CUInt -> CUInt -> IO <herr_t>
+
 -- herr_t H5Pset_shuffle(hid_t plist_id);
+#ccall H5Pset_shuffle, <hid_t> -> IO <herr_t>
+
 -- herr_t H5Pset_nbit(hid_t plist_id);
+#ccall H5Pset_nbit, <hid_t> -> IO <herr_t>
+
 -- herr_t H5Pset_scaleoffset(hid_t plist_id, H5Z_SO_scale_type_t scale_type, int scale_factor);
+#ccall H5Pset_scaleoffset, <hid_t> -> <H5Z_SO_scale_type_t> -> CInt -> IO <herr_t>
+
 -- herr_t H5Pset_fill_value(hid_t plist_id, hid_t type_id,
 --      const void *value);
+#ccall H5Pset_fill_value, <hid_t> -> <hid_t> -> In a -> IO <herr_t>
+
 -- herr_t H5Pget_fill_value(hid_t plist_id, hid_t type_id,
 --      void *value/*out*/);
+#ccall H5Pget_fill_value, <hid_t> -> <hid_t> -> Out a -> IO <herr_t>
+
 -- herr_t H5Pfill_value_defined(hid_t plist, H5D_fill_value_t *status);
+#ccall H5Pfill_value_defined, <hid_t> -> Ptr <H5D_fill_value_t> -> IO <herr_t>
+
 -- herr_t H5Pset_alloc_time(hid_t plist_id, H5D_alloc_time_t
 -- 	alloc_time);
+#ccall H5Pset_alloc_time, <hid_t> -> <H5D_alloc_time_t> -> IO <herr_t>
+
 -- herr_t H5Pget_alloc_time(hid_t plist_id, H5D_alloc_time_t
 -- 	*alloc_time/*out*/);
+#ccall H5Pget_alloc_time, <hid_t> -> Out H5D_alloc_time_t -> IO <herr_t>
+
 -- herr_t H5Pset_fill_time(hid_t plist_id, H5D_fill_time_t fill_time);
+#ccall H5Pset_fill_time, <hid_t> -> <H5D_fill_time_t> -> IO <herr_t>
+
 -- herr_t H5Pget_fill_time(hid_t plist_id, H5D_fill_time_t
 -- 	*fill_time/*out*/);
--- 
+#ccall H5Pget_fill_time, <hid_t> -> Out <H5D_fill_time_t> -> IO <herr_t>
+
+
 -- /* Dataset access property list (DAPL) routines */
 -- herr_t H5Pset_chunk_cache(hid_t dapl_id, size_t rdcc_nslots,
 --        size_t rdcc_nbytes, double rdcc_w0);
+#ccall H5Pset_chunk_cache, <hid_t> -> <size_t> -> <size_t> -> CDouble -> IO <herr_t>
+
 -- herr_t H5Pget_chunk_cache(hid_t dapl_id,
 --        size_t *rdcc_nslots/*out*/,
 --        size_t *rdcc_nbytes/*out*/,
 --        double *rdcc_w0/*out*/);
--- 
+#ccall H5Pget_chunk_cache, <hid_t> -> Out <size_t> -> Out <size_t> -> Out CDouble -> IO <herr_t>
+
+
 -- /* Dataset xfer property list (DXPL) routines */
 -- herr_t H5Pset_data_transform(hid_t plist_id, const char* expression);
+#ccall H5Pset_data_transform, <hid_t> -> CString -> IO <herr_t>
+
 -- ssize_t H5Pget_data_transform(hid_t plist_id, char* expression /*out*/, size_t size);
+#ccall H5Pget_data_transform, <hid_t> -> OutArray CChar -> <size_t> -> IO <ssize_t>
+
 -- herr_t H5Pset_buffer(hid_t plist_id, size_t size, void *tconv,
 --         void *bkg);
+#ccall H5Pset_buffer, <hid_t> -> <size_t> -> Ptr a -> Ptr b -> IO <herr_t>
+
 -- size_t H5Pget_buffer(hid_t plist_id, void **tconv/*out*/,
 --         void **bkg/*out*/);
+#ccall H5Pget_buffer, <hid_t> -> Out (Ptr a) -> Out (Ptr b) -> IO <size_t>
+
 -- herr_t H5Pset_preserve(hid_t plist_id, hbool_t status);
+#ccall H5Pset_preserve, <hid_t> -> <hbool_t> -> IO <herr_t>
+
 -- int H5Pget_preserve(hid_t plist_id);
+#ccall H5Pget_preserve, <hid_t> -> IO CInt
+
 -- herr_t H5Pset_edc_check(hid_t plist_id, H5Z_EDC_t check);
+#ccall H5Pset_edc_check, <hid_t> -> <H5Z_EDC_t> -> IO <herr_t>
+
 -- H5Z_EDC_t H5Pget_edc_check(hid_t plist_id);
+#ccall H5Pget_edc_check, <hid_t> -> IO <H5Z_EDC_t>
+
 -- herr_t H5Pset_filter_callback(hid_t plist_id, H5Z_filter_func_t func,
 --                                      void* op_data);
+#ccall H5Pset_filter_callback, <hid_t> -> H5Z_filter_func_t a b -> Ptr b -> IO <herr_t>
+
 -- herr_t H5Pset_btree_ratios(hid_t plist_id, double left, double middle,
 --        double right);
+#ccall H5Pset_btree_ratios, <hid_t> -> CDouble -> CDouble -> CDouble -> IO <herr_t>
+
 -- herr_t H5Pget_btree_ratios(hid_t plist_id, double *left/*out*/,
 --        double *middle/*out*/,
 --        double *right/*out*/);
+#ccall H5Pget_btree_ratios, <hid_t> -> Out CDouble -> Out CDouble -> Out CDouble -> IO <herr_t>
+
 -- herr_t H5Pset_vlen_mem_manager(hid_t plist_id,
 --                                        H5MM_allocate_t alloc_func,
 --                                        void *alloc_info, H5MM_free_t free_func,
 --                                        void *free_info);
+#ccall H5Pset_vlen_mem_manager, <hid_t> -> H5MM_allocate_t allocInfo mem -> Ptr allocInfo -> H5MM_free_t freeInfo mem -> Ptr freeInfo -> IO <herr_t>
+
 -- herr_t H5Pget_vlen_mem_manager(hid_t plist_id,
 --                                        H5MM_allocate_t *alloc_func,
 --                                        void **alloc_info,
 --                                        H5MM_free_t *free_func,
 --                                        void **free_info);
+#ccall H5Pget_vlen_mem_manager, <hid_t> -> Out (H5MM_allocate_t allocInfo mem) -> Out (Ptr allocInfo) -> Out (H5MM_free_t freeInfo mem) -> Out (Ptr freeInfo) -> IO <herr_t>
+
 -- herr_t H5Pset_hyper_vector_size(hid_t fapl_id, size_t size);
+#ccall H5Pset_hyper_vector_size, <hid_t> -> <size_t> -> IO <herr_t>
+
 -- herr_t H5Pget_hyper_vector_size(hid_t fapl_id, size_t *size/*out*/);
+#ccall H5Pget_hyper_vector_size, <hid_t> -> Out <size_t> -> IO <herr_t>
+
 -- herr_t H5Pset_type_conv_cb(hid_t dxpl_id, H5T_conv_except_func_t op, void* operate_data);
+#ccall H5Pset_type_conv_cb, <hid_t> -> H5T_conv_except_func_t a b -> Ptr b -> IO <herr_t>
+
 -- herr_t H5Pget_type_conv_cb(hid_t dxpl_id, H5T_conv_except_func_t *op, void** operate_data);
--- 
+#ccall H5Pget_type_conv_cb, <hid_t> -> Out (H5T_conv_except_func_t a b) -> Out (Ptr b) -> IO <herr_t>
+
+
 -- /* Link creation property list (LCPL) routines */
 -- herr_t H5Pset_create_intermediate_group(hid_t plist_id, unsigned crt_intmd);
+#ccall H5Pset_create_intermediate_group, <hid_t> -> CUInt -> IO <herr_t>
+
 -- herr_t H5Pget_create_intermediate_group(hid_t plist_id, unsigned *crt_intmd /*out*/);
--- 
+#ccall H5Pget_create_intermediate_group, <hid_t> -> Out CUInt -> IO <herr_t>
+
+
 -- /* Group creation property list (GCPL) routines */
 -- herr_t H5Pset_local_heap_size_hint(hid_t plist_id, size_t size_hint);
 -- herr_t H5Pget_local_heap_size_hint(hid_t plist_id, size_t *size_hint /*out*/);
