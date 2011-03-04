@@ -521,33 +521,77 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> Ptr a -> IO HErr_t)
 
 -- /* Group creation property list (GCPL) routines */
 -- herr_t H5Pset_local_heap_size_hint(hid_t plist_id, size_t size_hint);
+#ccall H5Pset_local_heap_size_hint, <hid_t> -> <size_t> -> IO <herr_t>
+
 -- herr_t H5Pget_local_heap_size_hint(hid_t plist_id, size_t *size_hint /*out*/);
+#ccall H5Pget_local_heap_size_hint, <hid_t> -> Out <size_t> -> IO <herr_t>
+
 -- herr_t H5Pset_link_phase_change(hid_t plist_id, unsigned max_compact, unsigned min_dense);
+#ccall H5Pset_link_phase_change, <hid_t> -> CUInt -> CUInt -> IO <herr_t>
+
 -- herr_t H5Pget_link_phase_change(hid_t plist_id, unsigned *max_compact /*out*/, unsigned *min_dense /*out*/);
+#ccall H5Pget_link_phase_change, <hid_t> -> Out CUInt -> Out CUInt -> IO <herr_t>
+
 -- herr_t H5Pset_est_link_info(hid_t plist_id, unsigned est_num_entries, unsigned est_name_len);
+#ccall H5Pset_est_link_info, <hid_t> -> CUInt -> CUInt -> IO <herr_t>
+
 -- herr_t H5Pget_est_link_info(hid_t plist_id, unsigned *est_num_entries /* out */, unsigned *est_name_len /* out */);
+#ccall H5Pget_est_link_info, <hid_t> -> Out CUInt -> Out CUInt -> IO <herr_t>
+
 -- herr_t H5Pset_link_creation_order(hid_t plist_id, unsigned crt_order_flags);
+#ccall H5Pset_link_creation_order, <hid_t> -> CUInt -> IO <herr_t>
+
 -- herr_t H5Pget_link_creation_order(hid_t plist_id, unsigned *crt_order_flags /* out */);
--- 
+#ccall H5Pget_link_creation_order, <hid_t> -> Out CUInt -> IO <herr_t>
+
+
 -- /* String creation property list (STRCPL) routines */
 -- herr_t H5Pset_char_encoding(hid_t plist_id, H5T_cset_t encoding);
+#ccall H5Pset_char_encoding, <hid_t> -> <H5T_cset_t> -> IO <herr_t>
+
 -- herr_t H5Pget_char_encoding(hid_t plist_id, H5T_cset_t *encoding /*out*/);
--- 
+#ccall H5Pget_char_encoding, <hid_t> -> Out <H5T_cset_t> -> IO <herr_t>
+
+
 -- /* Link access property list (LAPL) routines */
 -- herr_t H5Pset_nlinks(hid_t plist_id, size_t nlinks);
+#ccall H5Pset_nlinks, <hid_t> -> <size_t> -> IO <herr_t>
+
 -- herr_t H5Pget_nlinks(hid_t plist_id, size_t *nlinks);
+#ccall H5Pget_nlinks, <hid_t> -> Out <size_t> -> IO <herr_t>
+
 -- herr_t H5Pset_elink_prefix(hid_t plist_id, const char *prefix);
+#ccall H5Pset_elink_prefix, <hid_t> -> CString -> IO <herr_t>
+
 -- ssize_t H5Pget_elink_prefix(hid_t plist_id, char *prefix, size_t size);
+#ccall H5Pget_elink_prefix, <hid_t> -> OutArray CChar -> CString -> IO <ssize_t>
+
 -- hid_t H5Pget_elink_fapl(hid_t lapl_id);
+#ccall H5Pget_elink_fapl, <hid_t> -> IO <hid_t>
+
 -- herr_t H5Pset_elink_fapl(hid_t lapl_id, hid_t fapl_id);
+#ccall H5Pset_elink_fapl, <hid_t> -> <hid_t> -> IO <herr_t>
+
 -- herr_t H5Pset_elink_acc_flags(hid_t lapl_id, unsigned flags);
+#ccall H5Pset_elink_acc_flags, <hid_t> -> CUInt -> IO <herr_t>
+
 -- herr_t H5Pget_elink_acc_flags(hid_t lapl_id, unsigned *flags);
+#ccall H5Pget_elink_acc_flags, <hid_t> -> Out CUInt -> IO <herr_t>
+
 -- herr_t H5Pset_elink_cb(hid_t lapl_id, H5L_elink_traverse_t func, void *op_data);
+#ccall H5Pset_elink_cb, <hid_t> -> H5L_elink_traverse_t a -> Ptr a -> IO <herr_t>
+
 -- herr_t H5Pget_elink_cb(hid_t lapl_id, H5L_elink_traverse_t *func, void **op_data);
--- 
+#ccall H5Pget_elink_cb, <hid_t> -> Out (H5L_elink_traverse_t a) -> Out (Ptr a) -> IO <herr_t>
+
+
 -- /* Object copy property list (OCPYPL) routines */
 -- herr_t H5Pset_copy_object(hid_t plist_id, unsigned crt_intmd);
+#ccall H5Pset_copy_object, <hid_t> -> CUInt -> IO <herr_t>
+
 -- herr_t H5Pget_copy_object(hid_t plist_id, unsigned *crt_intmd /*out*/);
+#ccall H5Pget_copy_object, <hid_t> -> Out CUInt -> IO <herr_t>
+
 -- 
 -- /* Symbols defined for compatibility with previous versions of the HDF5 API.
 --  *
@@ -563,15 +607,22 @@ h5p_NO_CLASS = h5p_ROOT
 --     H5P_prp_set_func_t prp_set, H5P_prp_get_func_t prp_get,
 --     H5P_prp_delete_func_t prp_del, H5P_prp_copy_func_t prp_copy,
 --     H5P_prp_close_func_t prp_close);
+#ccall H5Pregister1, <hid_t> -> CString -> <size_t> -> Ptr a -> H5P_prp_create_func_t a -> H5P_prp_set_func_t a -> H5P_prp_get_func_t a -> H5P_prp_delete_func_t a -> H5P_prp_copy_func_t a -> H5P_prp_close_func_t a -> IO <herr_t>
+
 -- herr_t H5Pinsert1(hid_t plist_id, const char *name, size_t size,
 --     void *value, H5P_prp_set_func_t prp_set, H5P_prp_get_func_t prp_get,
 --     H5P_prp_delete_func_t prp_delete, H5P_prp_copy_func_t prp_copy,
 --     H5P_prp_close_func_t prp_close);
+#ccall H5Pinsert1, <hid_t> -> CString -> <size_t> -> Ptr a -> H5P_prp_set_func_t a -> H5P_prp_get_func_t a -> H5P_prp_delete_func_t a -> H5P_prp_copy_func_t a -> H5P_prp_close_func_t a -> IO <herr_t>
+
 -- H5Z_filter_t H5Pget_filter1(hid_t plist_id, unsigned filter,
 --     unsigned int *flags/*out*/, size_t *cd_nelmts/*out*/,
 --     unsigned cd_values[]/*out*/, size_t namelen, char name[]);
+#ccall H5Pget_filter1, <hid_t> -> CUInt -> Out CUInt -> Out <size_t> -> OutArray CUInt -> <size_t> -> Out CChar -> IO <H5Z_filter_t>
+
 -- herr_t H5Pget_filter_by_id1(hid_t plist_id, H5Z_filter_t id,
 --     unsigned int *flags/*out*/, size_t *cd_nelmts/*out*/,
 --     unsigned cd_values[]/*out*/, size_t namelen, char name[]/*out*/);
+#ccall H5Pget_filter_by_id1, <hid_t> -> <H5Z_filter_t> -> Out CUInt -> Out <size_t> -> OutArray CUInt -> <size_t> -> OutArray CChar -> IO <herr_t>
 
 #endif /* H5_NO_DEPRECATED_SYMBOLS */
