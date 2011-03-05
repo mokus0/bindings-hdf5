@@ -10,7 +10,7 @@ import Foreign.Ptr.Conventions
 #num H5_VERS_MAJOR
 #num H5_VERS_MINOR
 #num H5_VERS_RELEASE
-h5_VERS_SUBRELEASE = #const_str H5_VERS_SUBRELEASE
+#str H5_VERS_SUBRELEASE
 
 vers :: Version
 vers = Version
@@ -20,7 +20,7 @@ vers = Version
     ]
     (filter (not.null) [ h5_VERS_SUBRELEASE ])
 
-h5_VERS_INFO = #const_str H5_VERS_INFO
+#str H5_VERS_INFO
 
 #cinline H5check, <herr_t>
 
@@ -64,7 +64,7 @@ h5_SIZEOF_HSSIZE_T = #const H5_SIZEOF_HSSIZE_T
 h5_SIZEOF_HADDR_T :: CSize
 h5_SIZEOF_HADDR_T = #const H5_SIZEOF_HADDR_T
 
-h5_PRINTF_HADDR_FMT = #const_str H5_PRINTF_HADDR_FMT
+#str H5_PRINTF_HADDR_FMT
 
 #newtype_const haddr_t, HADDR_MAX
 

@@ -27,6 +27,14 @@ Library
                         Bindings.HDF5.H5E
                         Bindings.HDF5.H5F
                         Bindings.HDF5.H5FD
+                        Bindings.HDF5.H5FD.Core
+                        Bindings.HDF5.H5FD.Family
+                        Bindings.HDF5.H5FD.Log
+                        Bindings.HDF5.H5FD.MPI
+                        Bindings.HDF5.H5FD.Multi
+                        Bindings.HDF5.H5FD.Sec2
+                        Bindings.HDF5.H5FD.StdIO
+                        Bindings.HDF5.H5FD.Direct
                         Bindings.HDF5.H5G
                         Bindings.HDF5.H5I
                         Bindings.HDF5.H5L
@@ -40,9 +48,14 @@ Library
                         Bindings.HDF5.Util
                         Foreign.Ptr.Conventions
   
+  if os(windows)
+    exposed-modules:    Bindings.HDF5.H5FD.Windows
+  
   c-sources:            cbits/H5_inline.c
                         cbits/H5E_inline.c
                         cbits/H5FD_inline.c
+                        cbits/H5FD_inline.c
+                        cbits/H5FDmpi_inline.c
                         cbits/H5G_inline.c
                         cbits/H5P_inline.c
                         cbits/H5T_inline.c

@@ -30,8 +30,7 @@ import Foreign.Ptr.Conventions
 #newtype_const hsize_t, H5F_FAMILY_DEFAULT
 
 #ifdef H5_HAVE_PARALLEL
-#mangle_ident "H5F_MPIO_DEBUG_KEY"
-    = #const_str H5F_MPIO_DEBUG_KEY
+#str H5F_MPIO_DEBUG_KEY
 #endif /* H5_HAVE_PARALLEL */
 
 #newtype H5F_scope_t

@@ -65,4 +65,12 @@
         printf(")\n");              \
     }
 
+#define hsc_str(name)               \
+    {                               \
+        hsc_mangle_ident(# name);   \
+        printf(" = ");              \
+        hsc_const_str(name);        \
+        printf("\n");               \
+    }
+
 #endif /* ___n_bindings_h__ */
