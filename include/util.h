@@ -35,13 +35,18 @@ inline char *mapstrn(char *s, unsigned n, int (*f)(int)) {
     return t;
 }
 
+inline char *concatn(char *s1, unsigned n1, char *s2, unsigned n2) {
+    char *t = (char *) malloc(1 + n1 + n2);
+    strncpy(t,    s1, n1+1);
+    strncpy(t+n1, s2, n2+1);
+    t[n1+n2] = '\0';
+    return t;
+}
+
 inline char *concat(char *s1, char *s2) {
     unsigned n1 = strlen(s1);
     unsigned n2 = strlen(s2);
-    char *t = (char *) malloc(1 + n1 + n2);
-    strcpy(t,    s1);
-    strcpy(t+n1, s2);
-    return t;
+    return concatn(s1,n1,s2,n2);
 }
 
 #define lcn(s,n)     mapstrn(s, n, &tolower)
