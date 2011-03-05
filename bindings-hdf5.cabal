@@ -49,6 +49,7 @@ Library
   
   build-depends:        base >= 3 && <5,
                         bindings-DSL >= 1.0.9 && < 1.1,
+                        bytestring,
                         libffi,
                         monad-peel,
                         transformers
