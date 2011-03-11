@@ -68,6 +68,4 @@ Library
                         transformers
 
   include-dirs:         include
-                        /Users/mokus/Downloads/hdf5-1.8.6/hdf5/include
-  extra-lib-dirs:       /Users/mokus/Downloads/hdf5-1.8.6/hdf5/lib
-  extra-libraries:      hdf5
+  pkgconfig-depends:    hdf5
