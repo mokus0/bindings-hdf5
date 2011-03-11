@@ -10,8 +10,7 @@ import Foreign.Ptr.Conventions
 import Bindings.HDF5.H5
 import Bindings.HDF5.H5I
 
-#newtype H5T_class_t
-    deriving Eq
+#newtype H5T_class_t, Eq
 #newtype_const H5T_class_t, H5T_NO_CLASS
 #newtype_const H5T_class_t, H5T_INTEGER
 #newtype_const H5T_class_t, H5T_FLOAT
@@ -26,8 +25,7 @@ import Bindings.HDF5.H5I
 #newtype_const H5T_class_t, H5T_ARRAY
 #num H5T_NCLASSES
 
-#newtype H5T_order_t
-    deriving Eq
+#newtype H5T_order_t, Eq
 #newtype_const H5T_order_t, H5T_ORDER_ERROR
 #newtype_const H5T_order_t, H5T_ORDER_LE
 #newtype_const H5T_order_t, H5T_ORDER_BE
@@ -35,22 +33,19 @@ import Bindings.HDF5.H5I
 #newtype_const H5T_order_t, H5T_ORDER_MIXED
 #newtype_const H5T_order_t, H5T_ORDER_NONE
 
-#newtype H5T_sign_t
-    deriving Eq
+#newtype H5T_sign_t, Eq
 #newtype_const H5T_sign_t, H5T_SGN_ERROR
 #newtype_const H5T_sign_t, H5T_SGN_NONE
 #newtype_const H5T_sign_t, H5T_SGN_2
 #num H5T_NSGN
 
-#newtype H5T_norm_t
-    deriving Eq
+#newtype H5T_norm_t, Eq
 #newtype_const H5T_norm_t, H5T_NORM_ERROR
 #newtype_const H5T_norm_t, H5T_NORM_IMPLIED
 #newtype_const H5T_norm_t, H5T_NORM_MSBSET
 #newtype_const H5T_norm_t, H5T_NORM_NONE
 
-#newtype H5T_cset_t
-    deriving Eq
+#newtype H5T_cset_t, Eq
 #newtype_const H5T_cset_t, H5T_CSET_ERROR
 #newtype_const H5T_cset_t, H5T_CSET_ASCII
 #newtype_const H5T_cset_t, H5T_CSET_UTF8
@@ -70,8 +65,7 @@ import Bindings.HDF5.H5I
 #newtype_const H5T_cset_t, H5T_CSET_RESERVED_15
 #num H5T_NCSET
 
-#newtype H5T_str_t
-    deriving Eq
+#newtype H5T_str_t, Eq
 #newtype_const H5T_str_t, H5T_STR_ERROR
 #newtype_const H5T_str_t, H5T_STR_NULLTERM
 #newtype_const H5T_str_t, H5T_STR_NULLPAD
@@ -91,22 +85,19 @@ import Bindings.HDF5.H5I
 #newtype_const H5T_str_t, H5T_STR_RESERVED_15
 #num H5T_NSTR
 
-#newtype H5T_pad_t
-    deriving Eq
+#newtype H5T_pad_t, Eq
 #newtype_const H5T_pad_t, H5T_PAD_ERROR
 #newtype_const H5T_pad_t, H5T_PAD_ZERO
 #newtype_const H5T_pad_t, H5T_PAD_ONE
 #newtype_const H5T_pad_t, H5T_PAD_BACKGROUND
 #num H5T_NPAD
 
-#newtype H5T_cmd_t
-    deriving Eq
+#newtype H5T_cmd_t, Eq
 #newtype_const H5T_cmd_t, H5T_CONV_INIT
 #newtype_const H5T_cmd_t, H5T_CONV_CONV
 #newtype_const H5T_cmd_t, H5T_CONV_FREE
 
-#newtype H5T_bkg_t
-    deriving Eq
+#newtype H5T_bkg_t, Eq
 #newtype_const H5T_bkg_t, H5T_BKG_NO  
 #newtype_const H5T_bkg_t, H5T_BKG_TEMP
 #newtype_const H5T_bkg_t, H5T_BKG_YES 

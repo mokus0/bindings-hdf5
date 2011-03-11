@@ -12,22 +12,39 @@ import Bindings.HDF5.H5T -- Datatypes
 
 import Foreign.Ptr.Conventions
 
+-- |Information struct for attribute (for 'h5a_get_info'/'h5a_get_info_by_idx')
 #starttype H5A_info_t
+-- |Indicate if creation order is valid
 #field corder_valid,    <hbool_t>
+-- |Creation order
 #field corder,          <H5O_msg_crt_idx_t>
+-- |Character set of attribute name
 #field cset,            <H5T_cset_t>
+-- |Size of raw data
 #field data_size,       <hsize_t>
 #stoptype
 
+
+-- | Typedef for 'h5a_iterate2' callbacks.
+-- 
+-- @
+--  typedef herr_t (*H5A_operator2_t)(hid_t location_id/*in*/,
+--     const char *attr_name/*in*/, const H5A_info_t *ainfo/*in*/, void *op_data/*in,out*/);
+-- @
 type H5A_operator2_t a = FunPtr (HId_t -> CString -> In H5A_info_t -> InOut a -> IO HErr_t)
 
--- /* Public function prototypes */
+-- * Public function prototypes
+
+-- |@
 -- hid_t   H5Acreate2(hid_t loc_id, const char *attr_name, hid_t type_id,
 --     hid_t space_id, hid_t acpl_id, hid_t aapl_id);
+-- @
 #ccall H5Acreate2, <hid_t> -> CString -> <hid_t> -> <hid_t> -> <hid_t> -> <hid_t> -> IO <hid_t>
 
+-- |@
 -- hid_t   H5Acreate_by_name(hid_t loc_id, const char *obj_name, const char *attr_name,
 --     hid_t type_id, hid_t space_id, hid_t acpl_id, hid_t aapl_id, hid_t lapl_id);
+-- @
 #ccall H5Acreate_by_name, <hid_t> -> CString -> CString -> <hid_t> -> <hid_t> -> <hid_t> -> <hid_t> -> <hid_t> -> IO <hid_t>
 
 -- hid_t   H5Aopen(hid_t obj_id, const char *attr_name, hid_t aapl_id);
@@ -91,8 +108,10 @@ type H5A_operator2_t a = FunPtr (HId_t -> CString -> In H5A_info_t -> InOut a ->
 --     const char *old_attr_name, const char *new_attr_name, hid_t lapl_id);
 #ccall H5Arename_by_name, <hid_t> -> CString -> CString -> CString -> <hid_t> -> IO <herr_t>
 
+-- |@
 -- herr_t  H5Aiterate2(hid_t loc_id, H5_index_t idx_type,
 --     H5_iter_order_t order, hsize_t *idx, H5A_operator2_t op, void *op_data);
+-- @
 #ccall H5Aiterate2, <hid_t> -> <H5_index_t> -> <H5_iter_order_t> -> Ptr <hsize_t> -> H5A_operator2_t a -> Ptr a -> IO <herr_t>
 
 -- herr_t  H5Aiterate_by_name(hid_t loc_id, const char *obj_name, H5_index_t idx_type,

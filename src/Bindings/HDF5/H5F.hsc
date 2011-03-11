@@ -39,8 +39,7 @@ import Foreign.Ptr.Conventions
 
 #newtype_const hsize_t, H5F_UNLIMITED
 
-#newtype H5F_close_degree_t
-    deriving Eq
+#newtype H5F_close_degree_t, Eq
 #newtype_const H5F_close_degree_t, H5F_CLOSE_DEFAULT
 #newtype_const H5F_close_degree_t, H5F_CLOSE_WEAK
 #newtype_const H5F_close_degree_t, H5F_CLOSE_SEMI
@@ -52,8 +51,7 @@ import Foreign.Ptr.Conventions
 #field sohm.msgs_info,  <H5_ih_info_t>
 #stoptype
 
-#newtype H5F_mem_t
-    deriving Eq
+#newtype H5F_mem_t, Eq
 #newtype_const H5F_mem_t, H5FD_MEM_NOLIST
 #newtype_const H5F_mem_t, H5FD_MEM_DEFAULT
 #newtype_const H5F_mem_t, H5FD_MEM_SUPER

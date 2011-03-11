@@ -326,10 +326,8 @@ foreign import ccall "&H5Epush2"
 --  */
 -- typedef hid_t   H5E_major_t;
 -- typedef hid_t   H5E_minor_t;
-#newtype H5E_major_t
-    deriving Eq
-#newtype H5E_minor_t
-    deriving Eq
+#newtype H5E_major_t, Eq
+#newtype H5E_minor_t, Eq
 
 -- /* Information about an error element of error stack. */
 #starttype H5E_error1_t

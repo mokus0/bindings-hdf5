@@ -9,8 +9,7 @@ import Bindings.HDF5.H5
 import Foreign.Ptr.Conventions
 
 
-#newtype H5I_type_t
-    deriving Eq
+#newtype H5I_type_t, Eq
 #newtype_const H5I_type_t, H5I_UNINIT
 #newtype_const H5I_type_t, H5I_BADID
 #newtype_const H5I_type_t, H5I_FILE
@@ -30,8 +29,7 @@ import Foreign.Ptr.Conventions
 
 -- TODO: I think HId_t should be parameterised over the element type and 
 -- possibly also dimensionality of the dataset
-#newtype hid_t
-    deriving Eq
+#newtype hid_t, Eq
 h5_SIZEOF_HID_T :: CSize
 h5_SIZEOF_HID_T = #const H5_SIZEOF_HID_T
 

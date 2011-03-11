@@ -10,8 +10,7 @@ import Bindings.HDF5.H5I
 
 import Foreign.Ptr.Conventions
 
-#newtype H5Z_filter_t
-    deriving Eq
+#newtype H5Z_filter_t, Eq
 
 #newtype_const H5Z_filter_t, H5Z_FILTER_ERROR
 #newtype_const H5Z_filter_t, H5Z_FILTER_NONE

@@ -14,8 +14,7 @@ import Bindings.HDF5.H5T
 import Foreign.Ptr.Conventions
 
 -- /* Types of link storage for groups */
-#newtype H5G_storage_type_t
-    deriving Eq
+#newtype H5G_storage_type_t, Eq
 #newtype_const H5G_storage_type_t, H5G_STORAGE_TYPE_UNKNOWN
 #newtype_const H5G_storage_type_t, H5G_STORAGE_TYPE_SYMBOL_TABLE
 #newtype_const H5G_storage_type_t, H5G_STORAGE_TYPE_COMPACT
@@ -84,8 +83,7 @@ type H5G_link_t = H5L_type_t
 --  * application is running.  An object may satisfy the `isa' function for more
 --  * than one type.
 --  */
-#newtype H5G_obj_t
-    deriving Eq
+#newtype H5G_obj_t, Eq
 #newtype_const H5G_obj_t, H5G_UNKNOWN
 #newtype_const H5G_obj_t, H5G_GROUP
 #newtype_const H5G_obj_t, H5G_DATASET

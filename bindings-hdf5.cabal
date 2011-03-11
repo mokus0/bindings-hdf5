@@ -16,7 +16,7 @@ description:            Bindings to HDF5
 
 Library
   hs-source-dirs:       src
-  extensions:           ForeignFunctionInterface
+  extensions:           ForeignFunctionInterface, GeneralizedNewtypeDeriving
   
   exposed-modules:      Bindings.HDF5
                         Bindings.HDF5.H5

@@ -36,8 +36,7 @@ import Foreign.Ptr.Conventions
 #num H5O_SHMESG_MAX_NINDEXES
 #num H5O_SHMESG_MAX_LIST_SIZE
 
-#newtype H5O_type_t
-    deriving Eq
+#newtype H5O_type_t, Eq
 #newtype_const H5O_type_t, H5O_TYPE_UNKNOWN
 #newtype_const H5O_type_t, H5O_TYPE_GROUP	       
 #newtype_const H5O_type_t, H5O_TYPE_DATASET
@@ -72,8 +71,7 @@ import Foreign.Ptr.Conventions
 #field meta_size.attr,  <H5_ih_info_t>
 #stoptype
 
-#newtype H5O_msg_crt_idx_t
-    deriving Eq
+#newtype H5O_msg_crt_idx_t, Eq
 
 type H5O_iterate_t a = FunPtr (HId_t -> CString -> In H5O_info_t -> Ptr a -> IO HErr_t)
 

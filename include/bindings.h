@@ -27,36 +27,27 @@
 #define bc_famaccess(type,field)    bc_glue(mangle_famaccess(type),   field);
 
 
-#define hsc_newtype(t)                                          \
+#define hsc_newtype(t,derive...)                                \
     {                                                           \
-        printf("instance Storable ");                           \
-        hsc_mangle_tycon(# t);                                  \
-        printf(" where\n");                                     \
-        printf("\tsizeOf _ = %lu\n", sizeof(t));                \
-        printf("\talignment = sizeOf\n");                       \
-        printf("\tpeek p = fmap %s (peek (plusPtr p 0))",       \
-            mangle_datacon(# t)); printf("\n");                 \
-        printf("\tpoke p (%s x) = poke (plusPtr p 0) x",        \
-            mangle_datacon(# t)); printf("\n");                 \
-                                                                \
-        printf("instance Show ");                               \
-        hsc_mangle_tycon(# t);                                  \
-        printf(" where\n");                                     \
-        printf("\tshowsPrec p (%s x) = showParen (p>10)\n",     \
-            mangle_datacon(# t));                               \
-        printf("\t\t(showString \"%s \" . showsPrec 11 x)\n",   \
-            mangle_datacon(# t));                               \
-                                                                \
         printf("newtype ");                                     \
         hsc_mangle_tycon(# t);                                  \
         printf(" = ");                                          \
         hsc_mangle_datacon(# t);                                \
         printf(" ");                                            \
         hsc_type(t);                                            \
+        { char *derives = # derive;                             \
+            printf(" deriving (Storable, Show%s%s)\n",                    \
+                strlen(derives) > 0 ? ", " : "",                \
+                derives);                                       \
+        }                                                       \
     }
 
 #define hsc_newtype_const(t,c)      \
     {                               \
+        hsc_mangle_ident(# c);      \
+        printf(" :: ");             \
+        hsc_mangle_tycon(# t);      \
+        printf("\n");               \
         hsc_mangle_ident(# c);      \
         printf(" = ");              \
         hsc_mangle_datacon(# t);    \
@@ -67,6 +58,8 @@
 
 #define hsc_str(name)               \
     {                               \
+        hsc_mangle_ident(# name);   \
+        printf(" :: String\n");     \
         hsc_mangle_ident(# name);   \
         printf(" = ");              \
         hsc_const_str(name);        \

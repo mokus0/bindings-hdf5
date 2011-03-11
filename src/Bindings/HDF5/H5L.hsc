@@ -17,8 +17,7 @@ h5l_MAX_LINK_NAME_LEN = #const H5L_MAX_LINK_NAME_LEN
 
 #num H5L_LINK_CLASS_T_VERS
 
-#newtype H5L_type_t
-    deriving Eq
+#newtype H5L_type_t, Eq
 #newtype_const H5L_type_t, H5L_TYPE_ERROR
 #newtype_const H5L_type_t, H5L_TYPE_HARD
 #newtype_const H5L_type_t, H5L_TYPE_SOFT
