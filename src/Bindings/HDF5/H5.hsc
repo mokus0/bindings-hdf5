@@ -34,8 +34,8 @@ vers = Version
 #str H5_VERS_INFO
 
 -- |Check that the HDF5 library that is linked with the current executable is
--- the same version that these bindings were compiled against.  Should return
--- 'HErr_t 0'.
+-- the same version that these bindings were compiled against.  Returns 0 on
+-- success, calls abort() on failure.
 #cinline H5check, <herr_t>
 
 -- * Types and constants
@@ -50,7 +50,7 @@ vers = Version
 -- if((dset = H5Dopen2(file, name)) < 0)
 --    fprintf(stderr, "unable to open the requested dataset\n");
 -- @
-#newtype herr_t
+#newtype herr_t, Eq, Ord, Num, Real, Enum, Integral
 
 -- |Boolean type.  Successful return values are zero (false) or positive
 -- (true). The typical true value is 1 but don't bet on it.  Boolean
@@ -164,10 +164,106 @@ h5_SIZEOF_HADDR_T = #const H5_SIZEOF_HADDR_T
 
 -- *Functions in H5.c
 
+-- |Initialize the library.  This is normally called automatically, but if you
+-- find that an HDF5 library function is failing inexplicably, then try 
+-- calling this function first.
+--
+-- Return: Non-negative on success/Negative on failure
+-- 
+-- > herr_t H5open(void);
 #ccall H5open                   , IO <herr_t>
+
+-- |Terminate the library and release all resources.
+--
+-- Return: Non-negative on success/Negative on failure
+-- 
+-- > herr_t H5close(void);
 #ccall H5close                  , IO <herr_t>
+
+-- |Indicates that the library is not to clean up after itself
+-- when the application exits by calling exit() or returning
+-- from main().  This function must be called before any other
+-- HDF5 function or constant is used or it will have no effect.
+-- 
+-- If this function is used then certain memory buffers will not
+-- be de-allocated nor will open files be flushed automatically.
+-- The application may still call H5close() explicitly to
+-- accomplish these things.
+--
+-- Return:  non-negative on success, 
+--          negative if this function is called more than
+--          once or if it is called too late.
+-- 
+-- > herr_t H5dont_atexit(void);
 #ccall H5dont_atexit            , IO <herr_t>
+
+-- |Walks through all the garbage collection routines for the
+-- library, which are supposed to free any unused memory they have
+-- allocated.
+--
+-- These should probably be registered dynamicly in a linked list of
+-- functions to call, but there aren't that many right now, so we
+-- hard-wire them...
+-- 
+-- Return: non-negative on success, negative on failure
+--
+-- > herr_t H5garbage_collect(void);
 #ccall H5garbage_collect        , IO <herr_t>
+
+-- |Sets limits on the different kinds of free lists.  Setting a value
+-- of -1 for a limit means no limit of that type.  These limits are global
+-- for the entire library.  Each \"global\" limit only applies to free lists
+-- of that type, so if an application sets a limit of 1 MB on each of the
+-- global lists, up to 3 MB of total storage might be allocated (1MB on
+-- each of regular, array and block type lists).
+-- 
+-- The settings for block free lists are duplicated to factory free lists.
+-- Factory free list limits cannot be set independently currently.
+--
+-- Parameters:
+-- 
+-- [@ reg_global_lim :: CInt @]  The limit on all \"regular\" free list memory used
+-- 
+-- [@ reg_list_lim   :: CInt @]  The limit on memory used in each \"regular\" free list
+-- 
+-- [@ arr_global_lim :: CInt @]  The limit on all \"array\" free list memory used
+-- 
+-- [@ arr_list_lim   :: CInt @]  The limit on memory used in each \"array\" free list
+-- 
+-- [@ blk_global_lim :: CInt @]  The limit on all \"block\" free list memory used
+-- 
+-- [@ blk_list_lim   :: CInt @]  The limit on memory used in each \"block\" free list
+--
+-- Return: non-negative on success, negative on failure
+--
+-- > herr_t H5set_free_list_limits (int reg_global_lim, int reg_list_lim,
+-- >         int arr_global_lim, int arr_list_lim, int blk_global_lim,
+-- >         int blk_list_lim);
 #ccall H5set_free_list_limits   , CInt -> CInt -> CInt -> CInt -> CInt -> CInt -> IO <herr_t>
+
+-- |Returns the library version numbers through arguments. MAJNUM
+-- will be the major revision number of the library, MINNUM the
+-- minor revision number, and RELNUM the release revision number.
+--
+-- Note: When printing an HDF5 version number it should be printed as
+--
+-- > printf("%u.%u.%u", maj, min, rel)		or
+-- > printf("version %u.%u release %u", maj, min, rel)
+--
+-- Return:	Non-negative on success/Negative on failure
+--
+-- > herr_t H5get_libversion(unsigned *majnum, unsigned *minnum,
+-- >         unsigned *relnum);
 #ccall H5get_libversion         , Out CUInt -> Out CUInt -> Out CUInt -> IO <herr_t>
+
+-- |Purpose:	Verifies that the arguments match the version numbers
+-- compiled into the library.  This function is intended to be
+-- called from user to verify that the versions of header files
+-- compiled into the application match the version of the hdf5
+-- library.
+--
+-- Return: Success: 0, Failure: calls abort()
+-- 
+-- > herr_t H5check_version(unsigned majnum, unsigned minnum,
+-- >         unsigned relnum);
 #ccall H5check_version          , CUInt -> CUInt -> CUInt -> IO <herr_t>
