@@ -34,6 +34,7 @@ import Foreign.Ptr.Conventions
 -- > void H5FD_multi_term(void);
 #ccall H5FD_multi_term, IO ()
 
+-- TODO: find out whether input arrays need to be static... Probably not, since H5Pget_fapl_multi copies them out.
 -- |Sets the file access property list 'fapl_id' to use the multi
 -- driver. The 'memb_map' array maps memory usage types to other
 -- memory usage types and is the mechanism which allows the
