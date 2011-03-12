@@ -10,23 +10,43 @@ import Bindings.HDF5.H5I
 import Foreign.LibFFI
 import Foreign.Ptr.Conventions
 
-#num H5E_DEFAULT
+-- |Value for the default error stack
+#newtype_const hid_t, H5E_DEFAULT
 
+-- |Different kinds of error information
 #newtype H5E_type_t
 #newtype_const H5E_type_t, H5E_MAJOR
 #newtype_const H5E_type_t, H5E_MINOR
 
+-- |Information about an error; element of error stack
 #starttype H5E_error2_t
+
+-- | class ID
 #field cls_id,       <hid_t>
+
+-- | major error ID
 #field maj_num,      <hid_t>
+
+-- | minor error number
 #field min_num,      <hid_t>
+
+-- | line in file where error occurs
 #field line,         CUInt
+
+-- | function in which error occurred
 #field func_name,    CString
+
+-- | file in which error occurred
 #field file_name,    CString
+
+-- | optional supplied description
 #field desc,         CString
 #stoptype
 
+-- |HDF5 error class
 #cinline H5E_ERR_CLS,           <hid_t>
+
+-- * Major error codes
 
 #cinline H5E_DATASET,           <hid_t>
 #cinline H5E_FUNC,              <hid_t>
@@ -59,6 +79,10 @@ import Foreign.Ptr.Conventions
 #cinline H5E_FSPACE,            <hid_t>
 #cinline H5E_CACHE,             <hid_t>
 
+-- * Minor error codes
+
+-- ** Generic low-level file I/O errors
+
 #cinline H5E_SEEKERROR,         <hid_t>
 #cinline H5E_READERROR,         <hid_t>
 #cinline H5E_WRITEERROR,        <hid_t>
@@ -66,6 +90,7 @@ import Foreign.Ptr.Conventions
 #cinline H5E_OVERFLOW,          <hid_t>
 #cinline H5E_FCNTL,             <hid_t>
 
+-- ** Resource errors
 #cinline H5E_NOSPACE,           <hid_t>
 #cinline H5E_CANTALLOC,         <hid_t>
 #cinline H5E_CANTCOPY,          <hid_t>
@@ -77,6 +102,7 @@ import Foreign.Ptr.Conventions
 #cinline H5E_CANTGETSIZE,       <hid_t>
 #cinline H5E_OBJOPEN,           <hid_t>
 
+-- ** Heap errors
 #cinline H5E_CANTRESTORE,       <hid_t>
 #cinline H5E_CANTCOMPUTE,       <hid_t>
 #cinline H5E_CANTEXTEND,        <hid_t>
@@ -84,18 +110,22 @@ import Foreign.Ptr.Conventions
 #cinline H5E_CANTUPDATE,        <hid_t>
 #cinline H5E_CANTOPERATE,       <hid_t>
 
+-- ** Function entry/exit interface errors
 #cinline H5E_CANTINIT,          <hid_t>
 #cinline H5E_ALREADYINIT,       <hid_t>
 #cinline H5E_CANTRELEASE,       <hid_t>
 
+-- ** Property list errors
 #cinline H5E_CANTGET,           <hid_t>
 #cinline H5E_CANTSET,           <hid_t>
 #cinline H5E_DUPCLASS,          <hid_t>
 
+-- ** Free space errors
 #cinline H5E_CANTMERGE,         <hid_t>
 #cinline H5E_CANTREVIVE,        <hid_t>
 #cinline H5E_CANTSHRINK,        <hid_t>
 
+-- ** Object header related errors
 #cinline H5E_LINKCOUNT,         <hid_t>
 #cinline H5E_VERSION,           <hid_t>
 #cinline H5E_ALIGNMENT,         <hid_t>
@@ -106,8 +136,10 @@ import Foreign.Ptr.Conventions
 #cinline H5E_CANTRESET,         <hid_t>
 #cinline H5E_CANTRENAME,        <hid_t>
 
+-- ** System level errors
 #cinline H5E_SYSERRSTR,         <hid_t>
 
+-- ** I/O pipeline errors
 #cinline H5E_NOFILTER,          <hid_t>
 #cinline H5E_CALLBACK,          <hid_t>
 #cinline H5E_CANAPPLY,          <hid_t>
@@ -115,13 +147,16 @@ import Foreign.Ptr.Conventions
 #cinline H5E_NOENCODER,         <hid_t>
 #cinline H5E_CANTFILTER,        <hid_t>
 
+-- ** Group related errors
 #cinline H5E_CANTOPENOBJ,       <hid_t>
 #cinline H5E_CANTCLOSEOBJ,      <hid_t>
 #cinline H5E_COMPLEN,           <hid_t>
 #cinline H5E_PATH,              <hid_t>
 
+-- ** No error
 #cinline H5E_NONE_MINOR,        <hid_t>
 
+-- ** File accessability errors
 #cinline H5E_FILEEXISTS,        <hid_t>
 #cinline H5E_FILEOPEN,          <hid_t>
 #cinline H5E_CANTCREATE,        <hid_t>
@@ -132,6 +167,7 @@ import Foreign.Ptr.Conventions
 #cinline H5E_TRUNCATED,         <hid_t>
 #cinline H5E_MOUNT,             <hid_t>
 
+-- ** Object atom related errors
 #cinline H5E_BADATOM,           <hid_t>
 #cinline H5E_BADGROUP,          <hid_t>
 #cinline H5E_CANTREGISTER,      <hid_t>
@@ -139,6 +175,7 @@ import Foreign.Ptr.Conventions
 #cinline H5E_CANTDEC,           <hid_t>
 #cinline H5E_NOIDS,             <hid_t>
 
+-- ** Cache related errors
 #cinline H5E_CANTFLUSH,         <hid_t>
 #cinline H5E_CANTSERIALIZE,     <hid_t>
 #cinline H5E_CANTLOAD,          <hid_t>
@@ -155,16 +192,19 @@ import Foreign.Ptr.Conventions
 #cinline H5E_CANTEXPUNGE,       <hid_t>
 #cinline H5E_CANTRESIZE,        <hid_t>
 
+-- ** Link related errors
 #cinline H5E_TRAVERSE,          <hid_t>
 #cinline H5E_NLINKS,            <hid_t>
 #cinline H5E_NOTREGISTERED,     <hid_t>
 #cinline H5E_CANTMOVE,          <hid_t>
 #cinline H5E_CANTSORT,          <hid_t>
 
+-- ** Parallel MPI errors
 #cinline H5E_MPI,               <hid_t>
 #cinline H5E_MPIERRSTR,         <hid_t>
 #cinline H5E_CANTRECV,          <hid_t>
 
+-- ** Dataspace errors
 #cinline H5E_CANTCLIP,          <hid_t>
 #cinline H5E_CANTCOUNT,         <hid_t>
 #cinline H5E_CANTSELECT,        <hid_t>
@@ -172,12 +212,14 @@ import Foreign.Ptr.Conventions
 #cinline H5E_BADSELECT,         <hid_t>
 #cinline H5E_CANTCOMPARE,       <hid_t>
 
+-- ** Argument errors
 #cinline H5E_UNINITIALIZED,     <hid_t>
 #cinline H5E_UNSUPPORTED,       <hid_t>
 #cinline H5E_BADTYPE,           <hid_t>
 #cinline H5E_BADRANGE,          <hid_t>
 #cinline H5E_BADVALUE,          <hid_t>
 
+-- ** B-tree related errors
 #cinline H5E_NOTFOUND,          <hid_t>
 #cinline H5E_EXISTS,            <hid_t>
 #cinline H5E_CANTENCODE,        <hid_t>
@@ -190,6 +232,7 @@ import Foreign.Ptr.Conventions
 #cinline H5E_CANTMODIFY,        <hid_t>
 #cinline H5E_CANTREMOVE,        <hid_t>
 
+-- ** Datatype conversion errors
 #cinline H5E_CANTCONVERT,       <hid_t>
 #cinline H5E_BADSIZE,           <hid_t>
 
@@ -197,6 +240,7 @@ import Foreign.Ptr.Conventions
 -- to the paired macros H5E_BEGIN_TRY and H5E_END_TRY, wrapping a simple action.
 #cinline h5e_try,               FunPtr (IO (Ptr a)) -> IO (Ptr a)
 
+-- TODO: wrap these up in an exported header file (something like "Bindings.HDF5.H5E.h") as macros for use in haskell code, or maybe as TH macros
 -- /*
 --  * Public API Convenience Macros for Error reporting - Documented
 --  */
@@ -220,54 +264,117 @@ import Foreign.Ptr.Conventions
 --     H5Epush2(H5E_DEFAULT, __FILE__, func, __LINE__, cls, maj, min, str);      \
 --     goto label;								      \
 -- }
--- 
--- /* Error stack traversal direction */
+
+-- |Error stack traversal direction
 #newtype H5E_direction_t
+
+-- |begin deep, end at API function
 #newtype_const H5E_direction_t, H5E_WALK_UPWARD
+
+-- |begin at API function, end deep
 #newtype_const H5E_direction_t, H5E_WALK_DOWNWARD
 
--- /* Error stack traversal callback function pointers */
--- typedef herr_t (*H5E_walk2_t)(unsigned n, const H5E_error2_t *err_desc,
---     void *client_data);
-type H5E_walk2_t a = FunPtr (CUInt -> Ptr H5E_error2_t -> Ptr a -> IO HErr_t)
+-- * Error stack traversal callback function types
 
--- typedef herr_t (*H5E_auto2_t)(hid_t estack, void *client_data);
-type H5E_auto2_t a = FunPtr (HId_t -> Ptr a -> IO HErr_t)
+-- |Callback type for 'h5e_walk2'
+-- 
+-- > typedef herr_t (*H5E_walk2_t)(unsigned n, const H5E_error2_t *err_desc,
+-- >     void *client_data);
+type H5E_walk2_t a = FunPtr (CUInt -> In H5E_error2_t -> InOut a -> IO HErr_t)
 
--- /* Public API functions */
--- hid_t  H5Eregister_class(const char *cls_name, const char *lib_name,
---     const char *version);
+-- |Callback type for 'h5e_set_auto2'
+-- 
+-- > typedef herr_t (*H5E_auto2_t)(hid_t estack, void *client_data);
+type H5E_auto2_t a = FunPtr (HId_t -> InOut a -> IO HErr_t)
+
+-- * Public API functions
+
+-- |Registers an error class.
+--
+-- Returns non-negative value as class ID on success / negative on failure
+-- 
+-- > hid_t  H5Eregister_class(const char *cls_name, const char *lib_name,
+-- >     const char *version);
 #ccall H5Eregister_class, CString -> CString -> CString -> IO <hid_t>
 
--- herr_t H5Eunregister_class(hid_t class_id);
+-- |Closes an error class.
+-- 
+-- Returns non-negative value on success / negative on failure
+-- 
+-- > herr_t H5Eunregister_class(hid_t class_id);
 #ccall H5Eunregister_class, <hid_t> -> IO <herr_t>
 
--- herr_t H5Eclose_msg(hid_t err_id);
+-- |Closes a major or minor error.
+-- 
+-- Returns non-negative value on success / negative on failure
+-- 
+-- > herr_t H5Eclose_msg(hid_t err_id);
 #ccall H5Eclose_msg, <hid_t> -> IO <herr_t>
 
--- hid_t  H5Ecreate_msg(hid_t cls, H5E_type_t msg_type, const char *msg);
+-- |Creates a major or minor error, returns an ID.
+-- 
+-- Returns non-negative value on success / negative on failure
+-- 
+-- > hid_t  H5Ecreate_msg(hid_t cls, H5E_type_t msg_type, const char *msg);
 #ccall H5Ecreate_msg, <hid_t> -> H5E_type_t -> CString -> IO <hid_t>
 
--- hid_t  H5Ecreate_stack(void);
+-- |Creates a new, empty, error stack.
+-- 
+-- Returns non-negative value as stack ID on success / negative on failure
+-- 
+-- > hid_t  H5Ecreate_stack(void);
 #ccall H5Ecreate_stack, IO <hid_t>
 
--- hid_t  H5Eget_current_stack(void);
+-- |Registers current error stack, returns object handle for it, clears it.
+--
+-- Returns non-negative value as stack ID on success / negative on failure
+--
+-- > hid_t  H5Eget_current_stack(void);
 #ccall H5Eget_current_stack, IO <hid_t>
 
--- herr_t H5Eclose_stack(hid_t stack_id);
+-- |Closes an error stack.
+-- 
+-- Returns non-negative value on success / negative on failure
+-- 
+-- > herr_t H5Eclose_stack(hid_t stack_id);
 #ccall H5Eclose_stack, <hid_t> -> IO <herr_t>
 
--- ssize_t H5Eget_class_name(hid_t class_id, char *name, size_t size);
+-- |Retrieves error class name.
+--
+-- Returns non-negative for name length if succeeds(zero means no name);
+-- otherwise returns negative value.
+--
+-- On successful return, 'name' will always be zero-terminated.  
+-- 
+-- NB: The return value is the length of the name, not the length copied
+-- to the buffer.
+-- 
+-- > ssize_t H5Eget_class_name(hid_t class_id, char *name, size_t size);
 #ccall H5Eget_class_name, <hid_t> -> OutArray CChar -> <size_t> -> IO <ssize_t>
 
--- herr_t H5Eset_current_stack(hid_t err_stack_id);
+-- |Replaces current stack with specified stack.  This closes the
+-- stack ID also.
+-- 
+-- Returns non-negative value on success / negative on failure
+-- 
+-- > herr_t H5Eset_current_stack(hid_t err_stack_id);
 #ccall H5Eset_current_stack, <hid_t> -> IO <herr_t>
 
 -- libffi to the rescue!  I have no idea how I'd wrap this without it, and there
 -- doesn't appear to be a non-deprecated non-private non-varargs equivalent.
 -- 
--- |herr_t H5Epush2(hid_t err_stack, const char *file, const char *func, unsigned line,
---     hid_t cls_id, hid_t maj_id, hid_t min_id, const char *msg, ...);
+-- |Pushes a new error record onto error stack for the current
+-- thread.  The error has major and minor IDs 'maj_id' and
+-- 'min_id', the name of a function where the error was detected,
+-- the name of the file where the error was detected, the
+-- line within that file, and an error description string.  The
+-- function name, file name, and error description strings must
+-- be statically allocated.
+-- 
+-- Returns non-negative on success/Negative on failure.
+-- 
+-- > herr_t H5Epush2(hid_t err_stack, const char *file, const char *func, unsigned line,
+-- >     hid_t cls_id, hid_t maj_id, hid_t min_id, const char *msg, ...);
 --
 -- (msg is a printf format string, the varargs are the format parameters)
 h5epush2 :: HId_t -> CString -> CString -> CUInt -> HId_t -> HId_t -> HId_t -> CString -> [Arg] -> IO HErr_t
@@ -288,89 +395,223 @@ foreign import ccall "H5Epush2"
 foreign import ccall "&H5Epush2"
     p_h5epush2 :: FunPtr (HId_t -> CString -> CString -> CUInt -> HId_t -> HId_t -> HId_t -> CString -> IO HErr_t)
 
--- herr_t H5Epop(hid_t err_stack, size_t count);
+-- |Deletes some error messages from the top of error stack.
+-- 
+-- Returns non-negative value on success / negative on failure
+-- 
+-- > herr_t H5Epop(hid_t err_stack, size_t count);
 #ccall H5Epop, <hid_t> -> <size_t> -> IO <herr_t>
 
--- herr_t H5Eprint2(hid_t err_stack, FILE *stream);
-#ccall H5Eprint2, <hid_t> -> Ptr CFile -> IO <herr_t>
+-- |Prints the error stack in some default way.  This is just a
+-- convenience function for 'h5e_walk' with a function that
+-- prints error messages.  Users are encouraged to write their
+-- own more specific error handlers.
+-- 
+-- Returns non-negative on success / negative on failure
+-- 
+-- > herr_t H5Eprint2(hid_t err_stack, FILE *stream);
+#ccall H5Eprint2, <hid_t> -> InOut CFile -> IO <herr_t>
 
--- herr_t H5Ewalk2(hid_t err_stack, H5E_direction_t direction, H5E_walk2_t func,
---     void *client_data);
-#ccall H5Ewalk2, <hid_t> -> <H5E_direction_t> -> H5E_walk2_t a -> Ptr a -> IO <herr_t>
+-- |Walks the error stack for the current thread and calls some
+-- function for each error along the way.
+-- 
+-- Returns non-negative on success / negative on failure
+-- 
+-- > herr_t H5Ewalk2(hid_t err_stack, H5E_direction_t direction, H5E_walk2_t func,
+-- >     void *client_data);
+#ccall H5Ewalk2, <hid_t> -> <H5E_direction_t> -> H5E_walk2_t a -> InOut a -> IO <herr_t>
 
--- herr_t H5Eget_auto2(hid_t estack_id, H5E_auto2_t *func, void **client_data);
-#ccall H5Eget_auto2, <hid_t> -> Out (H5E_auto2_t a) -> Out (Ptr a) -> IO <herr_t>
+-- |Returns the current settings for the automatic error stack
+-- traversal function and its data for specific error stack.
+-- Either (or both) arguments may be null in which case the
+-- value is not returned.
+--
+-- Returns non-negative on success / negative on failure
+-- 
+-- > herr_t H5Eget_auto2(hid_t estack_id, H5E_auto2_t *func, void **client_data);
+-- 
+-- NB: the @a@ type here should be existentially quantified, not universally, but
+-- Haskell doesn't have a convenient way to say so in a foreign import.
+#ccall H5Eget_auto2, <hid_t> -> Out (H5E_auto2_t a) -> Out (InOut a) -> IO <herr_t>
 
--- herr_t H5Eset_auto2(hid_t estack_id, H5E_auto2_t func, void *client_data);
-#ccall H5Eset_auto2, <hid_t> -> H5E_auto2_t a -> Ptr a -> IO <herr_t>
+-- |Turns on or off automatic printing of errors for certain
+-- error stack.  When turned on (non-null 'func' pointer) any
+-- API function which returns an error indication will first
+-- call 'func' passing it 'client_data' as an argument.
+--
+-- The default values before this function is called are
+-- 'h5e_print2' with client data being the standard error stream,
+-- 'stderr'.
+--
+-- Automatic stack traversal is always in the 'h5e_WALK_DOWNWARD'
+-- direction.
+--
+-- > herr_t H5Eset_auto2(hid_t estack_id, H5E_auto2_t func, void *client_data);
+#ccall H5Eset_auto2, <hid_t> -> H5E_auto2_t a -> InOut a -> IO <herr_t>
 
--- herr_t H5Eclear2(hid_t err_stack);
+-- |Clears the error stack for the specified error stack.
+-- 
+-- Returns non-negative value on success / negative on failure
+-- 
+-- > herr_t H5Eclear2(hid_t err_stack);
 #ccall H5Eclear2, <hid_t> -> IO <herr_t>
 
--- herr_t H5Eauto_is_v2(hid_t err_stack, unsigned *is_stack);
+-- TODO: I think the type names mentioned here are wrong.  Sort them out.
+-- |Determines if the error auto reporting function for an
+-- error stack conforms to the 'H5E_auto_stack_t' typedef
+-- or the 'H5E_auto_t' typedef.  The 'is_stack' parameter is set
+-- to 1 for the first case and 0 for the latter case.
+-- 
+-- Returns non-negative on success / negative on failure
+-- 
+-- > herr_t H5Eauto_is_v2(hid_t err_stack, unsigned *is_stack);
 #ccall H5Eauto_is_v2, <hid_t> -> Out CUInt -> IO <herr_t>
 
--- ssize_t H5Eget_msg(hid_t msg_id, H5E_type_t *type, char *msg,
---     size_t size);
+-- |Retrieves an error message.
+--
+-- Returns non-negative for message length if succeeds(zero means no message);
+-- otherwise returns negative value.
+--
+-- > ssize_t H5Eget_msg(hid_t msg_id, H5E_type_t *type, char *msg,
+-- >     size_t size);
 #ccall H5Eget_msg, <hid_t> -> Out <H5E_type_t> -> OutArray CChar -> <size_t> -> IO <ssize_t>
 
--- ssize_t H5Eget_num(hid_t error_stack_id);
+-- |Retrieves the number of error message.
+-- 
+-- Returns non-negative value on success / negative on failure
+-- 
+-- > ssize_t H5Eget_num(hid_t error_stack_id);
 #ccall H5Eget_num, <hid_t> -> IO <ssize_t>
 
 #ifndef H5_NO_DEPRECATED_SYMBOLS
 
--- /* Typedefs */
--- 
--- /* Alias major & minor error types to hid_t's, for compatibility with new
---  *      error API in v1.8
---  */
--- typedef hid_t   H5E_major_t;
--- typedef hid_t   H5E_minor_t;
+-- * Deprecated symbols
+
 #newtype H5E_major_t, Eq
 #newtype H5E_minor_t, Eq
 
--- /* Information about an error element of error stack. */
+-- | Information about an error element of error stack
 #starttype H5E_error1_t
+
+-- |major error number
 #field maj_num,    <H5E_major_t>
+
+-- |minor error number
 #field min_num,    <H5E_minor_t>
+
+-- |function in which error occurred
 #field func_name,  CString
+
+-- |file in which error occurred
 #field file_name,  CString
+
+-- |line in file where error occurs
 #field line,       CUInt
+
+-- |optional supplied description
 #field desc,       CString
 #stoptype
 
--- /* Error stack traversal callback function pointers */
--- typedef herr_t (*H5E_walk1_t)(int n, H5E_error1_t *err_desc, void *client_data);
+
+-- | Callback type for 'h5e_walk1'
+-- 
+-- > typedef herr_t (*H5E_walk1_t)(int n, H5E_error1_t *err_desc, void *client_data);
 type H5E_walk1_t a = FunPtr (CInt -> In H5E_error1_t -> Ptr a -> IO HErr_t)
 
--- typedef herr_t (*H5E_auto1_t)(void *client_data);
-type H5E_auto1_t a = FunPtr (Ptr a -> IO HErr_t)
+-- | Callback type for 'h5e_set_auto1'
+-- 
+-- > typedef herr_t (*H5E_auto1_t)(void *client_data);
+type H5E_auto1_t a = FunPtr (InOut a -> IO HErr_t)
 
--- /* Function prototypes */
--- herr_t H5Eclear1(void);
+-- ** Function prototypes
+
+-- |This function is for backward compatbility.
+-- Clears the error stack for the specified error stack.
+-- 
+-- Returns non-negative on success / negative on failure
+-- 
+-- > herr_t H5Eclear1(void);
 #ccall H5Eclear1, IO <herr_t>
 
--- herr_t H5Eget_auto1(H5E_auto1_t *func, void **client_data);
-#ccall H5Eget_auto1, Out (H5E_auto1_t a) -> Out (Ptr a) -> IO <herr_t>
+-- |This function is for backward compatbility.
+-- Returns the current settings for the automatic error stack
+-- traversal function and its data for specific error stack.
+-- Either (or both) arguments may be null in which case the
+-- value is not returned.
+--
+-- Returns non-negative on success / negative on failure
+--
+-- > herr_t H5Eget_auto1(H5E_auto1_t *func, void **client_data);
+-- 
+-- NB: the @a@ type here should be existentially quantified, not universally, but
+-- Haskell doesn't have a convenient way to say so in a foreign import.
+#ccall H5Eget_auto1, Out (H5E_auto1_t a) -> Out (InOut a) -> IO <herr_t>
 
--- herr_t H5Epush1(const char *file, const char *func, unsigned line,
---     H5E_major_t maj, H5E_minor_t min, const char *str);
+-- |This function definition is for backward compatibility only.
+-- It doesn't have error stack and error class as parameters.
+-- The old definition of major and minor is casted as HID_T
+-- in H5Epublic.h
+--
+-- Returns non-negative on success / negative on failure
+-- 
+-- > herr_t H5Epush1(const char *file, const char *func, unsigned line,
+-- >     H5E_major_t maj, H5E_minor_t min, const char *str);
 #ccall H5Epush1, CString -> CString -> CUInt -> <H5E_major_t> -> <H5E_minor_t> -> CString -> IO <herr_t>
 
--- herr_t H5Eprint1(FILE *stream);
-#ccall H5Eprint1, Ptr CFile -> IO <herr_t>
+-- |This function is for backward compatbility.
+-- Prints the error stack in some default way.  This is just a
+-- convenience function for 'h5e_walk1' with a function that
+-- prints error messages.  Users are encouraged to write there
+-- own more specific error handlers.
+-- 
+-- Returns non-negative on success / negative on failure
+-- 
+-- > herr_t H5Eprint1(FILE *stream);
+-- 
+-- NB: The first parameter is declared as 'InOut' to match 'H5E_auto1_t', 
+-- but I'm quite sure it never modifies the passed value.
+#ccall H5Eprint1, InOut CFile -> IO <herr_t>
 
--- herr_t H5Eset_auto1(H5E_auto1_t func, void *client_data);
-#ccall H5Eset_auto1, H5E_auto1_t a -> Ptr a -> IO <herr_t>
+-- |This function is for backward compatbility.
+-- Turns on or off automatic printing of errors for certain
+-- error stack.  When turned on (non-null 'func' pointer) any
+-- API function which returns an error indication will first
+-- call 'func' passing it 'client_data' as an argument.
+-- 
+-- The default values before this function is called are
+-- 'h5e_print1' with client data being the standard error stream,
+-- 'stderr'.
+-- 
+-- Automatic stack traversal is always in the 'h5e_WALK_DOWNWARD'
+-- direction.
+-- 
+-- Returns non-negative on success / negative on failure
+--
+-- > herr_t H5Eset_auto1(H5E_auto1_t func, void *client_data);
+#ccall H5Eset_auto1, H5E_auto1_t a -> InOut a -> IO <herr_t>
 
--- herr_t H5Ewalk1(H5E_direction_t direction, H5E_walk1_t func,
---     void *client_data);
-#ccall H5Ewalk1, H5E_direction_t -> H5E_walk1_t a -> Ptr a -> IO <herr_t>
+-- |This function is for backward compatbility.
+-- Walks the error stack for the current thread and calls some
+-- function for each error along the way.
+-- 
+-- Returns non-negative on success / negative on failure
+-- 
+-- > herr_t H5Ewalk1(H5E_direction_t direction, H5E_walk1_t func,
+-- >     void *client_data);
+#ccall H5Ewalk1, H5E_direction_t -> H5E_walk1_t a -> InOut a -> IO <herr_t>
 
--- char *H5Eget_major(H5E_major_t maj);
+-- |Retrieves a major error message.
+--
+-- Returns message if succeeds, otherwise returns NULL.
+-- 
+-- > char *H5Eget_major(H5E_major_t maj);
 #ccall H5Eget_major, <H5E_major_t> -> IO CString
 
--- char *H5Eget_minor(H5E_minor_t min);
+-- |Retrieves a minor error message.
+-- 
+-- Returns message if succeeds, otherwise returns NULL.
+-- 
+-- > char *H5Eget_minor(H5E_minor_t min);
 #ccall H5Eget_minor, <H5E_minor_t> -> IO CString
 
 #endif /* H5_NO_DEPRECATED_SYMBOLS */
