@@ -95,14 +95,17 @@ h5_SIZEOF_HSIZE_T  = #const H5_SIZEOF_HSIZE_T
 h5_SIZEOF_HSSIZE_T = #const H5_SIZEOF_HSSIZE_T
 
 #newtype haddr_t, Eq, Ord
-#newtype_const haddr_t, HADDR_UNDEF
+
+hADDR_UNDEF :: HAddr_t
+hADDR_UNDEF = HAddr_t (#const HADDR_UNDEF)
 
 h5_SIZEOF_HADDR_T :: CSize
 h5_SIZEOF_HADDR_T = #const H5_SIZEOF_HADDR_T
 
 #str H5_PRINTF_HADDR_FMT
 
-#newtype_const haddr_t, HADDR_MAX
+hADDR_MAX :: HAddr_t
+hADDR_MAX = HAddr_t (#const HADDR_MAX)
 
 -- |Default value for all property list classes
 #num H5P_DEFAULT
