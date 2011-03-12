@@ -107,9 +107,6 @@ h5_SIZEOF_HADDR_T = #const H5_SIZEOF_HADDR_T
 hADDR_MAX :: HAddr_t
 hADDR_MAX = HAddr_t (#const HADDR_MAX)
 
--- |Default value for all property list classes
-#num H5P_DEFAULT
-
 -- |Common iteration orders
 #newtype H5_iter_order_t
 

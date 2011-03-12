@@ -9,7 +9,7 @@ import Bindings.HDF5.H5I
 
 import Foreign.Ptr.Conventions
 
-#num H5S_ALL
+#newtype_const hid_t, H5S_ALL
 #num H5S_UNLIMITED
 
 #num H5S_MAX_RANK

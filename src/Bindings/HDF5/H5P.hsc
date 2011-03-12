@@ -51,6 +51,9 @@ import System.Posix.Types (COff)
 #cinline H5P_LINK_CREATE_DEFAULT,           <hid_t>
 #cinline H5P_LINK_ACCESS_DEFAULT,           <hid_t>
 
+-- |Default value for all property list classes
+#newtype_const hid_t, H5P_DEFAULT
+
 #num H5P_CRT_ORDER_TRACKED
 #num H5P_CRT_ORDER_INDEXED
 
