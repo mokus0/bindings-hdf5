@@ -22,10 +22,6 @@ newtype Out      a = Out      (Ptr a) deriving (Eq, Ord, Show)
 -- and freed by caller
 newtype OutArray a = OutArray (Ptr a) deriving (Eq, Ord, Show)
 
--- |Out by-ref zero-terminated array.  Memory is not allocated or freed
--- by caller.
-newtype Out0     a = Out0     (Ptr a) deriving (Eq, Ord, Show)
-
 -- |In-out parameter.  Memory is allocated and freed by caller.
 newtype InOut    a = InOut    (Ptr a) deriving (Eq, Ord, Show)
 
@@ -41,37 +37,55 @@ withOut f = liftIOOp alloca $ \p -> do
     a <- liftIO (peek p)
     return (b,a)
 
+withMaybeOut :: (Storable a, MonadPeelIO m) => (Out a -> m Bool) -> m (Maybe a)
+withMaybeOut f = liftIOOp alloca $ \p -> do
+    success <- f (Out p)
+    if success
+        then do
+            a <- liftIO (peek p)
+            return (Just a)
+        else return Nothing
+
 withOut_ :: (Storable a, MonadPeelIO m) => (Out a -> m b) -> m a
 withOut_ f = liftIOOp alloca $ \p -> do
     f (Out p)
     liftIO (peek p)
 
-withOutArray :: (Storable a, MonadPeelIO m) => Int -> (Out a -> m b) -> m (b,[a])
+withOutArray :: (Storable a, MonadIO m) => Int -> (OutArray a -> m b) -> m (b,[a])
 withOutArray n f = do
     p <- liftIO (mallocArray n)
-    b <- f (Out p)
+    b <- f (OutArray p)
     a <- liftIO (peekArray n p)
     liftIO (free p)
     return (b,a)
 
-withOutArray_ :: (Storable a, MonadPeelIO m) => Int -> (Out a -> m b) -> m [a]
+withOutArray' :: (Storable a, MonadIO m) => Int -> (OutArray a -> m Int) -> m (Int, [a])
+withOutArray' sz f = do
+    p <- liftIO (mallocArray sz)
+    n <- f (OutArray p)
+    a <- liftIO (peekArray n p)
+    liftIO (free p)
+    return (n, a)
+
+withOutArray_ :: (Storable a, MonadIO m) => Int -> (OutArray a -> m b) -> m [a]
 withOutArray_ n f = do
     p <- liftIO (mallocArray n)
-    f (Out p)
+    f (OutArray p)
     a <- liftIO (peekArray n p)
     liftIO (free p)
     return a
 
-withOut0 :: (Storable a, Eq a, MonadPeelIO m) => a -> (Out a -> m b) -> m (b,[a])
-withOut0 zero f = liftIOOp alloca $ \p -> do
-    b <- f (Out p)
+-- | @withOut0 zero n f@: allocate an array large enough to hold @n@ elements,
+-- plus one extra spot for a terminator.  Calls @f@ with that buffer, which is
+-- expected to fill it with up to @n@ elements, followed by @zero@.  The 
+-- elements are then read out into a list.
+withOut0 :: (Storable a, Eq a, MonadIO m) => a -> Int -> (OutArray a -> m b) -> m (b,[a])
+withOut0 zero n f = do
+    p <- liftIO (mallocArray0 n)
+    b <- f (OutArray p)
     a <- liftIO (peekArray0 zero p)
+    liftIO (free p)
     return (b,a)
-
-withOut0_ :: (Storable a, Eq a, MonadPeelIO m) => a -> (Out a -> m b) -> m [a]
-withOut0_ zero f = liftIOOp alloca $ \p -> do
-    f (Out p)
-    liftIO (peekArray0 zero p)
 
 withInOut :: (Storable a, MonadPeelIO m) => a -> (InOut a -> m b) -> m (b,a)
 withInOut a f = liftIOOp alloca $ \p -> do

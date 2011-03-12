@@ -353,7 +353,7 @@ h5t_MIPS_F64 = h5t_IEEE_F64BE
 
 -- herr_t H5Tenum_nameof(hid_t type, const void *value, char *name/*out*/,
 -- 			     size_t size);
-#ccall H5Tenum_nameof, <hid_t> -> CString -> Out0 CChar -> <size_t> -> IO <herr_t>
+#ccall H5Tenum_nameof, <hid_t> -> CString -> OutArray CChar -> <size_t> -> IO <herr_t>
 
 -- herr_t H5Tenum_valueof(hid_t type, const char *name,
 -- 			      void *value/*out*/);

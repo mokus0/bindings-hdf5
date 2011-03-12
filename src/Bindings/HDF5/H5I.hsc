@@ -54,7 +54,7 @@ type H5I_search_func_t a = FunPtr (In a -> HId_t -> In a -> IO CInt)
 #ccall H5Iget_file_id , <hid_t> -> IO <hid_t>
 
 -- ssize_t H5Iget_name(hid_t id, char *name/*out*/, size_t size);
-#ccall H5Iget_name, <hid_t> -> Out0 CChar -> <size_t> -> IO <ssize_t>
+#ccall H5Iget_name, <hid_t> -> OutArray CChar -> <size_t> -> IO <ssize_t>
 
 -- int H5Iinc_ref(hid_t id);
 -- int H5Idec_ref(hid_t id);
