@@ -14,6 +14,8 @@ import Bindings.HDF5.H5I
 
 import Foreign.Ptr.Conventions
 
+-- TODO: Haddock docs.  This is a low priority right now because I don't even have an MPI library installed anywhere.
+
 #num H5D_ONE_LINK_CHUNK_IO_THRESHOLD
 #num H5D_MULTI_CHUNK_IO_COL_THRESHOLD
 
