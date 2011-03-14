@@ -205,13 +205,13 @@ type H5D_operator_t a b = FunPtr (InOut a -> HId_t -> CUInt -> In HSize_t -> InO
 --
 -- The chunk cache parameters in the returned property lists will be
 -- those used by the dataset.  If the properties in the file access
--- property list were used to determine the dataset’s chunk cache
+-- property list were used to determine the dataset's chunk cache
 -- configuration, then those properties will be present in the
 -- returned dataset access property list.  If the dataset does not
 -- use a chunked layout, then the chunk cache properties will be set
 -- to the default.  The chunk cache properties in the returned list
 -- are considered to be \"set\", and any use of this list will override
--- the corresponding properties in the file’s file access property
+-- the corresponding properties in the file's file access property
 -- list.
 --
 -- All link access properties in the returned list will be set to the
