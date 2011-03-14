@@ -254,8 +254,10 @@ type H5I_search_func_t a = FunPtr (In a -> HId_t -> In a -> IO CInt)
 -- > htri_t H5Itype_exists(H5I_type_t type);
 #ccall H5Itype_exists, <H5I_type_t> -> IO <htri_t>
 
+#if H5_VERSION_ATLEAST(1,8,3)
 -- |Check if the given id is valid.  An id is valid if it is in
 -- use and has an application reference count of at least 1.
 --
 -- > htri_t H5Iis_valid(hid_t id);
 #ccall H5Iis_valid, <hid_t> -> IO <htri_t>
+#endif

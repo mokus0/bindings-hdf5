@@ -30,7 +30,11 @@ import Bindings.HDF5.H5I
 #newtype_const H5T_order_t, H5T_ORDER_LE
 #newtype_const H5T_order_t, H5T_ORDER_BE
 #newtype_const H5T_order_t, H5T_ORDER_VAX
+
+#if H5_VERSION_ATLEAST(1,8,6)
 #newtype_const H5T_order_t, H5T_ORDER_MIXED
+#endif
+
 #newtype_const H5T_order_t, H5T_ORDER_NONE
 
 #newtype H5T_sign_t, Eq

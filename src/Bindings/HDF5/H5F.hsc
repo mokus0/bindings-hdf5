@@ -39,9 +39,13 @@ import Foreign.Ptr.Conventions
 -- |create non-existing files
 #num H5F_ACC_CREAT
 
+#if H5_VERSION_ATLEAST(1,8,3)
+
 -- |Value passed to 'h5p_set_elink_acc_flags' to cause flags to be taken from the
 -- parent file.
 #num H5F_ACC_DEFAULT
+
+#endif
 
 -- ** Flags for 'h5f_get_obj_count' and 'h5f_get_obj_ids' calls
 
@@ -118,6 +122,8 @@ import Foreign.Ptr.Conventions
 #field sohm.msgs_info,  <H5_ih_info_t>
 #stoptype
 
+#if H5_VERSION_ATLEAST(1,8,4)
+
 -- |Types of allocation requests. The values larger than 'h5fd_MEM_DEFAULT'
 -- should not change other than adding new types to the end. These numbers
 -- might appear in files.
@@ -132,6 +138,8 @@ import Foreign.Ptr.Conventions
 #newtype_const H5F_mem_t, H5FD_MEM_OHDR
 #num H5FD_MEM_NTYPES
 
+#endif
+
 -- |Library's file format versions
 #newtype H5F_libver_t
 
@@ -141,8 +149,12 @@ import Foreign.Ptr.Conventions
 -- |Use the latest possible format available for storing objects
 #newtype_const H5F_libver_t, H5F_LIBVER_LATEST
 
+#if H5_VERSION_ATLEAST(1,8,6)
+    
 -- |Use version 1.8 format for storing objects
 #newtype_const H5F_libver_t, H5F_LIBVER_18
+
+#endif
 
 -- * Public functions
 

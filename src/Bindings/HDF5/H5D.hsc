@@ -9,9 +9,13 @@ import Bindings.HDF5.H5I
 
 import Foreign.Ptr.Conventions
 
+#if H5_VERSION_ATLEAST(1,8,3)
+
 #num H5D_CHUNK_CACHE_NSLOTS_DEFAULT
 #num H5D_CHUNK_CACHE_NBYTES_DEFAULT
 #num H5D_CHUNK_CACHE_W0_DEFAULT
+
+#endif
 
 -- |Values for the H5D_LAYOUT property
 #newtype H5D_layout_t
@@ -29,11 +33,15 @@ import Foreign.Ptr.Conventions
 
 #num H5D_NLAYOUTS
 
+#if H5_VERSION_ATLEAST(1,8,3)
+
 -- |Types of chunk index data structures
 #newtype H5D_chunk_index_t
 
 -- |v1 B-tree index
 #newtype_const H5D_chunk_index_t, H5D_CHUNK_BTREE
+
+#endif
 
 -- |Values for the space allocation time property
 #newtype H5D_alloc_time_t
@@ -200,6 +208,7 @@ type H5D_operator_t a b = FunPtr (InOut a -> HId_t -> CUInt -> In HSize_t -> InO
 -- > hid_t H5Dget_create_plist(hid_t dset_id);
 #ccall H5Dget_create_plist, <hid_t> -> IO <hid_t>
 
+#if H5_VERSION_ATLEAST(1,8,3)
 -- |Returns a copy of the dataset creation property list of the specified
 -- dataset.
 --
@@ -223,6 +232,7 @@ type H5D_operator_t a b = FunPtr (InOut a -> HId_t -> CUInt -> In HSize_t -> InO
 --
 -- > hid_t H5Dget_access_plist(hid_t dset_id);
 #ccall H5Dget_access_plist, <hid_t> -> IO <hid_t>
+#endif
 
 -- |Returns the amount of storage that is required for the
 -- dataset. For chunked datasets this is the number of allocated

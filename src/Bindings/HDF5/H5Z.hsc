@@ -96,7 +96,11 @@ type H5Z_filter_func_t a b = FunPtr (H5Z_filter_t -> Ptr a -> CSize -> Ptr b -> 
 -- 			     size_t *buf_size, void **buf);
 type H5Z_func_t a = FunPtr (CUInt -> CSize -> InArray CUInt -> CSize -> Ptr CSize -> Ptr (Ptr a) -> IO CSize)
 
+#if H5_VERSION_ATLEAST(1,8,3)
 #starttype H5Z_class2_t
+#else
+#starttype H5Z_class_t
+#endif
 #field version,         CInt
 #field id,              <H5Z_filter_t>
 #field encoder_present, CUInt
@@ -121,6 +125,7 @@ type H5Z_func_t a = FunPtr (CUInt -> CSize -> InArray CUInt -> CSize -> Ptr CSiz
 
 #ifndef H5_NO_DEPRECATED_SYMBOLS
 
+#if H5_VERSION_ATLEAST(1,8,3)
 #starttype H5Z_class1_t
 #field id,          <H5Z_filter_t>
 #field name,        CString
@@ -128,6 +133,7 @@ type H5Z_func_t a = FunPtr (CUInt -> CSize -> InArray CUInt -> CSize -> Ptr CSiz
 #field set_local,   <H5Z_set_local_func_t>
 #field filter,      H5Z_func_t ()
 #stoptype
+#endif
 
 #endif /* H5_NO_DEPRECATED_SYMBOLS */
 

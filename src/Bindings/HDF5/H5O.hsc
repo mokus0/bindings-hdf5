@@ -43,6 +43,8 @@ import Foreign.Ptr.Conventions
 #newtype_const H5O_type_t, H5O_TYPE_NAMED_DATATYPE
 #num H5O_TYPE_NTYPES
 
+#if H5_VERSION_ATLEAST(1,8,4)
+
 #starttype H5O_hdr_info_t
 #field version,         CUInt
 #field nmesgs,          CUInt
@@ -56,6 +58,8 @@ import Foreign.Ptr.Conventions
 #field mesg.shared,     Word64
 #stoptype
 
+#endif
+
 #starttype H5O_info_t
 #field fileno,          CULong
 #field addr,            <haddr_t>
@@ -66,7 +70,43 @@ import Foreign.Ptr.Conventions
 #field ctime,           <time_t>
 #field btime,           <time_t>
 #field num_attrs,       <hsize_t>
+
+#if H5_VERSION_ATLEAST(1,8,4)
 #field hdr,             <H5O_hdr_info_t>
+#else
+
+-- |Version number of header format in file
+#field hdr.version,      CUInt
+
+-- |Number of object header messages
+#field hdr.nmesgs,       CUInt
+
+-- |Number of object header chunks
+#field hdr.nchunks,      CUInt
+
+-- |Object header status flags
+#field hdr.flags,        CUInt
+
+-- |Total space for storing object header in file
+#field hdr.space.total,  <hsize_t>
+
+-- |Space within header for object header metadata information
+#field hdr.space.meta,   <hsize_t>
+
+-- |Space within header for actual message information
+#field hdr.space.mesg,   <hsize_t>
+
+-- |Free space within object header
+#field hdr.space.free,   <hsize_t>
+
+-- |Flags to indicate presence of message type in header
+#field hdr.mesg.present, Word64
+
+-- |Flags to indicate message type is shared in header
+#field hdr.mesg.shared,  Word64
+
+#endif
+
 #field meta_size.obj,   <H5_ih_info_t>
 #field meta_size.attr,  <H5_ih_info_t>
 #stoptype
@@ -88,8 +128,10 @@ type H5O_iterate_t a = FunPtr (HId_t -> CString -> In H5O_info_t -> Ptr a -> IO 
 --     H5_index_t idx_type, H5_iter_order_t order, hsize_t n, hid_t lapl_id);
 #ccall H5Oopen_by_idx, <hid_t> -> CString -> <H5_index_t> -> <H5_iter_order_t> -> <hsize_t> -> <hid_t> -> IO <hid_t>
 
+#if H5_VERSION_ATLEAST(1,8,5)
 -- htri_t H5Oexists_by_name(hid_t loc_id, const char *name, hid_t lapl_id);
 #ccall H5Oexists_by_name, <hid_t> -> CString -> <hid_t> -> IO <htri_t>
+#endif
 
 -- herr_t H5Oget_info(hid_t loc_id, H5O_info_t *oinfo);
 #ccall H5Oget_info, <hid_t> -> Out <H5O_info_t> -> IO <herr_t>

@@ -11,6 +11,15 @@
 #define FALSE 0
 #endif
 
+#define H5_VERSION_ATLEAST(a,b,c)                    \
+    ((H5_VERS_MAJOR > a) || (H5_VERS_MAJOR == a && ( \
+        H5_VERS_MINOR > b || H5_VERS_MINOR == b && ( \
+            H5_VERS_RELEASE >= c))))
+
+#define H5_VERSION_ATMOST(a,b,c)                     \
+    ((H5_VERS_MAJOR < a) || (H5_VERS_MAJOR == a && ( \
+        H5_VERS_MINOR < b || H5_VERS_MINOR == b && ( \
+            H5_VERS_RELEASE <= c))))
 
 #define signed(t)       ((t)(-1) < 0)
 #define floating(t)     ((t)(int)(t) 1.4 == (t) 1.4)

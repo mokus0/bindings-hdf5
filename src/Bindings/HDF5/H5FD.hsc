@@ -18,44 +18,93 @@ import Foreign.Ptr.Conventions
 -- |Default VFL driver value
 #newtype_const hid_t, H5FD_VFD_DEFAULT
 
+#if H5_VERSION_ATLEAST(1,8,4)
+
 -- |Types of allocation requests: see "Bindings.HDF5.H5F"
 type H5FD_mem_t = H5F_mem_t
+
+#else
+
+#newtype H5FD_mem_t, Eq
+
+#newtype_const H5FD_mem_t, H5FD_MEM_NOLIST
+#newtype_const H5FD_mem_t, H5FD_MEM_DEFAULT
+#newtype_const H5FD_mem_t, H5FD_MEM_SUPER
+#newtype_const H5FD_mem_t, H5FD_MEM_BTREE
+#newtype_const H5FD_mem_t, H5FD_MEM_DRAW
+#newtype_const H5FD_mem_t, H5FD_MEM_GHEAP
+#newtype_const H5FD_mem_t, H5FD_MEM_LHEAP
+#newtype_const H5FD_mem_t, H5FD_MEM_OHDR
+
+#endif
 
 -- |Map "fractal heap" header blocks to 'ohdr' type file memory, since its
 -- a fair amount of work to add a new kind of file memory and they are similar
 -- enough to object headers and probably too minor to deserve their own type.
+#if H5_VERSION_ATLEAST(1,8,4)
 #newtype_const H5F_mem_t, H5FD_MEM_FHEAP_HDR
+#else
+#newtype_const H5FD_mem_t, H5FD_MEM_FHEAP_HDR
+#endif
 
 -- |Map "fractal heap" indirect blocks to 'ohdr' type file memory, since they
 -- are similar to fractal heap header blocks.
+#if H5_VERSION_ATLEAST(1,8,4)
 #newtype_const H5F_mem_t, H5FD_MEM_FHEAP_IBLOCK
+#else
+#newtype_const H5FD_mem_t, H5FD_MEM_FHEAP_IBLOCK
+#endif
 
 -- |Map "fractal heap" direct blocks to 'lheap' type file memory, since they
 -- will be replacing local heaps.
+#if H5_VERSION_ATLEAST(1,8,4)
 #newtype_const H5F_mem_t, H5FD_MEM_FHEAP_DBLOCK
+#else
+#newtype_const H5FD_mem_t, H5FD_MEM_FHEAP_DBLOCK
+#endif
 
 -- |Map "fractal heap" 'huge' objects to 'draw' type file memory, since they
 -- represent large objects that are directly stored in the file.
+#if H5_VERSION_ATLEAST(1,8,4)
 #newtype_const H5F_mem_t, H5FD_MEM_FHEAP_HUGE_OBJ
+#else
+#newtype_const H5FD_mem_t, H5FD_MEM_FHEAP_HUGE_OBJ
+#endif
 
 -- |Map "free space" header blocks to 'ohdr' type file memory, since its
 -- a fair amount of work to add a new kind of file memory and they are similar
 -- enough to object headers and probably too minor to deserve their own type.
+#if H5_VERSION_ATLEAST(1,8,4)
 #newtype_const H5F_mem_t, H5FD_MEM_FSPACE_HDR
+#else
+#newtype_const H5FD_mem_t, H5FD_MEM_FSPACE_HDR
+#endif
 
 -- |Map "free space" serialized sections to 'lheap' type file memory, since they
 -- are similar enough to local heap info.
+#if H5_VERSION_ATLEAST(1,8,4)
 #newtype_const H5F_mem_t, H5FD_MEM_FSPACE_SINFO
+#else
+#newtype_const H5FD_mem_t, H5FD_MEM_FSPACE_SINFO
+#endif
 
 -- |Map "shared object header message" master table to 'ohdr' type file memory,
 -- since its a fair amount of work to add a new kind of file memory and they are
 -- similar enough to object headers and probably too minor to deserve their own
 -- type.
+#if H5_VERSION_ATLEAST(1,8,4)
 #newtype_const H5F_mem_t, H5FD_MEM_SOHM_TABLE
+#else
+#newtype_const H5FD_mem_t, H5FD_MEM_SOHM_TABLE
+#endif
 
 -- |Map "shared object header message" indices to 'btree' type file memory,
 -- since they are similar enough to B-tree nodes.
+#if H5_VERSION_ATLEAST(1,8,4)
 #newtype_const H5F_mem_t, H5FD_MEM_SOHM_INDEX
+#else
+#newtype_const H5FD_mem_t, H5FD_MEM_SOHM_INDEX
+#endif
 
 -- Array initializers: pass a buffer and the size of that buffer (in bytes)
 -- and it will be filled as prescribed by the corresponding array-literal macro.
@@ -113,6 +162,8 @@ type H5FD_mem_t = H5F_mem_t
 -- and then sub-allocate \"small\" raw data requests from that larger block.
 #num H5FD_FEAT_AGGREGATE_SMALLDATA
 
+#if H5_VERSION_ATLEAST(1,8,4)
+    
 -- |Defining the 'h5fd_FEAT_IGNORE_DRVRINFO' for a VFL driver means that
 -- the library will ignore the driver info that is encoded in the file
 -- for the VFL driver.  (This will cause the driver info to be eliminated
@@ -125,10 +176,16 @@ type H5FD_mem_t = H5F_mem_t
 -- is flushed/closed.
 #num H5FD_FEAT_DIRTY_SBLK_LOAD
 
+#endif
+
+#if H5_VERSION_ATLEAST(1,8,5)
+
 -- |Defining the h5fd_FEAT_POSIX_COMPAT_HANDLE for a VFL driver means that
 -- the handle for the VFD (returned with the 'get_handle' callback) is
 -- of type 'int' and is compatible with POSIX I/O calls.
 #num H5FD_FEAT_POSIX_COMPAT_HANDLE
+
+#endif
 
 -- |Class information for each file driver
 #starttype H5FD_class_t
@@ -149,7 +206,11 @@ type H5FD_mem_t = H5F_mem_t
 #field close,           FunPtr (In <H5FD_t> -> IO <herr_t>)
 #field cmp,             FunPtr (In <H5FD_t> -> In <H5FD_t> -> IO CInt)
 #field query,           FunPtr (In <H5FD_t> -> Ptr CULong -> IO <herr_t>)
+
+#if H5_VERSION_ATLEAST(1,8,2)
 #field get_type_map,    FunPtr (In <H5FD_t> -> Out <H5FD_mem_t> -> IO <herr_t>)
+#endif
+
 #field alloc,           FunPtr (In <H5FD_t> -> <H5FD_mem_t> -> <hid_t> -> <hsize_t> -> IO <haddr_t>)
 #field free,            FunPtr (In <H5FD_t> -> <H5FD_mem_t> -> <hid_t> -> <haddr_t> -> <hsize_t> -> IO <herr_t>)
 #field get_eoa,         FunPtr (In <H5FD_t> -> <H5FD_mem_t> -> IO <haddr_t>)
@@ -159,7 +220,11 @@ type H5FD_mem_t = H5F_mem_t
 #field read,            FunPtr (In <H5FD_t> -> <H5FD_mem_t> -> <hid_t> -> <haddr_t> -> <size_t> -> OutArray () -> IO <herr_t>)
 #field write,           FunPtr (In <H5FD_t> -> <H5FD_mem_t> -> <hid_t> -> <haddr_t> -> <size_t> -> InArray  () -> IO <herr_t>)
 #field flush,           FunPtr (In <H5FD_t> -> <hid_t> -> CUInt -> IO <herr_t>)
+
+#if H5_VERSION_ATLEAST(1,8,2)
 #field truncate,        FunPtr (In <H5FD_t> -> <hid_t> -> <hbool_t> -> IO <herr_t>)
+#endif
+
 #field lock,            FunPtr (In <H5FD_t> -> Ptr CUChar -> CUInt -> <hbool_t> -> IO <herr_t>)
 #field unlock,          FunPtr (In <H5FD_t> -> Ptr CUChar -> <hbool_t> -> IO <herr_t>)
 #array_field fl_map,          <H5FD_mem_t>
@@ -193,8 +258,10 @@ type H5FD_mem_t = H5F_mem_t
 -- |For this file, overrides class
 #field maxaddr,         <haddr_t>
 
+#if H5_VERSION_ATLEAST(1,8,2)
 -- |Base address for HDF5 data w/in file
 #field base_addr,       <haddr_t>
+#endif
 
 -- Space allocation management fields
 
@@ -444,9 +511,11 @@ type H5FD_mem_t = H5F_mem_t
 -- > herr_t H5FDflush(H5FD_t *file, hid_t dxpl_id, unsigned closing);
 #ccall H5FDflush, In <H5FD_t> -> <hid_t> -> CUInt -> IO <herr_t>
 
+#if H5_VERSION_ATLEAST(1,8,2)
 -- |Notify driver to truncate the file back to the allocated size.
 -- 
 -- Returns non-negative on success, negative on failure.
 -- 
 -- > herr_t H5FDtruncate(H5FD_t *file, hid_t dxpl_id, hbool_t closing);
 #ccall H5FDtruncate, In <H5FD_t> -> <hid_t> -> <hbool_t> -> IO <herr_t>
+#endif

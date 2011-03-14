@@ -436,6 +436,8 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> Ptr a -> IO HErr_t)
 #ccall H5Pget_fill_time, <hid_t> -> Out <H5D_fill_time_t> -> IO <herr_t>
 
 
+#if H5_VERSION_ATLEAST(1,8,3)
+
 -- /* Dataset access property list (DAPL) routines */
 -- herr_t H5Pset_chunk_cache(hid_t dapl_id, size_t rdcc_nslots,
 --        size_t rdcc_nbytes, double rdcc_w0);
@@ -446,6 +448,8 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> Ptr a -> IO HErr_t)
 --        size_t *rdcc_nbytes/*out*/,
 --        double *rdcc_w0/*out*/);
 #ccall H5Pget_chunk_cache, <hid_t> -> Out <size_t> -> Out <size_t> -> Out CDouble -> IO <herr_t>
+
+#endif
 
 
 -- /* Dataset xfer property list (DXPL) routines */
@@ -569,11 +573,17 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> Ptr a -> IO HErr_t)
 -- ssize_t H5Pget_elink_prefix(hid_t plist_id, char *prefix, size_t size);
 #ccall H5Pget_elink_prefix, <hid_t> -> OutArray CChar -> CString -> IO <ssize_t>
 
+#if H5_VERSION_ATLEAST(1,8,2)
+
 -- hid_t H5Pget_elink_fapl(hid_t lapl_id);
 #ccall H5Pget_elink_fapl, <hid_t> -> IO <hid_t>
 
 -- herr_t H5Pset_elink_fapl(hid_t lapl_id, hid_t fapl_id);
 #ccall H5Pset_elink_fapl, <hid_t> -> <hid_t> -> IO <herr_t>
+
+#endif
+
+#if H5_VERSION_ATLEAST(1,8,3)
 
 -- herr_t H5Pset_elink_acc_flags(hid_t lapl_id, unsigned flags);
 #ccall H5Pset_elink_acc_flags, <hid_t> -> CUInt -> IO <herr_t>
@@ -586,6 +596,8 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> Ptr a -> IO HErr_t)
 
 -- herr_t H5Pget_elink_cb(hid_t lapl_id, H5L_elink_traverse_t *func, void **op_data);
 #ccall H5Pget_elink_cb, <hid_t> -> Out (H5L_elink_traverse_t a) -> Out (Ptr a) -> IO <herr_t>
+
+#endif
 
 
 -- /* Object copy property list (OCPYPL) routines */
