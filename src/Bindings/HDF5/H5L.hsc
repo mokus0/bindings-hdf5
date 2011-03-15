@@ -157,7 +157,7 @@ type H5L_query_func_t a b = FunPtr (CString -> Ptr a -> CSize -> Out b -> CSize 
 -- 
 -- > typedef herr_t (*H5L_iterate_t)(hid_t group, const char *name, const H5L_info_t *info,
 -- >     void *op_data);
-type H5L_iterate_t a = FunPtr (HId_t -> CString -> In H5L_info_t -> Ptr a -> IO HErr_t)
+type H5L_iterate_t a = FunPtr (HId_t -> CString -> In H5L_info_t -> InOut a -> IO HErr_t)
 
 -- |Callback for external link traversal
 --
@@ -168,7 +168,7 @@ type H5L_iterate_t a = FunPtr (HId_t -> CString -> In H5L_info_t -> Ptr a -> IO 
 type H5L_elink_traverse_t a = FunPtr (CString 
     -> CString -> CString
     -> CString -> Ptr CUInt -> HId_t
-    -> Ptr a -> IO HErr_t)
+    -> InOut a -> IO HErr_t)
 
 -- |Renames an object within an HDF5 file and moves it to a new
 -- group.  The original name 'src' is unlinked from the group graph
@@ -295,47 +295,181 @@ type H5L_elink_traverse_t a = FunPtr (CString
 -- >     H5L_info_t *linfo /*out*/, hid_t lapl_id);
 #ccall H5Lget_info_by_idx, <hid_t> -> CString -> <H5_index_t> -> <H5_iter_order_t> -> <hsize_t> -> Out <H5L_info_t> -> <hid_t> -> IO <herr_t>
 
+-- |Gets name for a link, according to the order within an index.
+--
+-- Same pattern of behavior as 'h5i_get_name'.
+--
+-- On success, returns non-negative length of name, with information
+-- in 'name' buffer
+-- On failure,returns a negative value.
+--
 -- > ssize_t H5Lget_name_by_idx(hid_t loc_id, const char *group_name,
 -- >     H5_index_t idx_type, H5_iter_order_t order, hsize_t n,
 -- >     char *name /*out*/, size_t size, hid_t lapl_id);
 #ccall H5Lget_name_by_idx, <hid_t> -> CString -> <H5_index_t> -> <H5_iter_order_t> -> <hsize_t> -> OutArray CChar -> <ssize_t> -> <hid_t> -> IO <ssize_t>
 
+-- |Iterates over links in a group, with user callback routine,
+-- according to the order within an index.
+--
+-- Same pattern of behavior as 'h5g_iterate'.
+--
+-- Returns the return value of the first operator that returns non-zero, 
+-- or zero if all members were processed with no operator returning non-zero.
+--
+-- Returns negative if something goes wrong within the library, or the
+-- negative value returned by one of the operators.
+--
 -- > herr_t H5Literate(hid_t grp_id, H5_index_t idx_type,
 -- >     H5_iter_order_t order, hsize_t *idx, H5L_iterate_t op, void *op_data);
-#ccall H5Literate, <hid_t> -> <H5_index_t> -> <H5_iter_order_t> -> Ptr <hsize_t> -> H5L_iterate_t a -> Ptr a -> IO <herr_t>
+#ccall H5Literate, <hid_t> -> <H5_index_t> -> <H5_iter_order_t> -> InOut <hsize_t> -> H5L_iterate_t a -> InOut a -> IO <herr_t>
 
+-- |Iterates over links in a group, with user callback routine,
+-- according to the order within an index.
+--
+-- Same pattern of behavior as 'h5g_iterate'.
+--
+-- Returns the return value of the first operator that returns non-zero, 
+-- or zero if all members were processed with no operator returning non-zero.
+--
+-- Returns negative if something goes wrong within the library, or the
+-- negative value returned by one of the operators.
+--
 -- > herr_t H5Literate_by_name(hid_t loc_id, const char *group_name,
 -- >     H5_index_t idx_type, H5_iter_order_t order, hsize_t *idx,
 -- >     H5L_iterate_t op, void *op_data, hid_t lapl_id);
-#ccall H5Literate_by_name, <hid_t> -> CString -> <H5_index_t> -> <H5_iter_order_t> -> Ptr <hsize_t> -> H5L_iterate_t a -> Ptr a -> <hid_t> -> IO <herr_t>
+#ccall H5Literate_by_name, <hid_t> -> CString -> <H5_index_t> -> <H5_iter_order_t> -> InOut <hsize_t> -> H5L_iterate_t a -> InOut a -> <hid_t> -> IO <herr_t>
 
+-- |Recursively visit all the links in a group and all
+-- the groups that are linked to from that group.  Links within
+-- each group are visited according to the order within the
+-- specified index (unless the specified index does not exist for
+-- a particular group, then the \"name\" index is used).
+-- 
+-- NOTE: Each _link_ reachable from the initial group will only be
+-- visited once.  However, because an object may be reached from
+-- more than one link, the visitation may call the application's
+-- callback with more than one link that points to a particular
+-- _object_.
+--
+-- Returns the return value of the first operator that
+-- returns non-zero, or zero if all members were
+-- processed with no operator returning non-zero.
+--
+-- Returns negative if something goes wrong within the
+-- library, or the negative value returned by one
+-- of the operators.
+--
 -- > herr_t H5Lvisit(hid_t grp_id, H5_index_t idx_type, H5_iter_order_t order,
 -- >     H5L_iterate_t op, void *op_data);
 #ccall H5Lvisit, <hid_t> -> <H5_index_t> -> <H5_iter_order_t> -> H5L_iterate_t a -> Ptr a -> IO <herr_t>
 
+-- |Recursively visit all the links in a group and all
+-- the groups that are linked to from that group.  Links within
+-- each group are visited according to the order within the
+-- specified index (unless the specified index does not exist for
+-- a particular group, then the \"name\" index is used).
+-- 
+-- NOTE: Each _link_ reachable from the initial group will only be
+-- visited once.  However, because an object may be reached from
+-- more than one link, the visitation may call the application's
+-- callback with more than one link that points to a particular
+-- _object_.
+--
+-- Returns the return value of the first operator that
+-- returns non-zero, or zero if all members were
+-- processed with no operator returning non-zero.
+--
+-- Returns negative if something goes wrong within the
+-- library, or the negative value returned by one
+-- of the operators.
+--
 -- > herr_t H5Lvisit_by_name(hid_t loc_id, const char *group_name,
 -- >     H5_index_t idx_type, H5_iter_order_t order, H5L_iterate_t op,
 -- >     void *op_data, hid_t lapl_id);
-#ccall H5Lvisit_by_name, <hid_t> -> CString -> <H5_index_t> -> <H5_iter_order_t> -> H5L_iterate_t a -> Ptr a -> <hid_t> -> IO <herr_t>
+#ccall H5Lvisit_by_name, <hid_t> -> CString -> <H5_index_t> -> <H5_iter_order_t> -> H5L_iterate_t a -> InOut a -> <hid_t> -> IO <herr_t>
 
+-- |Creates a user-defined link of type 'link_type' named 'link_name'
+-- with user-specified data 'udata'.
+--
+-- The format of the information pointed to by 'udata' is
+-- defined by the user. 'udata_size' holds the size of this buffer.
+-- 
+-- 'link_name' is interpreted relative to 'link_loc_id'.
+-- 
+-- The property list specified by 'lcpl_id' holds properties used
+-- to create the link.
+-- 
+-- The link class of the new link must already be registered
+-- with the library.
+-- 
+-- Returns non-negative on success, negative on failure.
+--
 -- > herr_t H5Lcreate_ud(hid_t link_loc_id, const char *link_name,
 -- >     H5L_type_t link_type, const void *udata, size_t udata_size, hid_t lcpl_id,
 -- >     hid_t lapl_id);
-#ccall H5Lcreate_ud, <hid_t> -> CString -> <H5L_type_t> -> Ptr a -> <size_t> -> <hid_t> -> <hid_t> -> IO <herr_t>
+#ccall H5Lcreate_ud, <hid_t> -> CString -> <H5L_type_t> -> In a -> <size_t> -> <hid_t> -> <hid_t> -> IO <herr_t>
 
+-- |Registers a class of user-defined links, or changes the
+-- behavior of an existing class.
+-- 
+-- The link class passed in will override any existing link
+-- class for the specified link class ID. It must at least
+-- include a 'H5L_class_t' version (which should be
+-- 'h5l_LINK_CLASS_T_VERS'), a link class ID, and a traversal
+-- function.
+-- 
+-- Returns non-negative on success, negative on failure.
+--
 -- > herr_t H5Lregister(const H5L_class_t *cls);
 #ccall H5Lregister, In <H5L_class_t> -> IO <herr_t>
 
+-- |Unregisters a class of user-defined links, preventing them
+-- from being traversed, queried, moved, etc.
+-- 
+-- A link class can be re-registered using 'h5l_register'.
+--
+-- Returns non-negative on success, negative on failure.
+--
 -- > herr_t H5Lunregister(H5L_type_t id);
 #ccall H5Lunregister, <H5L_type_t> -> IO <herr_t>
 
+-- |Tests whether a user-defined link class has been registered
+-- or not.
+--
 -- > htri_t H5Lis_registered(H5L_type_t id);
 #ccall H5Lis_registered, <H5L_type_t> -> IO <htri_t>
 
+-- |Given a buffer holding the \"link value\" from an external link,
+-- gets pointers to the information within the link value buffer.
+-- 
+-- External link link values contain some flags and
+-- two NULL-terminated strings, one after the other.
+-- 
+-- The 'flags' value will be filled in and 'filename' and
+-- 'obj_path' will be set to pointers within 'ext_linkval' (unless
+-- any of these values is NULL).
+-- 
+-- Using this function on strings that aren't external link
+-- 'udata' buffers can result in segmentation faults.
+--
+-- Returns non-negative on success, negative on failure.
+--
 -- > herr_t H5Lunpack_elink_val(const void *ext_linkval/*in*/, size_t link_size,
 -- >    unsigned *flags, const char **filename/*out*/, const char **obj_path /*out*/);
 #ccall H5Lunpack_elink_val, In a -> <size_t> -> Ptr CUInt -> Out CString -> Out CString -> IO <herr_t>
 
+-- |Creates an external link from 'link_name' to 'obj_name'.
+--
+-- External links are links to objects in other HDF5 files.  They
+-- are allowed to \"dangle\" like soft links internal to a file.
+-- 'file_name' is the name of the file that 'obj_name' is is contained
+-- within.  If 'obj_name' is given as a relative path name, the
+-- path will be relative to the root group of 'file_name'.
+-- 'link_name' is interpreted relative to 'link_loc_id', which is
+-- either a file ID or a group ID.
+--
+-- Returns non-negative on success, negative on failure.
+--
 -- > herr_t H5Lcreate_external(const char *file_name, const char *obj_name,
 -- >     hid_t link_loc_id, const char *link_name, hid_t lcpl_id, hid_t lapl_id);
 #ccall H5Lcreate_external, CString -> CString -> <hid_t> -> CString -> <hid_t> -> <hid_t> -> IO <herr_t>
