@@ -59,72 +59,367 @@ import System.Posix.Types (COff)
 
 
 -- /* Define property list class callback function pointer types */
--- typedef herr_t (*H5P_cls_create_func_t)(hid_t prop_id, void *create_data);
-type H5P_cls_create_func_t a = FunPtr (HId_t -> Ptr a -> IO HErr_t)
 
--- typedef herr_t (*H5P_cls_copy_func_t)(hid_t new_prop_id, hid_t old_prop_id,
---                                       void *copy_data);
-type H5P_cls_copy_func_t a = FunPtr (HId_t -> HId_t -> Ptr a -> IO HErr_t)
+-- |
+-- > typedef herr_t (*H5P_cls_create_func_t)(hid_t prop_id, void *create_data);
+type H5P_cls_create_func_t a = FunPtr (HId_t -> InOut a -> IO HErr_t)
 
--- typedef herr_t (*H5P_cls_close_func_t)(hid_t prop_id, void *close_data);
-type H5P_cls_close_func_t a = FunPtr (HId_t -> Ptr a -> IO HErr_t)
+-- |
+-- > typedef herr_t (*H5P_cls_copy_func_t)(hid_t new_prop_id, hid_t old_prop_id,
+-- >                                       void *copy_data);
+type H5P_cls_copy_func_t a = FunPtr (HId_t -> HId_t -> InOut a -> IO HErr_t)
 
+-- |
+-- > typedef herr_t (*H5P_cls_close_func_t)(hid_t prop_id, void *close_data);
+type H5P_cls_close_func_t a = FunPtr (HId_t -> InOut a -> IO HErr_t)
 
--- /* Define property list callback function pointer types */
--- typedef herr_t (*H5P_prp_cb1_t)(const char *name, size_t size, void *value);
-type H5P_prp_cb1_t a = FunPtr (CString -> CSize -> Ptr a -> IO HErr_t)
+-- |Parameters:
+-- 
+-- [@ prop_id       :: 'HId_t'        @]  The ID of the property list being created.
+-- 
+-- [@ name          :: 'CString'      @]  The name of the property being modified.
+-- 
+-- [@ size          :: 'CSize'        @]  The size of the property value
+-- 
+-- [@ initial_value :: 'InOut' a      @]  The initial value for the property being created. (The 'default' value passed to 'h5p_register2')
+-- 
+-- > typedef herr_t (*H5P_prp_create_func_t)(hid_t prop_id, const char *name,
+-- >         size_t size, void *initial_value);
+type H5P_prp_create_func_t a = FunPtr (CString -> CSize -> InOut a -> IO HErr_t)
 
--- typedef herr_t (*H5P_prp_cb2_t)(hid_t prop_id, const char *name, size_t size, void *value);
-type H5P_prp_cb2_t a = FunPtr (HId_t -> CString -> CSize -> Ptr a -> IO HErr_t)
+-- |Parameters:
+-- 
+-- [@ prop_id   :: 'HId_t'   @] The ID of the property list being modified.
+-- 
+-- [@ name      :: 'CString' @] The name of the property being modified.
+-- 
+-- [@ size      :: 'CSize'   @] The size of the property value
+-- 
+-- [@ new_value :: 'InOut' a @] The value being set for the property.
+-- 
+-- The 'set' routine may modify the value to be set and those changes will be
+-- stored as the value of the property.  If the 'set' routine returns a
+-- negative value, the new property value is not copied into the property and
+-- the property list set routine returns an error value.
 
-type H5P_prp_create_func_t a = H5P_prp_cb1_t a
+-- > typedef herr_t (*H5P_prp_set_func_t)(hid_t prop_id, const char *name,
+-- >     size_t size, void *value);
+type H5P_prp_set_func_t    a = FunPtr (HId_t -> CString -> CSize -> InOut a -> IO HErr_t)
 
-type H5P_prp_set_func_t    a = H5P_prp_cb2_t a
-type H5P_prp_get_func_t    a = H5P_prp_cb2_t a
-type H5P_prp_delete_func_t a = H5P_prp_cb2_t a
-type H5P_prp_copy_func_t   a = H5P_prp_cb1_t a
+-- |Parameters:
+-- 
+-- [@ prop_id :: 'HId_t'   @] The ID of the property list being queried.
+-- 
+-- [@ name    :: 'CString' @] The name of the property being queried.
+-- 
+-- [@ size    :: 'CSize'   @] The size of the property value
+-- 
+-- [@ value   :: 'InOut' a @] The value being retrieved for the property.
+-- 
+-- The 'get' routine may modify the value to be retrieved and those changes
+-- will be returned to the calling function.  If the 'get' routine returns a
+-- negative value, the property value is returned and the property list get
+-- routine returns an error value.
+-- 
+-- > typedef herr_t (*H5P_prp_get_func_t)(hid_t prop_id, const char *name,
+-- >     size_t size, void *value);
+type H5P_prp_get_func_t    a = FunPtr (HId_t -> CString -> CSize -> InOut a -> IO HErr_t)
 
--- typedef int (*H5P_prp_compare_func_t)(const void *value1, const void *value2, size_t size);
-type H5P_prp_compare_func_t a = FunPtr (Ptr a -> Ptr a -> CSize -> IO CInt)
+-- |Parameters:
+-- 
+-- [@ prop_id :: 'HId_t'   @] The ID of the property list the property is deleted from.
+-- [@ name    :: 'CString' @] The name of the property being deleted.
+-- [@ size    :: 'CSize'   @] The size of the property value
+-- [@ value   :: 'InOut' a @] The value of the property being deleted.
+-- 
+-- The 'delete' routine may modify the value passed in, but the value is not
+-- used by the library when the 'delete' routine returns.  If the
+-- 'delete' routine returns a negative value, the property list deletion
+-- routine returns an error value but the property is still deleted.
+-- 
+-- > typedef herr_t (*H5P_prp_del_func_t)(hid_t prop_id, const char *name,
+-- >     size_t size, void *value);
+type H5P_prp_delete_func_t a = FunPtr (HId_t -> CString -> CSize -> InOut a -> IO HErr_t)
 
--- typedef H5P_prp_cb1_t H5P_prp_close_func_t;
-type H5P_prp_close_func_t a = H5P_prp_cb1_t a
+-- |Parameters:
+-- 
+--     const char *name;   IN: The name of the property being copied.
+--     size_t size;        IN: The size of the property value
+--     void *value;        IN: The value of the property being copied.
+-- 
+-- The 'copy' routine may modify the value to be copied and those changes will be
+-- stored as the value of the property.  If the 'copy' routine returns a
+-- negative value, the new property value is not copied into the property and
+-- the property list copy routine returns an error value.
+-- 
+-- > typedef herr_t (*H5P_prp_copy_func_t)(const char *name, size_t size,
+-- >     void *value);
+type H5P_prp_copy_func_t   a = FunPtr (CString -> CSize -> InOut a -> IO HErr_t)
 
--- /* Define property list iteration function type */
--- typedef herr_t (*H5P_iterate_t)(hid_t id, const char *name, void *iter_data);
-type H5P_iterate_t a = FunPtr (HId_t -> CString -> Ptr a -> IO HErr_t)
+-- |Parameters:
+-- 
+-- [@ value1 :: In a  @]    The value of the first property being compared.
+-- 
+-- [@ value2 :: In a  @]    The value of the second property being compared.
+-- 
+-- [@ size   :: CSize @]    The size of the property value
+-- 
+-- The 'compare' routine may not modify the values to be compared.  The
+-- 'compare' routine should return a positive value if 'value1' is greater than
+-- 'value2', a negative value if 'value2' is greater than 'value1' and zero if 
+-- 'value1' and 'value2' are equal.
+--
+-- > typedef int (*H5P_prp_compare_func_t)( void *value1, void *value2,
+-- >     size_t size);
+type H5P_prp_compare_func_t a = FunPtr (In a -> In a -> CSize -> IO CInt)
+
+-- |Parameters:
+-- 
+-- [@ name  :: 'CString' @] The name of the property being closed.
+-- 
+-- [@ size  :: 'CSize'   @] The size of the property value
+-- 
+-- [@ value :: 'In' a    @] The value of the property being closed.
+-- 
+-- > typedef herr_t (*H5P_prp_close_func_t)(const char *name, size_t size,
+-- >     void *value);
+type H5P_prp_close_func_t a = FunPtr (CString -> CSize -> InOut a -> IO HErr_t)
+
+-- > typedef herr_t (*H5P_iterate_t)(hid_t id, const char *name, void *iter_data);
+type H5P_iterate_t a = FunPtr (HId_t -> CString -> InOut a -> IO HErr_t)
 
 -- /*********************/
 -- /* Public Prototypes */
 -- /*********************/
 
 -- /* Generic property list routines */
--- hid_t H5Pcreate_class(hid_t parent, const char *name,
---     H5P_cls_create_func_t cls_create, void *create_data,
---     H5P_cls_copy_func_t cls_copy, void *copy_data,
---     H5P_cls_close_func_t cls_close, void *close_data);
+
+
+-- |Create a new property list class.  Allocates memory and attaches
+-- a class to the property list class hierarchy.
+-- 
+-- Parameters
+--
+-- [@ parent      :: 'HId_t'                   @] Property list class ID of parent class
+-- 
+-- [@ name        :: 'CString'                 @] Name of class we are creating
+-- 
+-- [@ cls_create  :: 'H5P_cls_create_func_t' a @] The callback function to call when each property list in this class is created.
+-- 
+-- [@ create_data :: 'InOut' a                 @] Pointer to user data to pass along to class creation callback.
+-- 
+-- [@ cls_copy    :: 'H5P_cls_copy_func_t' b   @] The callback function to call when each property list in this class is copied.
+-- 
+-- [@ copy_data   :: 'InOut' b                 @] Pointer to user data to pass along to class copy callback.
+-- 
+-- [@ cls_close   :: 'H5P_cls_close_func_t' c  @] The callback function to call when each property list in this class is closed.
+-- 
+-- [@ close_data  :: 'InOut' c                 @] Pointer to user data to pass along to class close callback.
+-- 
+-- Returns a valid property list class ID on success, NULL on failure.
+--
+-- > hid_t H5Pcreate_class(hid_t parent, const char *name,
+-- >     H5P_cls_create_func_t cls_create, void *create_data,
+-- >     H5P_cls_copy_func_t cls_copy, void *copy_data,
+-- >     H5P_cls_close_func_t cls_close, void *close_data);
 #ccall H5Pcreate_class, <hid_t> -> CString -> H5P_cls_create_func_t a -> Ptr a -> H5P_cls_copy_func_t b -> Ptr b -> H5P_cls_close_func_t c -> Ptr c -> IO <hid_t>
 
--- char *H5Pget_class_name(hid_t pclass_id);
+-- |This routine retrieves the name of a generic property list class.
+-- The pointer to the name must be 'free'd by the user for successful calls.
+-- 
+-- Parameters
+-- 
+-- [@ pclass_id :: 'HId_t' @]   Property class to query
+-- 
+-- On success, returns a pointer to a malloc'ed string containing the class name
+-- On failure, returns NULL.
+--
+-- > char *H5Pget_class_name(hid_t pclass_id);
 #ccall H5Pget_class_name, <hid_t> -> IO CString
 
--- hid_t H5Pcreate(hid_t cls_id);
+-- |Routine to create a new property list of a property list class.
+-- 
+-- Creates a property list of a given class.  If a 'create' callback
+-- exists for the property list class, it is called before the
+-- property list is passed back to the user.  If 'create' callbacks exist for
+-- any individual properties in the property list, they are called before the
+-- class 'create' callback.
+--
+-- Parameters:
+-- 
+-- [@ cls_id :: 'HId_t' @]  Property list class create list from
+-- 
+-- Returns a valid property list ID on success, a negative value on failure.
+-- 
+-- > hid_t H5Pcreate(hid_t cls_id);
 #ccall H5Pcreate, <hid_t> -> IO <hid_t>
 
--- herr_t H5Pregister2(hid_t cls_id, const char *name, size_t size,
---     void *def_value, H5P_prp_create_func_t prp_create,
---     H5P_prp_set_func_t prp_set, H5P_prp_get_func_t prp_get,
---     H5P_prp_delete_func_t prp_del, H5P_prp_copy_func_t prp_copy,
---     H5P_prp_compare_func_t prp_cmp, H5P_prp_close_func_t prp_close);
-#ccall H5Pregister2, <hid_t> -> CString -> <size_t> -> Ptr a -> H5P_prp_create_func_t a -> H5P_prp_set_func_t a -> H5P_prp_get_func_t a -> H5P_prp_delete_func_t a -> H5P_prp_copy_func_t a -> H5P_prp_compare_func_t a -> H5P_prp_close_func_t a -> IO <herr_t>
+-- |Routine to register a new property in a property list class.
+-- 
+-- Registers a new property with a property list class.  The property will
+-- exist in all property list objects of that class after this routine is
+-- finished.  The name of the property must not already exist.  The default
+-- property value must be provided and all new property lists created with this
+-- property will have the property value set to the default provided.  Any of
+-- the callback routines may be set to NULL if they are not needed.
+-- 
+-- Zero-sized properties are allowed and do not store any data in the
+-- property list.  These may be used as flags to indicate the presence or
+-- absence of a particular piece of information.  The 'default' pointer for a
+-- zero-sized property may be set to NULL.  The property 'create' & 'close'
+-- callbacks are called for zero-sized properties, but the 'set' and 'get'
+-- callbacks are never called.
+-- 
+-- The 'create' callback is called when a new property list with this
+-- property is being created.  'H5P_prp_create_func_t' is defined as:
+-- 
+-- The 'create' routine may modify the value to be set and those changes will
+-- be stored as the initial value of the property.  If the 'create' routine
+-- returns a negative value, the new property value is not copied into the
+-- property and the property list creation routine returns an error value.
+-- 
+-- The 'set' callback is called before a new value is copied into the
+-- property.  The 'set' routine may modify the value to be set and those 
+-- changes will be stored as the value of the property.  If the 'set' routine 
+-- returns a negative value, the new property value is not copied into the 
+-- property and the property list set routine returns an error value.
+-- 
+-- The 'get' callback is called before a value is retrieved from the
+-- property.  The 'get' routine may modify the value to be retrieved and 
+-- those changes will be returned to the calling function.  If the 'get' 
+-- routine returns a negative value, the property value is returned and 
+-- the property list get routine returns an error value.
+-- 
+-- The 'delete' callback is called when a property is deleted from a
+-- property list.  The 'delete' routine may modify the value passed in, 
+-- but the value is not used by the library when the 'delete' routine 
+-- returns.  If the 'delete' routine returns a negative value, the 
+-- property list deletion routine returns an error value but the property
+-- is still deleted.
+-- 
+-- The 'copy' callback is called when a property list with this property 
+-- is copied.  The 'copy' routine may modify the value to be copied and 
+-- those changes will be stored as the value of the property.  If the 
+-- 'copy' routine returns a negative value, the new property value is not
+-- copied into the property and the property list copy routine returns an
+-- error value.
+-- 
+-- The 'compare' callback is called when a property list with this property
+-- is compared to another property list.  The 'compare' routine may not
+-- modify the values to be compared.  The 'compare' routine should return 
+-- a positive value if 'value1' is greater than 'value2', a negative value 
+-- if 'value2' is greater than 'value1' and zero if 'value1' and 'value2'
+-- are equal.
+-- 
+-- The 'close' callback is called when a property list with this property
+-- is being destroyed.  The 'close' routine may modify the value passed in,
+-- but the value is not used by the library when the 'close' routine returns.
+-- If the 'close' routine returns a negative value, the property list close
+-- routine returns an error value but the property list is still closed.
+-- 
+-- Parameters:
+-- 
+-- [@ class       :: HId_t                      @]        IN: Property list class to close
+-- 
+-- [@ name        :: CString                    @]        IN: Name of property to register
+-- 
+-- [@ size        :: CSize                      @]        IN: Size of property in bytes
+-- 
+-- [@ def_value   :: In a                       @]        IN: Pointer to buffer containing default value for property in newly created property lists
+-- 
+-- [@ prp_create  :: H5P_prp_create_func_t a    @]        IN: Function pointer to property creation callback
+-- 
+-- [@ prp_set     :: H5P_prp_set_func_t a       @]        IN: Function pointer to property set callback
+-- 
+-- [@ prp_get     :: H5P_prp_get_func_t a       @]        IN: Function pointer to property get callback
+-- 
+-- [@ prp_delete  :: H5P_prp_delete_func_t a    @]        IN: Function pointer to property delete callback
+-- 
+-- [@ prp_copy    :: H5P_prp_copy_func_t a      @]        IN: Function pointer to property copy callback
+-- 
+-- [@ prp_cmp     :: H5P_prp_compare_func_t a   @]        IN: Function pointer to property compare callback
+-- 
+-- [@ prp_close   :: H5P_prp_close_func_t a     @]        IN: Function pointer to property close callback
+-- 
+-- Returns non-negative on success, negative on failure.
+-- 
+--  COMMENTS, BUGS, ASSUMPTIONS:
+-- 
+-- The 'set' callback function may be useful to range check the value being
+-- set for the property or may perform some tranformation/translation of the
+-- value set.  The 'get' callback would then [probably] reverse the
+-- transformation, etc.  A single 'get' or 'set' callback could handle
+-- multiple properties by performing different actions based on the property
+-- name or other properties in the property list.
+-- 
+-- I would like to say \"the property list is not closed\" when a 'close'
+-- routine fails, but I don't think that's possible due to other properties in
+-- the list being successfully closed & removed from the property list.  I
+-- suppose that it would be possible to just remove the properties which have
+-- successful 'close' callbacks, but I'm not happy with the ramifications
+-- of a mangled, un-closable property list hanging around...  Any comments? -QAK
+-- 
+-- > herr_t H5Pregister2(hid_t cls_id, const char *name, size_t size,
+-- >     void *def_value, H5P_prp_create_func_t prp_create,
+-- >     H5P_prp_set_func_t prp_set, H5P_prp_get_func_t prp_get,
+-- >     H5P_prp_delete_func_t prp_del, H5P_prp_copy_func_t prp_copy,
+-- >     H5P_prp_compare_func_t prp_cmp, H5P_prp_close_func_t prp_close);
+#ccall H5Pregister2, <hid_t> -> CString -> <size_t> -> In a -> H5P_prp_create_func_t a -> H5P_prp_set_func_t a -> H5P_prp_get_func_t a -> H5P_prp_delete_func_t a -> H5P_prp_copy_func_t a -> H5P_prp_compare_func_t a -> H5P_prp_close_func_t a -> IO <herr_t>
 
--- herr_t H5Pinsert2(hid_t plist_id, const char *name, size_t size,
---     void *value, H5P_prp_set_func_t prp_set, H5P_prp_get_func_t prp_get,
---     H5P_prp_delete_func_t prp_delete, H5P_prp_copy_func_t prp_copy,
---     H5P_prp_compare_func_t prp_cmp, H5P_prp_close_func_t prp_close);
-#ccall H5Pinsert2, <hid_t> -> CString -> CSize -> Ptr a -> H5P_prp_set_func_t a -> H5P_prp_get_func_t a -> H5P_prp_delete_func_t a -> H5P_prp_copy_func_t a -> H5P_prp_compare_func_t a -> H5P_prp_close_func_t a -> IO <herr_t>
+-- |Routine to insert a new property in a property list.
+-- 
+-- Inserts a temporary property into a property list.  The property will
+-- exist only in this property list object.  The name of the property must not
+-- already exist.  The value must be provided unless the property is zero-
+-- sized.  Any of the callback routines may be set to NULL if they are not
+-- needed.
+--
+-- Zero-sized properties are allowed and do not store any data in the
+-- property list.  These may be used as flags to indicate the presence or
+-- absence of a particular piece of information.  The 'value' pointer for a
+-- zero-sized property may be set to NULL.  The property 'close' callback is
+-- called for zero-sized properties, but the 'set' and 'get' callbacks are
+-- never called.
+-- 
+-- There is no 'create' callback routine for temporary property list
+-- objects, the initial value is assumed to have any necessary setup already
+-- performed on it.
+-- Aside from that, the callbacks are the same as for 'h5p_register'.
+-- 
+-- Returns non-negative on success, negative on failure.
+-- 
+-- > herr_t H5Pinsert2(hid_t plist_id, const char *name, size_t size,
+-- >     void *value, H5P_prp_set_func_t prp_set, H5P_prp_get_func_t prp_get,
+-- >     H5P_prp_delete_func_t prp_delete, H5P_prp_copy_func_t prp_copy,
+-- >     H5P_prp_compare_func_t prp_cmp, H5P_prp_close_func_t prp_close);
+#ccall H5Pinsert2, <hid_t> -> CString -> CSize -> In a -> H5P_prp_set_func_t a -> H5P_prp_get_func_t a -> H5P_prp_delete_func_t a -> H5P_prp_copy_func_t a -> H5P_prp_compare_func_t a -> H5P_prp_close_func_t a -> IO <herr_t>
 
--- herr_t H5Pset(hid_t plist_id, const char *name, void *value);
+-- |Routine to set a property's value in a property list.
+-- 
+-- Sets a new value for a property in a property list.  The property name
+-- must exist or this routine will fail.  If there is a 'set' callback routine
+-- registered for this property, the 'value' will be passed to that routine and
+-- any changes to the 'value' will be used when setting the property value.
+-- The information pointed at by the 'value' pointer (possibly modified by the
+-- 'set' callback) is copied into the property list value and may be changed
+-- by the application making the H5Pset call without affecting the property
+-- value.
+-- 
+-- If the 'set' callback routine returns an error, the property value will
+-- not be modified.  This routine may not be called for zero-sized properties
+-- and will return an error in that case.
+-- 
+-- Parameters:
+-- 
+-- [@ plist_id :: HId_t   @]    Property list to find property in
+-- 
+-- [@ name     :: CString @]    Name of property to set
+-- 
+-- [@ value    :: In a    @]    Pointer to the value for the property
+-- 
+-- Returns non-negative on success, negative on failure.
+-- 
+-- > herr_t H5Pset(hid_t plist_id, const char *name, void *value);
 #ccall H5Pset, <hid_t> -> CString -> Ptr a -> IO <herr_t>
 
 -- htri_t H5Pexist(hid_t plist_id, const char *name);
