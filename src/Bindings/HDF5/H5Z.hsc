@@ -78,7 +78,7 @@ import Foreign.Ptr.Conventions
 #newtype_const H5Z_cb_return_t, H5Z_CB_CONT
 #newtype_const H5Z_cb_return_t, H5Z_CB_NO
 
-type H5Z_filter_func_t a b = FunPtr (H5Z_filter_t -> Ptr a -> CSize -> Ptr b -> IO H5Z_cb_return_t)
+type H5Z_filter_func_t a b = FunPtr (H5Z_filter_t -> Ptr a -> CSize -> InOut b -> IO H5Z_cb_return_t)
 
 #starttype H5Z_cb_t
 #field func, H5Z_filter_func_t () ()
