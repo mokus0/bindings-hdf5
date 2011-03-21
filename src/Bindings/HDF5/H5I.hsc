@@ -6,6 +6,8 @@ module Bindings.HDF5.H5I where
 
 import Bindings.HDF5.H5
 
+import Data.Bits
+import Data.Char
 import Foreign.Ptr.Conventions
 
 -- |Library type values
@@ -62,7 +64,20 @@ import Foreign.Ptr.Conventions
 -- TODO: I think HId_t should be parameterised over the element type and 
 -- possibly also dimensionality of the dataset
 -- |Type of atoms to return to users
-#newtype hid_t, Eq
+newtype HId_t = HId_t Int32 deriving (Storable, Eq)
+
+instance Show HId_t where
+    showsPrec p (HId_t x) = showParen (p>10)
+        ( showString "HId_t 0x"
+        . showString 
+            [ intToDigit (fromIntegral digit)
+            | place <- [bitSize x - 4, bitSize x - 8 .. 0]
+            , let mask = 0xf `shiftL` place
+            , let digit = ((x .&. mask) `shiftR` place) .&. 0xf
+            ]
+        )
+            
+
 h5_SIZEOF_HID_T :: CSize
 h5_SIZEOF_HID_T = #const H5_SIZEOF_HID_T
 
