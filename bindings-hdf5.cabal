@@ -18,6 +18,11 @@ Library
   hs-source-dirs:       src
   extensions:           ForeignFunctionInterface, GeneralizedNewtypeDeriving
   
+  if os(linux) && arch(x86_64)
+    -- Workaround for GHCi bug 781
+    -- ( http://hackage.haskell.org/trac/ghc/ticket/781 )
+    cc-options:     -fPIC
+  
   exposed-modules:      Bindings.HDF5
                         Bindings.HDF5.H5
                         Bindings.HDF5.H5A
