@@ -48,58 +48,148 @@ import Foreign.Ptr.Conventions
 
 -- * Major error codes
 
+-- |Dataset
 #cinline H5E_DATASET,           <hid_t>
+
+-- |Function entry/exit
 #cinline H5E_FUNC,              <hid_t>
+
+-- |Data storage
 #cinline H5E_STORAGE,           <hid_t>
+
+-- |File accessability
 #cinline H5E_FILE,              <hid_t>
+
+-- |Shared Object Header Messages
 #cinline H5E_SOHM,              <hid_t>
+
+-- |Symbol table
 #cinline H5E_SYM,               <hid_t>
+
+-- |Virtual File Layer
 #cinline H5E_VFL,               <hid_t>
+
+-- |Internal error (too specific to document in detail)
 #cinline H5E_INTERNAL,          <hid_t>
+
+-- |B-Tree node
 #cinline H5E_BTREE,             <hid_t>
+
+-- |References
 #cinline H5E_REFERENCE,         <hid_t>
+
+-- |Dataspace
 #cinline H5E_DATASPACE,         <hid_t>
+
+-- |Resource unavailable
 #cinline H5E_RESOURCE,          <hid_t>
+
+-- |Property lists
 #cinline H5E_PLIST,             <hid_t>
+
+-- |Links
 #cinline H5E_LINK,              <hid_t>
+
+-- |Datatype
 #cinline H5E_DATATYPE,          <hid_t>
+
+-- |Reference Counted Strings
 #cinline H5E_RS,                <hid_t>
+
+-- |Heap
 #cinline H5E_HEAP,              <hid_t>
+
+-- |Object header
 #cinline H5E_OHDR,              <hid_t>
+
+-- |Object atom
 #cinline H5E_ATOM,              <hid_t>
+
+-- |Attribute
 #cinline H5E_ATTR,              <hid_t>
+
+-- |No error
 #cinline H5E_NONE_MAJOR,        <hid_t>
+
+-- |Low-level I/O
 #cinline H5E_IO,                <hid_t>
+
+-- |Skip Lists
 #cinline H5E_SLIST,             <hid_t>
+
+-- |External file list
 #cinline H5E_EFL,               <hid_t>
+
+-- |Ternary Search Trees
 #cinline H5E_TST,               <hid_t>
+
+-- |Invalid arguments to routine
 #cinline H5E_ARGS,              <hid_t>
+
+-- |Error API
 #cinline H5E_ERROR,             <hid_t>
+
+-- |Data filters
 #cinline H5E_PLINE,             <hid_t>
+
+-- |Free Space Manager
 #cinline H5E_FSPACE,            <hid_t>
+
+-- |Object cache
 #cinline H5E_CACHE,             <hid_t>
 
 -- * Minor error codes
 
 -- ** Generic low-level file I/O errors
 
+-- |Seek failed
 #cinline H5E_SEEKERROR,         <hid_t>
+
+-- |Read failed
 #cinline H5E_READERROR,         <hid_t>
+
+-- |Write failed
 #cinline H5E_WRITEERROR,        <hid_t>
+
+-- |Close failed
 #cinline H5E_CLOSEERROR,        <hid_t>
+
+-- |Address overflowed
 #cinline H5E_OVERFLOW,          <hid_t>
+
+-- |File control (fcntl) failed
 #cinline H5E_FCNTL,             <hid_t>
 
 -- ** Resource errors
+
+-- |No space available for allocation
 #cinline H5E_NOSPACE,           <hid_t>
+
+-- |Can't allocate space
 #cinline H5E_CANTALLOC,         <hid_t>
+
+-- |Unable to copy object
 #cinline H5E_CANTCOPY,          <hid_t>
+
+-- |Unable to free object
 #cinline H5E_CANTFREE,          <hid_t>
+
+-- |Object already exists
 #cinline H5E_ALREADYEXISTS,     <hid_t>
+
+-- |Unable to lock object
 #cinline H5E_CANTLOCK,          <hid_t>
+
+-- |Unable to unlock object
 #cinline H5E_CANTUNLOCK,        <hid_t>
+
+-- |Unable to garbage collect
 #cinline H5E_CANTGC,            <hid_t>
+
+-- |Unable to compute size
 #cinline H5E_CANTGETSIZE,       <hid_t>
+
+-- |Object is already open
 #cinline H5E_OBJOPEN,           <hid_t>
 
 -- ** Heap errors
