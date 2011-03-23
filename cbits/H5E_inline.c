@@ -169,14 +169,3 @@ BC_INLINE_(H5E_CANTREMOVE,          hid_t)
 
 BC_INLINE_(H5E_CANTCONVERT,         hid_t)
 BC_INLINE_(H5E_BADSIZE,             hid_t)
-
-void *inline_h5e_try(void *(*f)()) {
-    void *res = NULL;
-    
-    H5E_BEGIN_TRY {
-        res = f();
-    } H5E_END_TRY
-    
-    return res;
-}
-

@@ -7,6 +7,7 @@ module Bindings.HDF5.H5E where
 import Bindings.HDF5.H5
 import Bindings.HDF5.H5I
 
+import Foreign (nullPtr, nullFunPtr)
 import Foreign.LibFFI
 import Foreign.Ptr.Conventions
 
@@ -326,9 +327,43 @@ import Foreign.Ptr.Conventions
 #cinline H5E_CANTCONVERT,       <hid_t>
 #cinline H5E_BADSIZE,           <hid_t>
 
+newtype H5E_TRY_STATE 
+    = H5E_TRY_STATE (Either (H5E_auto1_t ()) (H5E_auto2_t ()), InOut ())
+
+h5e_BEGIN_TRY :: IO H5E_TRY_STATE
+h5e_BEGIN_TRY = do
+    isV2 <- alloca $ \isV2 -> do
+        h5e_auto_is_v2 h5e_DEFAULT (Out isV2)
+        peek isV2
+    
+    alloca $ \cdata -> if isV2 /= 0
+        then alloca $ \func -> do
+            h5e_get_auto2 h5e_DEFAULT (Out func) (Out cdata)
+            h5e_set_auto2 h5e_DEFAULT nullFunPtr (InOut nullPtr)
+            
+            func <- peek func
+            cdata <- peek cdata
+            return (H5E_TRY_STATE (Right func, cdata))
+        else alloca $ \func -> do
+            h5e_get_auto1 (Out func) (Out cdata)
+            h5e_set_auto1 nullFunPtr (InOut nullPtr)
+            
+            func <- peek func
+            cdata <- peek cdata
+            return (H5E_TRY_STATE (Left func, cdata))
+
+h5e_END_TRY :: H5E_TRY_STATE -> IO HErr_t
+h5e_END_TRY (H5E_TRY_STATE (Right func, cdata)) = h5e_set_auto2 h5e_DEFAULT func cdata
+h5e_END_TRY (H5E_TRY_STATE (Left  func, cdata)) = h5e_set_auto1 func cdata
+
 -- |This is not a standard HDF5 function or macro, but rather a wrapper
 -- to the paired macros H5E_BEGIN_TRY and H5E_END_TRY, wrapping a simple action.
-#cinline h5e_try,               FunPtr (IO (Ptr a)) -> IO (Ptr a)
+h5e_try :: IO a -> IO a
+h5e_try action = do
+    tryState <- h5e_BEGIN_TRY
+    result <- action
+    h5e_END_TRY tryState
+    return result
 
 -- TODO: wrap these up in an exported header file (something like "Bindings.HDF5.H5E.h") as macros for use in haskell code, or maybe as TH macros
 -- /*
@@ -467,11 +502,11 @@ type H5E_auto2_t a = FunPtr (HId_t -> InOut a -> IO HErr_t)
 -- >     hid_t cls_id, hid_t maj_id, hid_t min_id, const char *msg, ...);
 --
 -- (msg is a printf format string, the varargs are the format parameters)
-h5epush2 :: HId_t -> CString -> CString -> CUInt -> HId_t -> HId_t -> HId_t -> CString -> [Arg] -> IO HErr_t
-h5epush2 err_stack file func line cls_id maj_id min_id fmt [] =
-    h5epush2_no_varargs err_stack file func line cls_id maj_id min_id fmt
-h5epush2 (HId_t err_stack) file func line (HId_t cls_id) (HId_t maj_id) (HId_t min_id) fmt varargs =
-    callFFI p_h5epush2 retHErr_t args
+h5e_push2 :: HId_t -> CString -> CString -> CUInt -> HId_t -> HId_t -> HId_t -> CString -> [Arg] -> IO HErr_t
+h5e_push2 err_stack file func line cls_id maj_id min_id fmt [] =
+    h5e_push2_no_varargs err_stack file func line cls_id maj_id min_id fmt
+h5e_push2 (HId_t err_stack) file func line (HId_t cls_id) (HId_t maj_id) (HId_t min_id) fmt varargs =
+    callFFI p_H5Epush2 retHErr_t args
     where 
         argHId_t = arg#type hid_t
         retHErr_t = fmap HErr_t (ret#type herr_t)
@@ -481,9 +516,9 @@ h5epush2 (HId_t err_stack) file func line (HId_t cls_id) (HId_t maj_id) (HId_t m
              : varargs
 
 foreign import ccall "H5Epush2"
-    h5epush2_no_varargs :: HId_t -> CString -> CString -> CUInt -> HId_t -> HId_t -> HId_t -> CString -> IO HErr_t
+    h5e_push2_no_varargs :: HId_t -> CString -> CString -> CUInt -> HId_t -> HId_t -> HId_t -> CString -> IO HErr_t
 foreign import ccall "&H5Epush2"
-    p_h5epush2 :: FunPtr (HId_t -> CString -> CString -> CUInt -> HId_t -> HId_t -> HId_t -> CString -> IO HErr_t)
+    p_H5Epush2 :: FunPtr (HId_t -> CString -> CString -> CUInt -> HId_t -> HId_t -> HId_t -> CString -> IO HErr_t)
 
 -- |Deletes some error messages from the top of error stack.
 -- 
