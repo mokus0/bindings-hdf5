@@ -82,19 +82,19 @@ instance Eq HTri_t where
 -- |C signed size type.  This is a semi-standard POSIX type that isn't in
 -- the "Foreign.C.Types" module.  It is in "System.Posix.Types", but I'm not 
 -- sure whether that module is available on all platforms.
-#newtype ssize_t, Eq, Ord
+#newtype ssize_t, Eq, Ord, Num, Enum, Real, Integral
 
 h5_SIZEOF_SSIZE_T :: CSize
 h5_SIZEOF_SSIZE_T = #const H5_SIZEOF_SSIZE_T
 
-#newtype hsize_t, Eq, Ord
-#newtype hssize_t, Eq, Ord
+#newtype hsize_t, Eq, Ord, Num, Enum, Real, Integral
+#newtype hssize_t, Eq, Ord, Num, Enum, Real, Integral
 
 h5_SIZEOF_HSIZE_T, h5_SIZEOF_HSSIZE_T :: CSize
 h5_SIZEOF_HSIZE_T  = #const H5_SIZEOF_HSIZE_T
 h5_SIZEOF_HSSIZE_T = #const H5_SIZEOF_HSSIZE_T
 
-#newtype haddr_t, Eq, Ord
+#newtype haddr_t, Eq, Ord, Num, Enum, Real, Integral
 
 hADDR_UNDEF :: HAddr_t
 hADDR_UNDEF = HAddr_t (#const HADDR_UNDEF)
