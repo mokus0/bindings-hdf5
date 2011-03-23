@@ -161,6 +161,7 @@ import Foreign.Ptr.Conventions
 #newtype_const H5Z_cb_return_t, H5Z_CB_NO
 
 -- |Filter callback function definition
+-- 
 -- > typedef H5Z_cb_return_t (*H5Z_filter_func_t)(H5Z_filter_t filter, void* buf,
 -- >        size_t buf_size, void* op_data);
 type H5Z_filter_func_t a b = FunPtr (H5Z_filter_t -> Ptr a -> CSize -> InOut b -> IO H5Z_cb_return_t)
