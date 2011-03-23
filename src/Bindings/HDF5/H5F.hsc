@@ -13,7 +13,7 @@ import Foreign.Ptr.Conventions
 -- * Types and constants
 
 -- ** Flags for 'h5f_create' and 'h5f_open'
--- These are the bits that can be passed to the `flags' argument of
+-- These are the bits that can be passed to the 'flags' argument of
 -- H5Fcreate() and H5Fopen(). Use the bit-wise OR operator (|) to combine
 -- them as needed.  As a side effect, they call H5check_version() to make sure
 -- that the application is compiled with a version of the hdf5 header files
@@ -391,11 +391,11 @@ import Foreign.Ptr.Conventions
 #ccall H5Freset_mdc_hit_rate_stats, <hid_t> -> IO <herr_t>
 
 -- |Gets the name of the file to which object OBJ_ID belongs.
--- If `name' is non-NULL then write up to `size' bytes into that
+-- If 'name' is non-NULL then write up to 'size' bytes into that
 -- buffer and always return the length of the entry name.
--- Otherwise `size' is ignored and the function does not store the name,
+-- Otherwise 'size' is ignored and the function does not store the name,
 -- just returning the number of characters required to store the name.
--- If an error occurs then the buffer pointed to by `name' (NULL or non-NULL)
+-- If an error occurs then the buffer pointed to by 'name' (NULL or non-NULL)
 -- is unchanged and the function returns a negative value.
 -- 
 -- Note:  This routine returns the name that was used to open the file,
