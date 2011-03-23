@@ -1,3 +1,4 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Foreign.Ptr.Conventions where
 
 import Foreign.Marshal
@@ -10,20 +11,20 @@ import Control.Monad.IO.Peel
 -- various common data-passing conventions
 
 -- |In by-ref parameter; memory is allocated and freed by caller
-newtype In       a = In       (Ptr a) deriving (Eq, Ord, Show)
+newtype In       a = In       (Ptr a) deriving (Eq, Ord, Show, Storable)
 
 -- |In by-ref array; memory is allocated and freed by caller
-newtype InArray  a = InArray  (Ptr a) deriving (Eq, Ord, Show)
+newtype InArray  a = InArray  (Ptr a) deriving (Eq, Ord, Show, Storable)
 
 -- |Out by-ref parameter; memory is allocated and freed by caller
-newtype Out      a = Out      (Ptr a) deriving (Eq, Ord, Show)
+newtype Out      a = Out      (Ptr a) deriving (Eq, Ord, Show, Storable)
 
 -- |Out by-ref array; length is specified by caller, memory is allocated
 -- and freed by caller
-newtype OutArray a = OutArray (Ptr a) deriving (Eq, Ord, Show)
+newtype OutArray a = OutArray (Ptr a) deriving (Eq, Ord, Show, Storable)
 
 -- |In-out parameter.  Memory is allocated and freed by caller.
-newtype InOut    a = InOut    (Ptr a) deriving (Eq, Ord, Show)
+newtype InOut    a = InOut    (Ptr a) deriving (Eq, Ord, Show, Storable)
 
 withIn :: (Storable a, MonadPeelIO m) => a -> (In a -> m b) -> m b
 withIn x f = liftIOOp (with x) (f . In)
