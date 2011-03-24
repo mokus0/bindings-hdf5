@@ -1,10 +1,10 @@
 #include <bindings.h>
 #include <H5Cpublic.h>
 
-module Bindings.HDF5.H5C where
+module Bindings.HDF5.Raw.H5C where
 #strict_import
 
-import Bindings.HDF5.H5
+import Bindings.HDF5.Raw.H5
 
 #def typedef enum H5C_cache_incr_mode H5C_cache_incr_mode;
 #newtype H5C_cache_incr_mode, Eq

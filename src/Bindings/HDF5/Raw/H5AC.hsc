@@ -1,11 +1,11 @@
 #include <bindings.h>
 #include <H5ACpublic.h>
 
-module Bindings.HDF5.H5AC where
+module Bindings.HDF5.Raw.H5AC where
 #strict_import
 
-import Bindings.HDF5.H5
-import Bindings.HDF5.H5C
+import Bindings.HDF5.Raw.H5
+import Bindings.HDF5.Raw.H5C
 
 -- |'H5AC_cache_config_t' is a public structure intended for use in public APIs.
 -- At least in its initial incarnation, it is basicaly a copy of struct

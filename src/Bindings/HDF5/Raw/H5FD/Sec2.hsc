@@ -7,13 +7,13 @@
 -- changed based on previous I/O through this driver (don't mix
 -- I/O from this driver with I/O from other parts of the
 -- application to the same file).
-module Bindings.HDF5.H5FD.Sec2 where
+module Bindings.HDF5.Raw.H5FD.Sec2 where
 #strict_import
 
 import Foreign (unsafePerformIO)
 
-import Bindings.HDF5.H5
-import Bindings.HDF5.H5I
+import Bindings.HDF5.Raw.H5
+import Bindings.HDF5.Raw.H5I
 
 #mangle_ident "H5FD_SEC2"
     = unsafePerformIO (#mangle_ident "H5FD_sec2_init")

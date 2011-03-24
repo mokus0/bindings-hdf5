@@ -1,13 +1,13 @@
 #include <bindings.h>
 #include <H5Rpublic.h>
 
-module Bindings.HDF5.H5R where
+module Bindings.HDF5.Raw.H5R where
 #strict_import
 
-import Bindings.HDF5.H5
-import Bindings.HDF5.H5G
-import Bindings.HDF5.H5I
-import Bindings.HDF5.H5O
+import Bindings.HDF5.Raw.H5
+import Bindings.HDF5.Raw.H5G
+import Bindings.HDF5.Raw.H5I
+import Bindings.HDF5.Raw.H5O
 
 import Data.ByteString
 
@@ -160,7 +160,7 @@ newtype #mangle_tycon   "hdset_reg_ref_t"
 -- 
 -- [@ ref      :: 'In' a       @]   Reference to query.
 -- 
--- On success, returns an object type defined in "Bindings.HDF5.H5G"
+-- On success, returns an object type defined in "Bindings.HDF5.Raw.H5G"
 -- On failure, returns 'h5g_UNKNOWN'
 -- 
 -- > H5G_obj_t H5Rget_obj_type1(hid_t id, H5R_type_t ref_type, const void *_ref);

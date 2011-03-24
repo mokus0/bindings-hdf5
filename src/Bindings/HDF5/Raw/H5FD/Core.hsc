@@ -4,13 +4,13 @@
 -- |A driver which stores the HDF5 data in main memory using
 -- only the HDF5 public API. This driver is useful for fast
 -- access to small, temporary hdf5 files.
-module Bindings.HDF5.H5FD.Core where
+module Bindings.HDF5.Raw.H5FD.Core where
 #strict_import
 
 import Foreign (unsafePerformIO)
 
-import Bindings.HDF5.H5
-import Bindings.HDF5.H5I
+import Bindings.HDF5.Raw.H5
+import Bindings.HDF5.Raw.H5I
 
 import Foreign.Ptr.Conventions
 

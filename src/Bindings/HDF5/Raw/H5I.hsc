@@ -1,10 +1,10 @@
 #include <bindings.h>
 #include <H5Apublic.h>
 
-module Bindings.HDF5.H5I where
+module Bindings.HDF5.Raw.H5I where
 #strict_import
 
-import Bindings.HDF5.H5
+import Bindings.HDF5.Raw.H5
 
 import Data.Bits
 import Data.Char

@@ -6,12 +6,12 @@
 -- storage access whether a file, memory, network, etc. This
 -- layer usually just dispatches the request to an actual
 -- file driver layer.
-module Bindings.HDF5.H5FD where
+module Bindings.HDF5.Raw.H5FD where
 #strict_import
 
-import Bindings.HDF5.H5
-import Bindings.HDF5.H5F
-import Bindings.HDF5.H5I
+import Bindings.HDF5.Raw.H5
+import Bindings.HDF5.Raw.H5F
+import Bindings.HDF5.Raw.H5I
 
 import Foreign.Ptr.Conventions
 
@@ -20,7 +20,7 @@ import Foreign.Ptr.Conventions
 
 #if H5_VERSION_ATLEAST(1,8,4)
 
--- |Types of allocation requests: see "Bindings.HDF5.H5F"
+-- |Types of allocation requests: see "Bindings.HDF5.Raw.H5F"
 type H5FD_mem_t = H5F_mem_t
 
 #else
@@ -374,7 +374,7 @@ type H5FD_mem_t = H5F_mem_t
 #ccall H5FDcmp, In <H5FD_t> -> In <H5FD_t> -> IO CInt
 
 -- |Query a VFL driver for its feature flags. (listed in
--- "Bindings.HDF5.H5FD")
+-- "Bindings.HDF5.Raw.H5FD")
 -- 
 -- Returns non-negative on success, negative on failure.
 -- 

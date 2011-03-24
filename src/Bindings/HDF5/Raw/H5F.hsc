@@ -1,12 +1,12 @@
 #include <bindings.h>
 #include <H5Fpublic.h>
 
-module Bindings.HDF5.H5F where
+module Bindings.HDF5.Raw.H5F where
 #strict_import
 
-import Bindings.HDF5.H5
-import Bindings.HDF5.H5AC
-import Bindings.HDF5.H5I
+import Bindings.HDF5.Raw.H5
+import Bindings.HDF5.Raw.H5AC
+import Bindings.HDF5.Raw.H5I
 
 import Foreign.Ptr.Conventions
 
@@ -180,8 +180,8 @@ import Foreign.Ptr.Conventions
 -- value indicates that the library should use the default
 -- values for the appropriate template.
 --
--- See also: "Bindings.HDF5.H5F" for the list of supported flags.
--- "Bindings.HDF5.H5P" for the list of file creation and file 
+-- See also: "Bindings.HDF5.Raw.H5F" for the list of supported flags.
+-- "Bindings.HDF5.Raw.H5P" for the list of file creation and file 
 -- access properties.
 --
 -- On success, returns a file ID.  On failure, returns a negative value.
@@ -198,7 +198,7 @@ import Foreign.Ptr.Conventions
 -- behaviors of a file's access are controlled through the file-access
 -- property list.
 --
--- See Also: "Bindings.HDF5.H5F" for a list of possible values for 'flags'.
+-- See Also: "Bindings.HDF5.Raw.H5F" for a list of possible values for 'flags'.
 --
 -- On success, returns a file ID.  On failure, returns a negative value.
 --

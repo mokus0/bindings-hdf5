@@ -9,13 +9,13 @@
 -- From the start, this will have the structure very similar
 -- to our sec2 driver, but make system calls more similar to
 -- our stdio driver.
-module Bindings.HDF5.H5FD.Windows where
+module Bindings.HDF5.Raw.H5FD.Windows where
 #strict_import
 
 import Foreign (unsafePerformIO)
 
-import Bindings.HDF5.H5
-import Bindings.HDF5.H5I
+import Bindings.HDF5.Raw.H5
+import Bindings.HDF5.Raw.H5I
 
 #mangle_ident "H5FD_WINDOWS"
     = unsafePerformIO (#mangle_ident "H5FD_windows_init")

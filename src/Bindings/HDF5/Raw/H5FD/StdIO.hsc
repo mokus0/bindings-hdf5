@@ -1,13 +1,13 @@
 #include <bindings.h>
 #include <H5FDcore.h>
 
-module Bindings.HDF5.H5FD.StdIO where
+module Bindings.HDF5.Raw.H5FD.StdIO where
 #strict_import
 
 import Foreign (unsafePerformIO)
 
-import Bindings.HDF5.H5
-import Bindings.HDF5.H5I
+import Bindings.HDF5.Raw.H5
+import Bindings.HDF5.Raw.H5I
 
 import Foreign.Ptr.Conventions
 

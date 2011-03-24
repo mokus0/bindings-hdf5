@@ -8,13 +8,13 @@
 -- I/O from this driver with I/O from other parts of the
 -- application to the same file).
 --     With custom modifications...
-module Bindings.HDF5.H5FD.Log where
+module Bindings.HDF5.Raw.H5FD.Log where
 #strict_import
 
 import Foreign (unsafePerformIO)
 
-import Bindings.HDF5.H5
-import Bindings.HDF5.H5I
+import Bindings.HDF5.Raw.H5
+import Bindings.HDF5.Raw.H5I
 
 import Foreign.Ptr.Conventions
 

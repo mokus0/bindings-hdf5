@@ -1,19 +1,19 @@
 #include <bindings.h>
 #include <H5Ppublic.h>
 
-module Bindings.HDF5.H5P where
+module Bindings.HDF5.Raw.H5P where
 #strict_import
 
-import Bindings.HDF5.H5
-import Bindings.HDF5.H5AC
-import Bindings.HDF5.H5D
-import Bindings.HDF5.H5F
-import Bindings.HDF5.H5FD
-import Bindings.HDF5.H5I
-import Bindings.HDF5.H5L
-import Bindings.HDF5.H5MM
-import Bindings.HDF5.H5T
-import Bindings.HDF5.H5Z
+import Bindings.HDF5.Raw.H5
+import Bindings.HDF5.Raw.H5AC
+import Bindings.HDF5.Raw.H5D
+import Bindings.HDF5.Raw.H5F
+import Bindings.HDF5.Raw.H5FD
+import Bindings.HDF5.Raw.H5I
+import Bindings.HDF5.Raw.H5L
+import Bindings.HDF5.Raw.H5MM
+import Bindings.HDF5.Raw.H5T
+import Bindings.HDF5.Raw.H5Z
 
 import Foreign.Ptr.Conventions
 import System.Posix.Types (COff)
@@ -851,7 +851,7 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> InOut a -> IO HErr_t)
 -- 'cd_nelmts' indicates the number of entries in the 'cd_values'
 -- array allocated by the caller while on exit it contains the
 -- number of values defined by the filter.  'filter_config' is a bit
--- field contaning encode/decode flags from "Bindings.HDF5.H5Z".  The
+-- field contaning encode/decode flags from "Bindings.HDF5.Raw.H5Z".  The
 -- 'idx' should be a value between zero and N-1 as described for
 -- 'h5p_get_nfilters' and the function will return failure if the
 -- filter number is out of range.
@@ -874,7 +874,7 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> InOut a -> IO HErr_t)
 -- 'cd_nelmts' indicates the number of entries in the 'cd_values'
 -- array allocated by the caller while on exit it contains the
 -- number of values defined by the filter.  'filter_config' is a bit
--- field contaning encode/decode flags from "Bindings.HDF5.H5Z".  The 
+-- field contaning encode/decode flags from "Bindings.HDF5.Raw.H5Z".  The 
 -- ID should be the filter ID to retrieve the parameters for.  If the
 -- filter is not set for the property list, an error will be returned.
 --

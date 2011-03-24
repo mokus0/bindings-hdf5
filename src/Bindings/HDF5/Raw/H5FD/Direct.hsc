@@ -4,13 +4,13 @@
 -- |The Direct I/O file driver forces the data to be written to
 -- the file directly without being copied into system kernel
 -- buffer.  The main system supporting this feature is Linux.
-module Bindings.HDF5.H5FD.Direct where
+module Bindings.HDF5.Raw.H5FD.Direct where
 #strict_import
 
 import Foreign (unsafePerformIO)
 
-import Bindings.HDF5.H5
-import Bindings.HDF5.H5I
+import Bindings.HDF5.Raw.H5
+import Bindings.HDF5.Raw.H5I
 
 import Foreign.Ptr.Conventions
 

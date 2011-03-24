@@ -1,14 +1,14 @@
 #include <bindings.h>
 #include <H5Apublic.h>
 
-module Bindings.HDF5.H5A where
+module Bindings.HDF5.Raw.H5A where
 #strict_import
 
-import Bindings.HDF5.H5
+import Bindings.HDF5.Raw.H5
 
-import Bindings.HDF5.H5I -- IDs
-import Bindings.HDF5.H5O -- Object Headers
-import Bindings.HDF5.H5T -- Datatypes
+import Bindings.HDF5.Raw.H5I -- IDs
+import Bindings.HDF5.Raw.H5O -- Object Headers
+import Bindings.HDF5.Raw.H5T -- Datatypes
 
 import Foreign.Ptr.Conventions
 

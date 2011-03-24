@@ -1,7 +1,7 @@
 #include <bindings.h>
 #include <H5public.h>
 
-module Bindings.HDF5.H5 where
+module Bindings.HDF5.Raw.H5 where
 #strict_import
 
 import Data.Version

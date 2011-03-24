@@ -2,13 +2,13 @@
 
 #include <H5Tpublic.h>
 
-module Bindings.HDF5.H5T where
+module Bindings.HDF5.Raw.H5T where
 #strict_import
 
 import Foreign.Ptr.Conventions
 
-import Bindings.HDF5.H5
-import Bindings.HDF5.H5I
+import Bindings.HDF5.Raw.H5
+import Bindings.HDF5.Raw.H5I
 
 -- |These are the various classes of datatypes
 -- 

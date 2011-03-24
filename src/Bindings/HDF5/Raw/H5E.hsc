@@ -1,11 +1,11 @@
 #include <bindings.h>
 #include <H5Epublic.h>
 
-module Bindings.HDF5.H5E where
+module Bindings.HDF5.Raw.H5E where
 #strict_import
 
-import Bindings.HDF5.H5
-import Bindings.HDF5.H5I
+import Bindings.HDF5.Raw.H5
+import Bindings.HDF5.Raw.H5I
 
 import Foreign (nullPtr, nullFunPtr)
 import Foreign.LibFFI
@@ -365,7 +365,7 @@ h5e_try action = do
     h5e_END_TRY tryState
     return result
 
--- TODO: wrap these up in an exported header file (something like "Bindings.HDF5.H5E.h") as macros for use in haskell code, or maybe as TH macros
+-- TODO: wrap these up in an exported header file (something like "Bindings.HDF5.Raw.H5E.h") as macros for use in haskell code, or maybe as TH macros
 -- /*
 --  * Public API Convenience Macros for Error reporting - Documented
 --  */

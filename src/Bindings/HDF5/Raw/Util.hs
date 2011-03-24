@@ -1,6 +1,6 @@
-module Bindings.HDF5.Util where
+module Bindings.HDF5.Raw.Util where
 
-import Bindings.HDF5
+import Bindings.HDF5.Raw
 
 hboolToBool :: HBool_t -> Bool
 hboolToBool (HBool_t n) = (n /= 0)

@@ -15,13 +15,13 @@
 -- (actually, this happens when the file family is flushed, and
 -- can be quite time consuming on file systems that don't
 -- implement holes, like nfs).
-module Bindings.HDF5.H5FD.Family where
+module Bindings.HDF5.Raw.H5FD.Family where
 #strict_import
 
 import Foreign (unsafePerformIO)
 
-import Bindings.HDF5.H5
-import Bindings.HDF5.H5I
+import Bindings.HDF5.Raw.H5
+import Bindings.HDF5.Raw.H5I
 
 import Foreign.Ptr.Conventions
 

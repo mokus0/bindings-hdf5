@@ -2,11 +2,11 @@
 #include <H5Ipublic.h>
 #include <H5Zpublic.h>
 
-module Bindings.HDF5.H5Z where
+module Bindings.HDF5.Raw.H5Z where
 #strict_import
 
-import Bindings.HDF5.H5
-import Bindings.HDF5.H5I
+import Bindings.HDF5.Raw.H5
+import Bindings.HDF5.Raw.H5I
 
 import Foreign.Ptr.Conventions
 
