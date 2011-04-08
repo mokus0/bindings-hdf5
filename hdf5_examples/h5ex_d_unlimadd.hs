@@ -70,7 +70,7 @@ main = do
   -- notice annoying conversion from Integral to Word64, otherwise
   -- typecast to HSize_t fails
 
-  space <- withInArray [h5s_UNLIMITED, h5s_UNLIMITED ] (\maxdims -> withInArray [HSize_t (fromIntegral dim0), HSize_t (fromIntegral dim1)] (\dims -> h5s_create_simple 2 dims maxdims))
+  space <- withInArray [h5s_UNLIMITED, h5s_UNLIMITED ] (\maxdims -> withInArray [fromIntegral dim0, fromIntegral dim1] (\dims -> h5s_create_simple 2 dims maxdims))
 
   -- Create the dataset creation property list, and set the chunk
   -- size.

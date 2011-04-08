@@ -42,7 +42,7 @@ main = do
     -- Create dataspace.  Setting maximum size to NULL sets the
     -- maximum size to be the current size.
 
-    let dims = [HSize_t (fromIntegral dim0), HSize_t (fromIntegral dim1)]
+    let dims = [fromIntegral dim0, fromIntegral dim1]
     space <- withInArray dims $ \dims' -> h5s_create_simple 2 dims' (InArray nullPtr)
 
     -- Create the dataset.  We will use all default properties for
