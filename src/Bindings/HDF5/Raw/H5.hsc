@@ -4,6 +4,7 @@
 module Bindings.HDF5.Raw.H5 where
 #strict_import
 
+import Data.Bits
 import Data.Version
 import Foreign.Ptr.Conventions
 
@@ -50,7 +51,7 @@ vers = Version
 -- if((dset = H5Dopen2(file, name)) < 0)
 --    fprintf(stderr, "unable to open the requested dataset\n");
 -- @
-#newtype herr_t, Eq, Ord, Num, Real, Enum, Integral
+#newtype herr_t, Eq, Ord, Num, Real, Bits, Enum, Bounded, Integral
 
 -- |Boolean type.  Successful return values are zero (false) or positive
 -- (true). The typical true value is 1 but don't bet on it.  Boolean
@@ -82,19 +83,19 @@ instance Eq HTri_t where
 -- |C signed size type.  This is a semi-standard POSIX type that isn't in
 -- the "Foreign.C.Types" module.  It is in "System.Posix.Types", but I'm not 
 -- sure whether that module is available on all platforms.
-#newtype ssize_t, Eq, Ord, Num, Enum, Real, Integral
+#newtype ssize_t, Eq, Ord, Num, Bits, Enum, Bounded, Real, Integral
 
 h5_SIZEOF_SSIZE_T :: CSize
 h5_SIZEOF_SSIZE_T = #const H5_SIZEOF_SSIZE_T
 
-#newtype hsize_t, Eq, Ord, Num, Enum, Real, Integral
-#newtype hssize_t, Eq, Ord, Num, Enum, Real, Integral
+#newtype hsize_t, Eq, Ord, Num, Bits, Enum, Bounded, Real, Integral
+#newtype hssize_t, Eq, Ord, Num, Bits, Enum, Bounded, Real, Integral
 
 h5_SIZEOF_HSIZE_T, h5_SIZEOF_HSSIZE_T :: CSize
 h5_SIZEOF_HSIZE_T  = #const H5_SIZEOF_HSIZE_T
 h5_SIZEOF_HSSIZE_T = #const H5_SIZEOF_HSSIZE_T
 
-#newtype haddr_t, Eq, Ord, Num, Enum, Real, Integral
+#newtype haddr_t, Eq, Ord, Num, Bits, Enum, Bounded, Real, Integral
 
 hADDR_UNDEF :: HAddr_t
 hADDR_UNDEF = HAddr_t (#const HADDR_UNDEF)
