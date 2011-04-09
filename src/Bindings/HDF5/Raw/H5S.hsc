@@ -16,7 +16,7 @@ import Foreign.Ptr.Conventions
 #num H5S_MAX_RANK
 
 -- |Different types of dataspaces
-#newtype H5S_class_t
+#newtype H5S_class_t, Eq
 
 -- |error
 #newtype_const H5S_class_t, H5S_NO_CLASS
@@ -84,7 +84,7 @@ import Foreign.Ptr.Conventions
 #newtype_const H5S_seloper_t, H5S_SELECT_INVALID
 
 -- |Enumerated type for the type of selection
-#newtype H5S_sel_type
+#newtype H5S_sel_type, Eq
 
 -- |Error
 #newtype_const H5S_sel_type, H5S_SEL_ERROR
@@ -168,7 +168,7 @@ import Foreign.Ptr.Conventions
 -- Returns non-negative on success, negative on failure.
 -- 
 -- > herr_t H5Sencode(hid_t obj_id, void *buf, size_t *nalloc);
-#ccall H5Sencode, <hid_t> -> Ptr a -> InOut <size_t> -> IO <herr_t>
+#ccall H5Sencode, <hid_t> -> OutArray a -> InOut <size_t> -> IO <herr_t>
 
 -- |Decode a binary object description of dataspace and
 -- return a new object handle.
