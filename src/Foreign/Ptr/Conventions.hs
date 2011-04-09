@@ -1,6 +1,8 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Foreign.Ptr.Conventions where
 
+-- TODO: make these all exception-safe
+
 import Foreign.Marshal
 import Foreign.Ptr
 import Foreign.Storable
@@ -25,6 +27,8 @@ newtype OutArray a = OutArray (Ptr a) deriving (Eq, Ord, Show, Storable)
 
 -- |In-out parameter.  Memory is allocated and freed by caller.
 newtype InOut    a = InOut    (Ptr a) deriving (Eq, Ord, Show, Storable)
+
+newtype InOutArray a = InOutArray (Ptr a) deriving (Eq, Ord, Show, Storable)
 
 withIn :: (Storable a, MonadPeelIO m) => a -> (In a -> m b) -> m b
 withIn x f = liftIOOp (with x) (f . In)
@@ -101,3 +105,34 @@ withInOut_ a f = liftIOOp alloca $ \p -> do
     f (InOut p)
     liftIO (peek p)
 
+withInOutArray :: (Storable a, MonadIO m) => Int -> [a] -> (InOutArray a -> m (Int, b)) -> m ([a], b)
+withInOutArray sz xs f = do
+    p <- liftIO (mallocArray sz)
+    liftIO $ sequence_
+        [ pokeElemOff p i x
+        | (i,x) <- zip [0..] (take sz xs)
+        ]
+    
+    (n, y) <- f (InOutArray p)
+    
+    xs' <- liftIO $ sequence
+        [ peekElemOff p i
+        | i <- [0..n-1]
+        ]
+    
+    return (xs', y)
+
+withInOutArray_ :: (Storable a, MonadIO m) => Int -> [a] -> (InOutArray a -> m Int) -> m [a]
+withInOutArray_ sz xs f = do
+    p <- liftIO (mallocArray sz)
+    liftIO $ sequence_
+        [ pokeElemOff p i x
+        | (i,x) <- zip [0..] (take sz xs)
+        ]
+    
+    n <- f (InOutArray p)
+    
+    liftIO $ sequence
+        [ peekElemOff p i
+        | i <- [0..n-1]
+        ]

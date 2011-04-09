@@ -76,15 +76,15 @@ import Foreign.Ptr.Conventions
 -- 
 -- Parameters:
 -- 
--- [@ elem          :: 'InOut' a      @]    Pointer to the element in memory containing the current point.
+-- [@ elem          :: 'InOut' a           @]    Pointer to the element in memory containing the current point.
 -- 
--- [@ type_id       :: 'HId_t'        @]    Datatype ID for the elements stored in ELEM.
+-- [@ type_id       :: 'HId_t'             @]    Datatype ID for the elements stored in ELEM.
 -- 
--- [@ ndim          :: 'CUInt'        @]    Number of dimensions for POINT array
+-- [@ ndim          :: 'CUInt'             @]    Number of dimensions for POINT array
 -- 
--- [@ point         :: 'In' 'HSize_t' @]    Array containing the location of the element within the original dataspace.
+-- [@ point         :: 'InArray' 'HSize_t' @]    Array containing the location of the element within the original dataspace.
 -- 
--- [@ operator_data :: 'InOut' b      @]    Pointer to any user-defined data associated with the operation.
+-- [@ operator_data :: 'InOut' b           @]    Pointer to any user-defined data associated with the operation.
 -- 
 -- Return Values:
 -- 
@@ -101,7 +101,7 @@ import Foreign.Ptr.Conventions
 -- 
 -- > typedef herr_t (*H5D_operator_t)(void *elem, hid_t type_id, unsigned ndim,
 -- > 				 const hsize_t *point, void *operator_data);
-type H5D_operator_t a b = FunPtr (InOut a -> HId_t -> CUInt -> In HSize_t -> InOut b -> IO HErr_t)
+type H5D_operator_t a b = FunPtr (InOut a -> HId_t -> CUInt -> InArray HSize_t -> InOut b -> IO HErr_t)
 
 -- |Creates a new dataset named 'name' at 'loc_id', opens the
 -- dataset for access, and associates with that dataset constant
@@ -305,6 +305,7 @@ type H5D_operator_t a b = FunPtr (InOut a -> HId_t -> CUInt -> In HSize_t -> InO
 -- >        hid_t file_space_id, hid_t plist_id, const void *buf);
 #ccall H5Dwrite, <hid_t> -> <hid_t> -> <hid_t> -> <hid_t> -> <hid_t> -> InArray a -> IO <herr_t>
 
+-- TODO: verify that 'buf' is mutable
 -- |This routine iterates over all the elements selected in a memory
 -- buffer.  The callback function is called once for each element selected
 -- in the dataspace.  The selection in the dataspace is modified so
@@ -334,7 +335,7 @@ type H5D_operator_t a b = FunPtr (InOut a -> HId_t -> CUInt -> In HSize_t -> InO
 --
 -- > herr_t H5Diterate(void *buf, hid_t type_id, hid_t space_id,
 -- >        H5D_operator_t op, void *operator_data);
-#ccall H5Diterate, Ptr a -> <hid_t> -> <hid_t> -> H5D_operator_t a b -> Ptr b -> IO <herr_t>
+#ccall H5Diterate, InOutArray a -> <hid_t> -> <hid_t> -> H5D_operator_t a b -> InOut b -> IO <herr_t>
 
 -- |Frees the buffers allocated for storing variable-length data
 -- in memory.  Only frees the VL data in the selection defined in the
