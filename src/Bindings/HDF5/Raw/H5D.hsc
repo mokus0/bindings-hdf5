@@ -18,7 +18,7 @@ import Foreign.Ptr.Conventions
 #endif
 
 -- |Values for the H5D_LAYOUT property
-#newtype H5D_layout_t
+#newtype H5D_layout_t, Eq
 
 #newtype_const H5D_layout_t, H5D_LAYOUT_ERROR
 
@@ -44,7 +44,7 @@ import Foreign.Ptr.Conventions
 #endif
 
 -- |Values for the space allocation time property
-#newtype H5D_alloc_time_t
+#newtype H5D_alloc_time_t, Eq
 #newtype_const H5D_alloc_time_t, H5D_ALLOC_TIME_ERROR
 #newtype_const H5D_alloc_time_t, H5D_ALLOC_TIME_DEFAULT
 #newtype_const H5D_alloc_time_t, H5D_ALLOC_TIME_EARLY
@@ -52,21 +52,21 @@ import Foreign.Ptr.Conventions
 #newtype_const H5D_alloc_time_t, H5D_ALLOC_TIME_INCR
 
 -- |Values for the status of space allocation
-#newtype H5D_space_status_t
+#newtype H5D_space_status_t, Eq
 #newtype_const H5D_space_status_t, H5D_SPACE_STATUS_ERROR
 #newtype_const H5D_space_status_t, H5D_SPACE_STATUS_NOT_ALLOCATED
 #newtype_const H5D_space_status_t, H5D_SPACE_STATUS_PART_ALLOCATED
 #newtype_const H5D_space_status_t, H5D_SPACE_STATUS_ALLOCATED
 
 -- |Values for time of writing fill value property
-#newtype H5D_fill_time_t
+#newtype H5D_fill_time_t, Eq
 #newtype_const H5D_fill_time_t, H5D_FILL_TIME_ERROR
 #newtype_const H5D_fill_time_t, H5D_FILL_TIME_ALLOC
 #newtype_const H5D_fill_time_t, H5D_FILL_TIME_NEVER
 #newtype_const H5D_fill_time_t, H5D_FILL_TIME_IFSET
 
 -- |Values for fill value status
-#newtype H5D_fill_value_t
+#newtype H5D_fill_value_t, Eq
 #newtype_const H5D_fill_value_t, H5D_FILL_VALUE_ERROR
 #newtype_const H5D_fill_value_t, H5D_FILL_VALUE_UNDEFINED
 #newtype_const H5D_fill_value_t, H5D_FILL_VALUE_DEFAULT

@@ -471,7 +471,7 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> InOut a -> IO HErr_t)
 -- Returns non-negative on success, negative on failure.
 -- 
 -- > herr_t H5Pget_size(hid_t id, const char *name, size_t *size);
-#ccall H5Pget_size, <hid_t> -> CString -> Ptr <size_t> -> IO <herr_t>
+#ccall H5Pget_size, <hid_t> -> CString -> Out <size_t> -> IO <herr_t>
 
 -- |Routine to query the size of a property in a property list or class.
 -- 
@@ -489,7 +489,7 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> InOut a -> IO HErr_t)
 -- Returns non-negative on success, negative on failure.
 -- 
 -- > herr_t H5Pget_nprops(hid_t id, size_t *nprops);
-#ccall H5Pget_nprops, <hid_t> -> Ptr <size_t> -> IO <herr_t>
+#ccall H5Pget_nprops, <hid_t> -> Out <size_t> -> IO <herr_t>
 
 -- |Routine to query the name of a generic property list class
 -- 
