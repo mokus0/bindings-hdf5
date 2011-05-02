@@ -16,7 +16,7 @@ h5l_MAX_LINK_NAME_LEN :: Word32
 h5l_MAX_LINK_NAME_LEN = #const H5L_MAX_LINK_NAME_LEN
 
 -- |Macro to indicate operation occurs on same location
-#num H5L_SAME_LOC
+#newtype_const hid_t, H5L_SAME_LOC
 
 -- |Current version of the H5L_class_t struct
 #num H5L_LINK_CLASS_T_VERS

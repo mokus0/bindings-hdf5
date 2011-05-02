@@ -2,13 +2,18 @@
 module Foreign.Ptr.Conventions where
 
 -- TODO: make these all exception-safe
-
+-- TODO: reverse order of 'out' returns
+-- TODO: bytestring versions?  versions allocating by byte but using vectors?
 import Foreign.Marshal
 import Foreign.Ptr
+import Foreign.ForeignPtr
 import Foreign.Storable
 
 import Control.Monad.IO.Class
 import Control.Monad.IO.Peel
+import Control.Monad.Primitive (RealWorld)
+
+import qualified Data.Vector.Storable as SV
 
 -- various common data-passing conventions
 
@@ -35,6 +40,12 @@ withIn x f = liftIOOp (with x) (f . In)
 
 withInArray :: (Storable a, MonadPeelIO m) => [a] -> (InArray a -> m b) -> m b
 withInArray xs f = liftIOOp (withArray xs) (f . InArray)
+
+withInVector :: (Storable a, MonadPeelIO m) => SV.Vector a -> (InArray a -> m b) -> m b
+withInVector vec f = liftIOOp (SV.unsafeWith vec) (f . InArray)
+
+withInMVector :: (Storable a, MonadPeelIO m) => SV.MVector RealWorld a -> (InArray a -> m b) -> m b
+withInMVector (SV.MVector p _ fp) f = liftIOOp (withForeignPtr fp) (\_ -> f (InArray p))
 
 withOut :: (Storable a, MonadPeelIO m) => (Out a -> m b) -> m (b,a)
 withOut f = liftIOOp alloca $ \p -> do
@@ -64,6 +75,16 @@ withOutArray n f = do
     liftIO (free p)
     return (b,a)
 
+withOutMVector :: (Storable a, MonadPeelIO m) => SV.MVector RealWorld a -> (Int -> OutArray a -> m b) -> m b
+withOutMVector (SV.MVector p n fp) f = do
+    liftIOOp (withForeignPtr fp) (\_ -> f n (OutArray p))
+
+withOutVector :: (Storable a, MonadPeelIO m) => Int -> (OutArray a -> m b) -> m (b, SV.Vector a)
+withOutVector n f = do
+    p <- liftIO (mallocForeignPtrArray n)
+    b <- liftIOOp (withForeignPtr p) (f . OutArray)
+    return (b, SV.unsafeFromForeignPtr p 0 n)
+
 withOutArray' :: (Storable a, MonadIO m) => Int -> (OutArray a -> m Int) -> m (Int, [a])
 withOutArray' sz f = do
     p <- liftIO (mallocArray sz)
@@ -72,6 +93,12 @@ withOutArray' sz f = do
     liftIO (free p)
     return (n, a)
 
+withOutVector' :: (Storable a, MonadPeelIO m) => Int -> (OutArray a -> m Int) -> m (SV.Vector a)
+withOutVector' sz f = do
+    p <- liftIO (mallocForeignPtrArray sz)
+    n <- liftIOOp (withForeignPtr p) (f . OutArray)
+    return (SV.unsafeFromForeignPtr p 0 n)
+
 withOutArray_ :: (Storable a, MonadIO m) => Int -> (OutArray a -> m b) -> m [a]
 withOutArray_ n f = do
     p <- liftIO (mallocArray n)
@@ -79,6 +106,13 @@ withOutArray_ n f = do
     a <- liftIO (peekArray n p)
     liftIO (free p)
     return a
+
+withOutVector_ :: (Storable a, MonadPeelIO m) => Int -> (OutArray a -> m b) -> m (SV.Vector a)
+withOutVector_ n f = do
+    p <- liftIO (mallocForeignPtrArray n)
+    b <- liftIOOp (withForeignPtr p) (f . OutArray)
+    return (SV.unsafeFromForeignPtr p 0 n)
+
 
 -- | @withOut0 zero n f@: allocate an array large enough to hold @n@ elements,
 -- plus one extra spot for a terminator.  Calls @f@ with that buffer, which is

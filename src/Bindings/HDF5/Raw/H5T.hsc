@@ -595,7 +595,7 @@ h5t_MIPS_F64 = h5t_IEEE_F64BE
 -- Returns non-negative on success, negative on failure.
 --
 -- > herr_t H5Tclose(hid_t type_id);
-#ccall H5Tclose, <hid_t> -> <herr_t>
+#ccall H5Tclose, <hid_t> -> IO <herr_t>
 
 -- |Determines if two datatypes are equal.
 --
@@ -668,13 +668,13 @@ h5t_MIPS_F64 = h5t_IEEE_F64BE
 -- Returns non-negative on success, negative on failure.
 -- 
 -- > herr_t H5Tencode(hid_t obj_id, void *buf, size_t *nalloc);
-#ccall H5Tencode, <hid_t> -> In a -> InOut <size_t> -> IO <herr_t>
+#ccall H5Tencode, <hid_t> -> OutArray a -> InOut <size_t> -> IO <herr_t>
 
 -- |Decode a binary object description and return a new object handle,
 -- or negative on failure.
 -- 
 -- > hid_t H5Tdecode(const void *buf);
-#ccall H5Tdecode, In a -> IO <hid_t>
+#ccall H5Tdecode, InArray a -> IO <hid_t>
 
 -- * Operations defined on compound datatypes
 
@@ -721,25 +721,32 @@ h5t_MIPS_F64 = h5t_IEEE_F64BE
 -- > herr_t H5Tenum_insert(hid_t type, const char *name, const void *value);
 #ccall H5Tenum_insert, <hid_t> -> CString -> In a -> IO <herr_t>
 
--- > herr_t H5Tenum_nameof(hid_t type, const void *value, char *name/*out*/,
--- >        size_t size);
-#ccall H5Tenum_nameof, <hid_t> -> CString -> OutArray CChar -> <size_t> -> IO <herr_t>
-
 -- |Finds the symbol name that corresponds to the specified 'value'
 -- of an enumeration data type 'type'. At most 'size' characters of
 -- the symbol name are copied into the 'name' buffer. If the
--- entire symbol name and null terminator do not fit in the 'name'
+-- entire symbol anem and null terminator do not fit in the 'name'
 -- buffer then as many characters as possible are copied (not
 -- null terminated) and the function fails.
 -- 
--- On success, returns non-negative.  On failure, returns negative and the
--- first character of 'name' is set to null if 'size' allows it.
+-- Returns non-negative on success, negative on failure.  On failure,
+-- the first character of 'name' is set to null if 'size' allows it.
 -- 
 -- WARNING: the above 2 paragraphs contradict each other about what happens
 -- on failure.  This is because the documentation in the source does.  If
 -- I read the source correctly, this is because there are some failures which
 -- have one behavior and some which have the other.  Therefore, I would 
 -- probably not rely on either behavior.
+-- 
+-- > herr_t H5Tenum_nameof(hid_t type, const void *value, char *name/*out*/,
+-- >        size_t size);
+#ccall H5Tenum_nameof, <hid_t> -> In a -> OutArray CChar -> <size_t> -> IO <herr_t>
+
+-- |Finds the value that corresponds to the specified 'name' of an
+-- enumeration 'type'. The 'value' argument should be at least as
+-- large as the value of @'h5t_get_size' type@ in order to hold the
+-- result.
+-- 
+-- Returns non-negative on success, negative on failure.
 -- 
 -- > herr_t H5Tenum_valueof(hid_t type, const char *name,
 -- >        void *value/*out*/);

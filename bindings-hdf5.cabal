@@ -70,7 +70,9 @@ Library
                         bytestring,
                         libffi,
                         monad-peel,
-                        transformers
+                        primitive,
+                        transformers,
+                        vector
 
   include-dirs:         include
   pkgconfig-depends:    hdf5
