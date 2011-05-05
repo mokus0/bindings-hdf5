@@ -70,14 +70,14 @@ main = do
   -- notice annoying conversion from Integral to Word64, otherwise
   -- typecast to HSize_t fails
 
-  space <- withInArray [h5s_UNLIMITED, h5s_UNLIMITED ] (\maxdims -> withInArray [fromIntegral dim0, fromIntegral dim1] (\dims -> h5s_create_simple 2 dims maxdims))
+  space <- withInList [h5s_UNLIMITED, h5s_UNLIMITED ] (\maxdims -> withInList [fromIntegral dim0, fromIntegral dim1] (\dims -> h5s_create_simple 2 dims maxdims))
 
   -- Create the dataset creation property list, and set the chunk
   -- size.
 
   putStrLn $ "chunk0,chunk1 " ++ show chunk0 ++ "," ++ show chunk1
   dcpl <- h5p_create h5p_DATASET_CREATE
-  status <- withInArray [ chunk0, chunk1 ] (\chunk -> h5p_set_chunk dcpl 2 chunk)
+  status <- withInList [ chunk0, chunk1 ] (\chunk -> h5p_set_chunk dcpl 2 chunk)
 
   -- Create the unlimited dataset.
 
@@ -85,7 +85,7 @@ main = do
 
   -- Write the data to the dataset.
 
-  status <- withInArray wdata (\wdata' -> h5d_write dset h5t_NATIVE_INT h5s_ALL h5s_ALL h5p_DEFAULT wdata')
+  status <- withInList wdata (\wdata' -> h5d_write dset h5t_NATIVE_INT h5s_ALL h5s_ALL h5p_DEFAULT wdata')
 
   -- Close and release resources.
 
@@ -108,7 +108,7 @@ main = do
 
   space <- h5d_get_space dset
 
-  (ndims, dims) <- withOutArray 2 $ \a1 -> withOutArray 2 $ \a2 -> h5s_get_simple_extent_dims space a1 a2
+  (dims, (maxDims, ndims)) <- withOutList 2 $ \a1 -> withOutList 2 $ \a2 -> h5s_get_simple_extent_dims space a1 a2
 
   let n = (dims !! 0) * (dims !! 1)
 
@@ -116,7 +116,7 @@ main = do
 
   -- Read the data using the default properties.
 
-  (err_code, rdata) <- withOutArray (fromIntegral n) $ \a1 -> h5d_read dset h5t_NATIVE_INT h5s_ALL h5s_ALL h5p_DEFAULT (a1 :: OutArray CInt)
+  (rdata, err_code) <- withOutList (fromIntegral n) $ \a1 -> h5d_read dset h5t_NATIVE_INT h5s_ALL h5s_ALL h5p_DEFAULT (a1 :: OutArray CInt)
 
   -- Output the data to the screen.
 
@@ -127,7 +127,7 @@ main = do
 
   -- Extend the dataset.
 
-  status <- withInArray [ edim0, edim1 ] (\extdims -> h5d_set_extent dset extdims)
+  status <- withInList [ edim0, edim1 ] (\extdims -> h5d_set_extent dset extdims)
     
   -- Retrieve the dataspace for the newly extended dataset.
 
@@ -156,7 +156,7 @@ main = do
 
   -- Write the data to the selected portion of the dataset.
 
-  status <- withInArray wdata2 (\wdata2' -> h5d_write dset h5t_NATIVE_INT h5s_ALL space h5p_DEFAULT wdata2')
+  status <- withInList wdata2 (\wdata2' -> h5d_write dset h5t_NATIVE_INT h5s_ALL space h5p_DEFAULT wdata2')
 
   -- Close and release resources.
 
@@ -175,7 +175,7 @@ main = do
 
   space <- h5d_get_space dset
 
-  (ndims, dims) <- withOutArray 2 $ \a1 -> withOutArray 2 $ \a2 -> h5s_get_simple_extent_dims space a1 a2
+  (dims, ndims) <- withOutList 2 $ \a1 -> withOutList_ 2 $ \a2 -> h5s_get_simple_extent_dims space a1 a2
 
   let n = (dims !! 0) * (dims !! 1)
 
@@ -183,7 +183,7 @@ main = do
 
   -- Read the data using the default properties.
 
-  (err_code, rdata) <- withOutArray (fromIntegral n) $ \a1 -> h5d_read dset h5t_NATIVE_INT h5s_ALL h5s_ALL h5p_DEFAULT (a1 :: OutArray CInt)
+  (rdata, err_code) <- withOutList (fromIntegral n) $ \a1 -> h5d_read dset h5t_NATIVE_INT h5s_ALL h5s_ALL h5p_DEFAULT (a1 :: OutArray CInt)
 
   -- Output the data to the screen.
 

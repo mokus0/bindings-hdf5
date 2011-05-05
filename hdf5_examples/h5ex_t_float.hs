@@ -88,7 +88,7 @@ dimensional dataset so the dynamic allocation must be done in steps.
 
   space <- h5d_get_space dset
 
-  (dims, ndims) <- withOutList 2 $ \a1 -> withOutList 2 $ \a2 -> h5s_get_simple_extent_dims space a1 a2
+  (dims, (maxDims, ndims)) <- withOutList 2 $ \a1 -> withOutList 2 $ \a2 -> h5s_get_simple_extent_dims space a1 a2
 
   putStrLn $ "ndims : " ++ show ndims ++ " dims : " ++ show dims
 
@@ -108,7 +108,7 @@ dimensional dataset so the dynamic allocation must be done in steps.
   -- situation is that this determination is made automagically and
   -- the appropriate tagged data is returned.
 
-  (err_code, arr) <- withOutList (fromIntegral n) $ \a1 -> h5d_read dset h5t_NATIVE_DOUBLE h5s_ALL h5s_ALL h5p_DEFAULT (a1 :: OutArray CDouble)
+  (arr, err_code) <- withOutList (fromIntegral n) $ \a1 -> h5d_read dset h5t_NATIVE_DOUBLE h5s_ALL h5s_ALL h5p_DEFAULT (a1 :: OutArray CDouble)
 
   -- Output the data to the screen.
 

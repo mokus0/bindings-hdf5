@@ -43,7 +43,7 @@ main = do
     -- maximum size to be the current size.
 
     let dims = [fromIntegral dim0, fromIntegral dim1]
-    space <- withInArray dims $ \dims' -> h5s_create_simple 2 dims' (InArray nullPtr)
+    space <- withInList dims $ \dims' -> h5s_create_simple 2 dims' (InArray nullPtr)
 
     -- Create the dataset.  We will use all default properties for
     -- this example.
@@ -52,7 +52,7 @@ main = do
 
     -- Write the data to the dataset.
 
-    status <- withInArray wdata (\wdata' -> h5d_write dset h5t_NATIVE_INT h5s_ALL h5s_ALL h5p_DEFAULT wdata')
+    status <- withInList wdata (\wdata' -> h5d_write dset h5t_NATIVE_INT h5s_ALL h5s_ALL h5p_DEFAULT wdata')
 
     -- Close and release resources.
 
@@ -70,7 +70,7 @@ main = do
     -- Read the data using the default properties.
 
     let n = dim0 * dim1
-    (err_code, rdata) <- withOutArray (fromIntegral n) $ \rdata' -> h5d_read dset h5t_NATIVE_INT h5s_ALL h5s_ALL h5p_DEFAULT (rdata' :: OutArray CInt)
+    (rdata, err_code) <- withOutList (fromIntegral n) $ \rdata' -> h5d_read dset h5t_NATIVE_INT h5s_ALL h5s_ALL h5p_DEFAULT (rdata' :: OutArray CInt)
 
     -- Output the data to the screen.
 
