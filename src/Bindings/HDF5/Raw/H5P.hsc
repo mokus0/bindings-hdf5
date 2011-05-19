@@ -1466,6 +1466,31 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> InOut a -> IO HErr_t)
 -- >     H5F_libver_t *high);
 #ccall H5Pget_libver_bounds, <hid_t> -> Out H5F_libver_t -> Out H5F_libver_t -> IO <herr_t>
 
+#if H5_VERSION_GE(1,8,7)
+
+-- |Sets the number of files opened through external links
+-- from the file associated with this fapl to be held open
+-- in that file's external file cache.  When the maximum
+-- number of files is reached, the least recently used file
+-- is closed (unless it is opened from somewhere else).
+-- 
+-- Returns non-negative on success, negative on failure.
+-- 
+-- > herr_t H5Pset_elink_file_cache_size(hid_t plist_id, unsigned efc_size);
+#ccall H5Pset_elink_file_cache_size, <hid_t> -> CUInt -> IO <herr_t>
+
+-- |Gets the number of files opened through external links
+-- from the file associated with this fapl to be held open
+-- in that file's external file cache.  When the maximum
+-- number of files is reached, the least recently used file
+-- is closed (unless it is opened from somewhere else).
+-- 
+-- Returns non-negative on success, negative on failure.
+-- 
+-- > herr_t H5Pget_elink_file_cache_size(hid_t plist_id, unsigned *efc_size);
+#ccall H5Pget_elink_file_cache_size, <hid_t> -> Out CUInt -> IO <herr_t>
+
+#endif
 
 -- * Dataset creation property list (DCPL) routines
 
@@ -1671,7 +1696,7 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> InOut a -> IO HErr_t)
 #ccall H5Pget_fill_time, <hid_t> -> Out <H5D_fill_time_t> -> IO <herr_t>
 
 
-#if H5_VERSION_ATLEAST(1,8,3)
+#if H5_VERSION_GE(1,8,3)
 
 -- * Dataset access property list (DAPL) routines
 
@@ -2058,7 +2083,7 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> InOut a -> IO HErr_t)
 -- > ssize_t H5Pget_elink_prefix(hid_t plist_id, char *prefix, size_t size);
 #ccall H5Pget_elink_prefix, <hid_t> -> OutArray CChar -> CString -> IO <ssize_t>
 
-#if H5_VERSION_ATLEAST(1,8,2)
+#if H5_VERSION_GE(1,8,2)
 
 -- |Gets the file access property list identifier that is
 -- set for link access property.
@@ -2077,7 +2102,7 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> InOut a -> IO HErr_t)
 
 #endif
 
-#if H5_VERSION_ATLEAST(1,8,3)
+#if H5_VERSION_GE(1,8,3)
 
 -- |Sets the file access flags to be used when traversing an
 -- external link.  This should be either 'h5f_ACC_RDONLY' or

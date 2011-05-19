@@ -69,7 +69,7 @@ import Bindings.HDF5.Raw.H5I
 -- |VAX mixed endian
 #newtype_const H5T_order_t, H5T_ORDER_VAX
 
-#if H5_VERSION_ATLEAST(1,8,6)
+#if H5_VERSION_GE(1,8,6)
 -- |Compound type with mixed member orders
 #newtype_const H5T_order_t, H5T_ORDER_MIXED
 #endif

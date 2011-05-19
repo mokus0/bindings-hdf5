@@ -11,15 +11,22 @@
 #define FALSE 0
 #endif
 
-#define H5_VERSION_ATLEAST(a,b,c)                    \
-    ((H5_VERS_MAJOR > a) || (H5_VERS_MAJOR == a && ( \
-        H5_VERS_MINOR > b || H5_VERS_MINOR == b && ( \
-            H5_VERS_RELEASE >= c))))
+#include <H5public.h>
 
-#define H5_VERSION_ATMOST(a,b,c)                     \
+// These version-check macros were introduced in HDF5 1.8.7
+#ifndef H5_VERSION_GE
+#define H5_VERSION_GE(a,b,c)                    \
+    ((H5_VERS_MAJOR > a) || (H5_VERS_MAJOR == a && ( \
+        H5_VERS_MINOR > b || (H5_VERS_MINOR == b && \
+            H5_VERS_RELEASE >= c))))
+#endif
+
+#ifndef H5_VERSION_LE
+#define H5_VERSION_LE(a,b,c)                     \
     ((H5_VERS_MAJOR < a) || (H5_VERS_MAJOR == a && ( \
-        H5_VERS_MINOR < b || H5_VERS_MINOR == b && ( \
+        H5_VERS_MINOR < b || (H5_VERS_MINOR == b && \
             H5_VERS_RELEASE <= c))))
+#endif
 
 #define signed(t)       ((t)(-1) < 0)
 #define floating(t)     ((t)(int)(t) 1.4 == (t) 1.4)

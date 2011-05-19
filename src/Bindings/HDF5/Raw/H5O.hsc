@@ -104,7 +104,7 @@ import Foreign.Ptr.Conventions
 -- |Number of different object types
 #num H5O_TYPE_NTYPES
 
-#if H5_VERSION_ATLEAST(1,8,4)
+#if H5_VERSION_GE(1,8,4)
 
 -- |Information struct for object header metadata 
 -- (for 'h5o_get_info'/ 'h5o_get_info_by_name' / 'h5o_get_info_by_idx')
@@ -175,7 +175,7 @@ import Foreign.Ptr.Conventions
 -- |# of attributes attached to object
 #field num_attrs,       <hsize_t>
 
-#if H5_VERSION_ATLEAST(1,8,4)
+#if H5_VERSION_GE(1,8,4)
 
 -- |Object header information
 #field hdr,             <H5O_hdr_info_t>
@@ -298,7 +298,7 @@ type H5O_iterate_t a = FunPtr (HId_t -> CString -> In H5O_info_t -> Ptr a -> IO 
 -- >     H5_index_t idx_type, H5_iter_order_t order, hsize_t n, hid_t lapl_id);
 #ccall H5Oopen_by_idx, <hid_t> -> CString -> <H5_index_t> -> <H5_iter_order_t> -> <hsize_t> -> <hid_t> -> IO <hid_t>
 
-#if H5_VERSION_ATLEAST(1,8,5)
+#if H5_VERSION_GE(1,8,5)
 
 -- |Determine if a linked-to object exists
 -- 

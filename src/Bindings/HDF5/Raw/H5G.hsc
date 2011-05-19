@@ -41,7 +41,7 @@ import Foreign.Ptr.Conventions
 -- |Current max. creation order value for group
 #field max_corder,      Int64
 
-#if H5_VERSION_ATLEAST(1,8,2)
+#if H5_VERSION_GE(1,8,2)
 -- |Whether group has a file mounted on it
 #field mounted,         <hbool_t>
 #endif

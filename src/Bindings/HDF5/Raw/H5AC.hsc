@@ -347,7 +347,7 @@ import Bindings.HDF5.Raw.H5C
 -- parallel.
 #field dirty_bytes_threshold,   CInt
 
-#if H5_VERSION_ATLEAST(1,8,6)
+#if H5_VERSION_GE(1,8,6)
 -- |Integer field containing a code indicating the
 -- desired metadata write strategy.  The valid values of this field
 -- are enumerated and discussed below:
@@ -359,7 +359,7 @@ import Bindings.HDF5.Raw.H5C
 #num H5AC__CURR_CACHE_CONFIG_VERSION
 #num H5AC__MAX_TRACE_FILE_NAME_LEN
 
-#if H5_VERSION_ATLEAST(1,8,6)
+#if H5_VERSION_GE(1,8,6)
 
 -- |When 'metadata_write_strategy' is set to this value, only process 
 -- zero is allowed to write dirty metadata to disk.  All other 

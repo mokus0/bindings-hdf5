@@ -8,14 +8,14 @@
 # setting PKG_CONFIG_PATH
 #
 
-prefix=/opt/hdf5-1.8.6
+prefix=/opt/hdf5-1.8.7
 exec_prefix=${prefix}
 includedir=${prefix}/include
 libdir=${exec_prefix}/lib
 
 Name: hdf5
 Description: HDF5
-Version: 1.8.6
+Version: 1.8.7
 Requires.private: zlib
 Cflags: -I${includedir}
 Libs: -L${libdir} -lhdf5

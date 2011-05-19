@@ -9,7 +9,7 @@ import Bindings.HDF5.Raw.H5I
 
 import Foreign.Ptr.Conventions
 
-#if H5_VERSION_ATLEAST(1,8,3)
+#if H5_VERSION_GE(1,8,3)
 
 #num H5D_CHUNK_CACHE_NSLOTS_DEFAULT
 #num H5D_CHUNK_CACHE_NBYTES_DEFAULT
@@ -33,7 +33,7 @@ import Foreign.Ptr.Conventions
 
 #num H5D_NLAYOUTS
 
-#if H5_VERSION_ATLEAST(1,8,3)
+#if H5_VERSION_GE(1,8,3)
 
 -- |Types of chunk index data structures
 #newtype H5D_chunk_index_t
@@ -208,7 +208,7 @@ type H5D_operator_t a b = FunPtr (InOut a -> HId_t -> CUInt -> InArray HSize_t -
 -- > hid_t H5Dget_create_plist(hid_t dset_id);
 #ccall H5Dget_create_plist, <hid_t> -> IO <hid_t>
 
-#if H5_VERSION_ATLEAST(1,8,3)
+#if H5_VERSION_GE(1,8,3)
 -- |Returns a copy of the dataset creation property list of the specified
 -- dataset.
 --

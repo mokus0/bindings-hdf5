@@ -39,7 +39,7 @@ import Foreign.Ptr.Conventions
 -- |create non-existing files
 #num H5F_ACC_CREAT
 
-#if H5_VERSION_ATLEAST(1,8,3)
+#if H5_VERSION_GE(1,8,3)
 
 -- |Value passed to 'h5p_set_elink_acc_flags' to cause flags to be taken from the
 -- parent file.
@@ -122,7 +122,7 @@ import Foreign.Ptr.Conventions
 #field sohm.msgs_info,  <H5_ih_info_t>
 #stoptype
 
-#if H5_VERSION_ATLEAST(1,8,4)
+#if H5_VERSION_GE(1,8,4)
 
 -- |Types of allocation requests. The values larger than 'h5fd_MEM_DEFAULT'
 -- should not change other than adding new types to the end. These numbers
@@ -149,7 +149,7 @@ import Foreign.Ptr.Conventions
 -- |Use the latest possible format available for storing objects
 #newtype_const H5F_libver_t, H5F_LIBVER_LATEST
 
-#if H5_VERSION_ATLEAST(1,8,6)
+#if H5_VERSION_GE(1,8,6)
     
 -- |Use version 1.8 format for storing objects
 #newtype_const H5F_libver_t, H5F_LIBVER_18
@@ -418,3 +418,13 @@ import Foreign.Ptr.Conventions
 -- > herr_t H5Fget_info(hid_t obj_id, H5F_info_t *bh_info);
 #ccall H5Fget_info, <hid_t> -> Out H5F_info_t -> IO <herr_t>
 
+#if H5_VERSION_GE(1,8,7)
+-- |Releases the external file cache associated with the
+-- provided file, potentially closing any cached files
+-- unless they are held open from somewhere else.
+-- 
+-- Returns non-negative on success, negative on failure
+--
+-- > herr_t H5Fclear_elink_file_cache(hid_t file_id);
+#ccall H5Fclear_elink_file_cache, <hid_t> -> IO <herr_t>
+#endif
