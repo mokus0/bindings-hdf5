@@ -2081,7 +2081,7 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> InOut a -> IO HErr_t)
 -- Returns non-negative on success, negative on failure.
 -- 
 -- > ssize_t H5Pget_elink_prefix(hid_t plist_id, char *prefix, size_t size);
-#ccall H5Pget_elink_prefix, <hid_t> -> OutArray CChar -> CString -> IO <ssize_t>
+#ccall H5Pget_elink_prefix, <hid_t> -> OutArray CChar -> <size_t> -> IO <ssize_t>
 
 #if H5_VERSION_GE(1,8,2)
 

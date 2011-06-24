@@ -775,7 +775,7 @@ h5t_MIPS_F64 = h5t_IEEE_F64BE
 -- 
 -- > hid_t H5Tarray_create2(hid_t base_id, unsigned ndims,
 -- >        const hsize_t dim[/* ndims */]);
-#ccall H5Tarray_create2, <hid_t> -> CUInt -> <hsize_t> -> IO <hid_t>
+#ccall H5Tarray_create2, <hid_t> -> CUInt -> InArray <hsize_t> -> IO <hid_t>
 
 -- |Returns the number of dimensions of an array datatype, or negative on
 -- failure.
@@ -1315,7 +1315,7 @@ h5t_MIPS_F64 = h5t_IEEE_F64BE
 -- > hid_t H5Tarray_create1(hid_t base_id, int ndims,
 -- >        const hsize_t dim[/* ndims */],
 -- >        const int perm[/* ndims */]);
-#ccall H5Tarray_create1, <hid_t> -> CInt -> <hsize_t> -> CInt -> IO <hid_t>
+#ccall H5Tarray_create1, <hid_t> -> CInt -> InArray <hsize_t> -> InArray CInt -> IO <hid_t>
 
 -- |Query the sizes of dimensions for an array datatype.
 --
