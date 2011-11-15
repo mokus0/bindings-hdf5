@@ -15,6 +15,7 @@ import Control.Monad.IO.Peel
 import Control.Monad.Primitive (RealWorld)
 
 import qualified Data.Vector.Storable as SV
+import qualified Data.Vector.Storable.Mutable as SVM
 
 class WrappedPtr p where
     wrapPtr         :: Ptr a -> p a
@@ -47,8 +48,8 @@ withInList xs f = liftIOOp (withArray xs) (f . InArray)
 withInVector :: (Storable a, MonadPeelIO m) => SV.Vector a -> (InArray a -> m b) -> m b
 withInVector vec f = liftIOOp (SV.unsafeWith vec) (f . InArray)
 
-withInMVector :: (Storable a, MonadPeelIO m) => SV.MVector RealWorld a -> (InArray a -> m b) -> m b
-withInMVector (SV.MVector p _ fp) f = liftIOOp (withForeignPtr fp) (\_ -> f (InArray p))
+withInMVector :: (Storable a, MonadPeelIO m) => SVM.IOVector a -> (InArray a -> m b) -> m b
+withInMVector vec f = liftIOOp (SVM.unsafeWith vec) (f . InArray)
 
 -- * Output pointers
 
@@ -79,9 +80,9 @@ withOut_ f = liftIOOp alloca $ \p -> do
     f (Out p)
     liftIO (peek p)
 
-withOutMVector :: (Storable a, MonadPeelIO m) => SV.MVector RealWorld a -> (Int -> OutArray a -> m b) -> m b
-withOutMVector (SV.MVector p n fp) f = do
-    liftIOOp (withForeignPtr fp) (\_ -> f n (OutArray p))
+withOutMVector :: (Storable a, MonadPeelIO m) => SVM.IOVector a -> (Int -> OutArray a -> m b) -> m b
+withOutMVector vec f = do
+    liftIOOp (SVM.unsafeWith vec) (f (SVM.length vec) . OutArray)
 
 withOutVector :: (Storable a, MonadPeelIO m) => Int -> (OutArray a -> m b) -> m (SV.Vector a, b)
 withOutVector n f = do
