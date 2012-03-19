@@ -6,7 +6,7 @@
 module Bindings.HDF5.Raw.H5FD.MPI where
 #strict_import
 
-import Foreign (unsafePerformIO)
+import System.IO.Unsafe (unsafePerformIO)
 
 import Bindings.HDF5.Raw.H5
 import Bindings.HDF5.Raw.H5F

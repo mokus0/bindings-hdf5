@@ -12,6 +12,7 @@
 #endif
 
 #include <H5public.h>
+#include <string.h>
 
 // These version-check macros were introduced in HDF5 1.8.7
 #ifndef H5_VERSION_GE

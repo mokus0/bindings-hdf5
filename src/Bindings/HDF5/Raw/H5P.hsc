@@ -16,7 +16,7 @@ import Bindings.HDF5.Raw.H5T
 import Bindings.HDF5.Raw.H5Z
 
 import Foreign.Ptr.Conventions
-import System.Posix.Types (COff)
+import System.Posix.Types (COff(..))
 
 #cinline H5P_ROOT,                          <hid_t>
 #cinline H5P_OBJECT_CREATE,                 <hid_t>
