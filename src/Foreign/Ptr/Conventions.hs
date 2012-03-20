@@ -5,15 +5,18 @@ module Foreign.Ptr.Conventions where
 -- TODO: make these all exception-safe
 -- TODO: reverse order of 'out' returns
 -- TODO: bytestring versions?  versions allocating by byte but using vectors?
+import Foreign.C.Types
 import Foreign.Marshal
 import Foreign.Ptr
 import Foreign.ForeignPtr
 import Foreign.Storable
 
+import Control.Exception.Peel
 import Control.Monad.IO.Class
 import Control.Monad.IO.Peel
 import Control.Monad.Primitive (RealWorld)
 
+import qualified Data.ByteString as BS
 import qualified Data.Vector.Storable as SV
 import qualified Data.Vector.Storable.Mutable as SVM
 
@@ -137,6 +140,21 @@ withOutList0 zero n f = do
     a <- liftIO (peekArray0 zero p)
     liftIO (free p)
     return (a, b)
+
+-- |Get a 'BS.ByteString' from a function using the common \"buffer and size in,
+-- bytes written out\" convention.
+-- 
+-- Calls the function twice; once with a null pointer to discover the length
+-- needed and once more to actually read out the string.
+withOutByteString :: (MonadPeelIO m, Integral a, Integral b) => (OutArray CChar -> a -> m b) -> m BS.ByteString
+withOutByteString f = do
+    bufSz <- f nullWrappedPtr 0
+    
+    bracket (liftIO (mallocBytes (fromIntegral bufSz))) (liftIO . free) $ \buf -> do 
+        sz <- f (OutArray buf) (fromIntegral bufSz)
+        
+        liftIO (BS.packCStringLen (buf, fromIntegral sz))
+
 
 -- * Bidirectional pointers
 
