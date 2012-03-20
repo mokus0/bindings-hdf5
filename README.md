@@ -35,4 +35,4 @@ Once all that is done:
 See also
 ---------
 
-The API exposed here is very low level; I strongly recommend against using it directly.  Instead, check out <http://github.com/mokus0/hs-hdf5>, which is a higher level wrapper that makes it quite a bit harder to shoot yourself in the foot.  That library is still fairly incomplete, though.  If it's missing something you need (it almost certainly will be), check out <http://github.com/mokus0/hdf5-sandbox> as well - it's a bit less refined but more complete.  If you still don't find an interface you need, feel free to ask me for it or just send a pull request.
+The API exposed here is very low level; I strongly recommend against using it directly.  Instead, check out <http://github.com/mokus0/hs-hdf5>, which is a higher level wrapper that makes it quite a bit harder to shoot yourself in the foot.  That library is still fairly incomplete, though.  If it's missing something you need, feel free to ask me to implement it or just send a pull request.
