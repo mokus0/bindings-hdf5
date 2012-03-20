@@ -99,11 +99,11 @@ withOutVector_ n f = do
     b <- liftIOOp (withForeignPtr p) (f . OutArray)
     return (SV.unsafeFromForeignPtr p 0 n)
 
-withOutVector' :: (Storable a, MonadPeelIO m) => Int -> (OutArray a -> m Int) -> m (SV.Vector a)
+withOutVector' :: (Storable a, Integral b, MonadPeelIO m) => Int -> (OutArray a -> m b) -> m (SV.Vector a)
 withOutVector' sz f = do
     p <- liftIO (mallocForeignPtrArray sz)
     n <- liftIOOp (withForeignPtr p) (f . OutArray)
-    return (SV.unsafeFromForeignPtr p 0 n)
+    return (SV.unsafeFromForeignPtr p 0 (fromIntegral n))
 
 withOutList :: (Storable a, MonadIO m) => Int -> (OutArray a -> m b) -> m ([a],b)
 withOutList n f = do
