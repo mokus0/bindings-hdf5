@@ -14,7 +14,7 @@ import Bindings.HDF5.Raw.H5T
 import Foreign.Ptr.Conventions
 
 -- |Types of link storage for groups
-#newtype H5G_storage_type_t, Eq
+#newtype H5G_storage_type_t, Eq, Ord, Read
 
 -- |Unknown link storage type
 #newtype_const H5G_storage_type_t, H5G_STORAGE_TYPE_UNKNOWN
