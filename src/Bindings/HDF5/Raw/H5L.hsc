@@ -361,7 +361,7 @@ type H5L_elink_traverse_t a = FunPtr (CString
 --
 -- > herr_t H5Lvisit(hid_t grp_id, H5_index_t idx_type, H5_iter_order_t order,
 -- >     H5L_iterate_t op, void *op_data);
-#ccall H5Lvisit, <hid_t> -> <H5_index_t> -> <H5_iter_order_t> -> H5L_iterate_t a -> Ptr a -> IO <herr_t>
+#ccall H5Lvisit, <hid_t> -> <H5_index_t> -> <H5_iter_order_t> -> H5L_iterate_t a -> InOut a -> IO <herr_t>
 
 -- |Recursively visit all the links in a group and all
 -- the groups that are linked to from that group.  Links within
