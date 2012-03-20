@@ -30,7 +30,7 @@ h5l_MAX_LINK_NAME_LEN = #const H5L_MAX_LINK_NAME_LEN
 -- development team at <mailto:hdfhelp@ncsa.uiuc.edu>.
 -- 
 -- These values can never change because they appear in HDF5 files.
-#newtype H5L_type_t, Eq
+#newtype H5L_type_t, Eq, Ord, Read
 
 -- |Invalid link type id
 #newtype_const H5L_type_t, H5L_TYPE_ERROR

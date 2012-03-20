@@ -109,7 +109,7 @@ import Bindings.HDF5.Raw.H5I
 
 -- |Character set to use for text strings.  Do not change these values since
 -- they appear in HDF5 files!
-#newtype H5T_cset_t, Eq
+#newtype H5T_cset_t, Eq, Ord, Read
 
 -- |error
 #newtype_const H5T_cset_t, H5T_CSET_ERROR
