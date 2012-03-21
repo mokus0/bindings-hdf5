@@ -16,6 +16,8 @@ One way of invoking this function would be to use the `withOutVector_` function:
     withOutVector_ (fromIntegral n) $ \buf ->
         h5d_read dset_id h5t_NATIVE_DOUBLE h5s_ALL h5s_ALL h5p_DEFAULT buf
 
+`withOutVector_` here creates an `n`-element vector (the type of which will either need to be explicitly given or inferred from its usage elsewhere), passing the lambda expression a pointer to the vector's contents and returning the vector.
+
 Installation
 -------------
 
