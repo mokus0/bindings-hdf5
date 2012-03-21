@@ -62,16 +62,16 @@ import System.Posix.Types (COff(..))
 
 -- |
 -- > typedef herr_t (*H5P_cls_create_func_t)(hid_t prop_id, void *create_data);
-type H5P_cls_create_func_t a = FunPtr (HId_t -> InOut a -> IO HErr_t)
+type H5P_cls_create_func_t a = FunPtr (HId_t -> Ptr a -> IO HErr_t)
 
 -- |
 -- > typedef herr_t (*H5P_cls_copy_func_t)(hid_t new_prop_id, hid_t old_prop_id,
 -- >                                       void *copy_data);
-type H5P_cls_copy_func_t a = FunPtr (HId_t -> HId_t -> InOut a -> IO HErr_t)
+type H5P_cls_copy_func_t a = FunPtr (HId_t -> HId_t -> Ptr a -> IO HErr_t)
 
 -- |
 -- > typedef herr_t (*H5P_cls_close_func_t)(hid_t prop_id, void *close_data);
-type H5P_cls_close_func_t a = FunPtr (HId_t -> InOut a -> IO HErr_t)
+type H5P_cls_close_func_t a = FunPtr (HId_t -> Ptr a -> IO HErr_t)
 
 -- |Parameters:
 -- 
@@ -441,7 +441,7 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> InOut a -> IO HErr_t)
 -- Returns non-negative on success, negative on failure.
 -- 
 -- > herr_t H5Pset(hid_t plist_id, const char *name, void *value);
-#ccall H5Pset, <hid_t> -> CString -> Ptr a -> IO <herr_t>
+#ccall H5Pset, <hid_t> -> CString -> In a -> IO <herr_t>
 
 -- |Routine to query the existence of a property in a property object.
 -- 
@@ -541,7 +541,7 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> InOut a -> IO HErr_t)
 -- Returns non-negative on success, negative on failure.
 -- 
 -- > herr_t H5Pget(hid_t plist_id, const char *name, void * value);
-#ccall H5Pget, <hid_t> -> CString -> Ptr a -> IO <herr_t>
+#ccall H5Pget, <hid_t> -> CString -> Out a -> IO <herr_t>
 
 -- |Determines whether two property lists or two property classes are equal.
 -- 
@@ -597,7 +597,7 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> InOut a -> IO HErr_t)
 -- 
 -- > int H5Piterate(hid_t id, int *idx, H5P_iterate_t iter_func,
 -- >             void *iter_data);
-#ccall H5Piterate, <hid_t> -> Ptr CInt -> H5P_iterate_t a -> Ptr a -> IO CInt
+#ccall H5Piterate, <hid_t> -> InOut CInt -> H5P_iterate_t a -> InOut a -> IO CInt
 
 -- |Copies a property from one property list or class to another.
 -- 
@@ -1139,7 +1139,7 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> InOut a -> IO HErr_t)
 --
 -- > herr_t H5Pset_driver(hid_t plist_id, hid_t driver_id,
 -- >         const void *driver_info);
-#ccall H5Pset_driver, <hid_t> -> <hid_t> -> Ptr a -> IO <herr_t>
+#ccall H5Pset_driver, <hid_t> -> <hid_t> -> In a -> IO <herr_t>
 
 -- |Return the ID of the low-level file driver.  'plist_id' should
 -- be a file access property list or data transfer propert list.
@@ -2200,7 +2200,7 @@ h5p_NO_CLASS = h5p_ROOT
 -- >     void *value, H5P_prp_set_func_t prp_set, H5P_prp_get_func_t prp_get,
 -- >     H5P_prp_delete_func_t prp_delete, H5P_prp_copy_func_t prp_copy,
 -- >     H5P_prp_close_func_t prp_close);
-#ccall H5Pinsert1, <hid_t> -> CString -> <size_t> -> Ptr a -> H5P_prp_set_func_t a -> H5P_prp_get_func_t a -> H5P_prp_delete_func_t a -> H5P_prp_copy_func_t a -> H5P_prp_close_func_t a -> IO <herr_t>
+#ccall H5Pinsert1, <hid_t> -> CString -> <size_t> -> In a -> H5P_prp_set_func_t a -> H5P_prp_get_func_t a -> H5P_prp_delete_func_t a -> H5P_prp_copy_func_t a -> H5P_prp_close_func_t a -> IO <herr_t>
 
 -- |This is the query counterpart of 'h5p_set_filter' and returns
 -- information about a particular filter number in a permanent

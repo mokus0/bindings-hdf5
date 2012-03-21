@@ -415,7 +415,7 @@ type H5A_operator2_t a = FunPtr (HId_t -> CString -> In H5A_info_t -> InOut a ->
 -- > herr_t  H5Aiterate_by_name(hid_t loc_id, const char *obj_name, H5_index_t idx_type,
 -- >     H5_iter_order_t order, hsize_t *idx, H5A_operator2_t op, void *op_data,
 -- >     hid_t lapd_id);
-#ccall H5Aiterate_by_name, <hid_t> -> CString -> <H5_index_t> -> <H5_iter_order_t> -> Ptr <hsize_t> -> H5A_operator2_t a -> Ptr a -> <hid_t> -> IO <herr_t>
+#ccall H5Aiterate_by_name, <hid_t> -> CString -> <H5_index_t> -> <H5_iter_order_t> -> InOut <hsize_t> -> H5A_operator2_t a -> InOut a -> <hid_t> -> IO <herr_t>
 
 -- |Deletes an attribute from a location
 -- 
@@ -633,6 +633,6 @@ type H5A_operator1_t a = FunPtr (HId_t -> CString -> InOut a -> IO HErr_t)
 --
 -- > herr_t  H5Aiterate1(hid_t loc_id, unsigned *attr_num, H5A_operator1_t op,
 -- >     void *op_data);
-#ccall H5Aiterate1, <hid_t> -> Ptr CUInt -> H5A_operator1_t a -> Ptr a -> IO <herr_t>
+#ccall H5Aiterate1, <hid_t> -> InOut CUInt -> H5A_operator1_t a -> InOut a -> IO <herr_t>
 
 #endif /* H5_NO_DEPRECATED_SYMBOLS */

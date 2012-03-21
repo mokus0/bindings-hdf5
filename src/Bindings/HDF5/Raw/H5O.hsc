@@ -227,7 +227,7 @@ import Foreign.Ptr.Conventions
 #newtype H5O_msg_crt_idx_t, Eq
 
 -- |Prototype for 'h5o_visit' / 'h5o_visit_by_name' operator
-type H5O_iterate_t a = FunPtr (HId_t -> CString -> In H5O_info_t -> Ptr a -> IO HErr_t)
+type H5O_iterate_t a = FunPtr (HId_t -> CString -> In H5O_info_t -> InOut a -> IO HErr_t)
 
 -- * Functions
 
@@ -529,7 +529,7 @@ type H5O_iterate_t a = FunPtr (HId_t -> CString -> In H5O_info_t -> Ptr a -> IO 
 -- 
 -- > herr_t H5Ovisit(hid_t obj_id, H5_index_t idx_type, H5_iter_order_t order,
 -- >     H5O_iterate_t op, void *op_data);
-#ccall H5Ovisit, <hid_t> -> <H5_index_t> -> <H5_iter_order_t> -> H5O_iterate_t a -> Ptr a -> IO <herr_t>
+#ccall H5Ovisit, <hid_t> -> <H5_index_t> -> <H5_iter_order_t> -> H5O_iterate_t a -> InOut a -> IO <herr_t>
 
 -- |Recursively visit an object and all the objects reachable
 -- from it.  If the starting object is a group, all the objects
@@ -557,7 +557,7 @@ type H5O_iterate_t a = FunPtr (HId_t -> CString -> In H5O_info_t -> Ptr a -> IO 
 -- > herr_t H5Ovisit_by_name(hid_t loc_id, const char *obj_name,
 -- >     H5_index_t idx_type, H5_iter_order_t order, H5O_iterate_t op,
 -- >     void *op_data, hid_t lapl_id);
-#ccall H5Ovisit_by_name, <hid_t> -> CString -> <H5_index_t> -> <H5_iter_order_t> -> H5O_iterate_t a -> Ptr a -> <hid_t> -> IO <herr_t>
+#ccall H5Ovisit_by_name, <hid_t> -> CString -> <H5_index_t> -> <H5_iter_order_t> -> H5O_iterate_t a -> InOut a -> <hid_t> -> IO <herr_t>
 
 -- |Close an open file object.
 -- 

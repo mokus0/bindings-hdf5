@@ -168,7 +168,7 @@ import Foreign.Ptr.Conventions
 -- Returns non-negative on success, negative on failure.
 -- 
 -- > herr_t H5Sencode(hid_t obj_id, void *buf, size_t *nalloc);
-#ccall H5Sencode, <hid_t> -> OutArray a -> InOut <size_t> -> IO <herr_t>
+#ccall H5Sencode, <hid_t> -> OutArray CChar -> InOut <size_t> -> IO <herr_t>
 
 -- |Decode a binary object description of dataspace and
 -- return a new object handle.
@@ -177,7 +177,7 @@ import Foreign.Ptr.Conventions
 -- failure.
 -- 
 -- > hid_t H5Sdecode(const void *buf);
-#ccall H5Sdecode, Ptr a -> IO <hid_t>
+#ccall H5Sdecode, InArray CChar -> IO <hid_t>
 
 -- |Determines how many data points a dataset extent has.
 -- 

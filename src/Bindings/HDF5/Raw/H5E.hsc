@@ -641,7 +641,7 @@ foreign import ccall "&H5Epush2"
 -- | Callback type for 'h5e_walk1'
 -- 
 -- > typedef herr_t (*H5E_walk1_t)(int n, H5E_error1_t *err_desc, void *client_data);
-type H5E_walk1_t a = FunPtr (CInt -> In H5E_error1_t -> Ptr a -> IO HErr_t)
+type H5E_walk1_t a = FunPtr (CInt -> In H5E_error1_t -> InOut a -> IO HErr_t)
 
 -- | Callback type for 'h5e_set_auto1'
 -- 

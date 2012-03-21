@@ -164,25 +164,7 @@ import Foreign.Ptr.Conventions
 -- 
 -- > typedef H5Z_cb_return_t (*H5Z_filter_func_t)(H5Z_filter_t filter, void* buf,
 -- >        size_t buf_size, void* op_data);
-type H5Z_filter_func_t a b = FunPtr (H5Z_filter_t -> Ptr a -> CSize -> InOut b -> IO H5Z_cb_return_t)
-
--- |Structure for filter callback property
-data H5Z_cb_t a b = H5Z_cb_t{
-    h5z_cb_t'func :: H5Z_filter_func_t a b,
-    h5z_cb_t'op_data :: Ptr b}
-    deriving (Eq,Show)
-
-instance Storable (H5Z_cb_t a b) where
-  sizeOf _ = #size H5Z_cb_t
-  alignment = sizeOf
-  peek p = do
-    v0 <- #{peek H5Z_cb_t, func   } p
-    v1 <- #{peek H5Z_cb_t, op_data} p
-    return $ H5Z_cb_t v0 v1
-  poke p (H5Z_cb_t v0 v1) = do
-    #{poke H5Z_cb_t, func   } p v0
-    #{poke H5Z_cb_t, op_data} p v1
-    return ()
+type H5Z_filter_func_t a b = FunPtr (H5Z_filter_t -> InOutArray a -> CSize -> InOut b -> IO H5Z_cb_return_t)
 
 -- |Before a dataset gets created, the \"can_apply\" callbacks for any filters used
 -- in the dataset creation property list are called
@@ -248,12 +230,42 @@ instance Storable (H5Z_cb_t a b) where
 -- >        size_t *buf_size, void **buf);
 type H5Z_func_t a = FunPtr (CUInt -> CSize -> InArray CUInt -> CSize -> InOut CSize -> InOut (Ptr a) -> IO CSize)
 
+-- | The filter table maps filter identification numbers to structs that
+-- contain a pointers to the filter function and timing statistics.
+#starttype H5Z_class2_t
+
+-- | Version number of the H5Z_class_t struct
+#field version, CInt
+
+-- | Filter ID number
+#field id, <H5Z_filter_t>
+
+-- | Does this filter have an encoder?
+#field encoder_present, CUInt
+
+-- | Does this filter have a decoder?
+#field decoder_present, CUInt
+
+-- | Comment for debugging
+#field name, CString
+
+-- | The \"can apply\" callback for a filter
+#field can_apply, <H5Z_can_apply_func_t>
+
+-- | The \"set local\" callback for a filter
+#field set_local, <H5Z_set_local_func_t>
+
+-- | The actual filter function
+#field filter, H5Z_func_t ()
+
+#stoptype
+
 -- |This function registers a new filter.
 -- 
 -- Returns non-negative on success, negative on failure.
 -- 
 -- > herr_t H5Zregister(const void *cls);
-#ccall H5Zregister, In a -> IO <herr_t>
+#ccall H5Zregister, In <H5Z_class2_t> -> IO <herr_t>
 
 -- |This function unregisters a filter.
 -- 

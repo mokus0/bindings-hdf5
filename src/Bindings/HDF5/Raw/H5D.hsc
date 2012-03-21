@@ -383,7 +383,7 @@ type H5D_operator_t a b = FunPtr (InOut a -> HId_t -> CUInt -> InArray HSize_t -
 -- 
 -- > herr_t H5Dfill(const void *fill, hid_t fill_type, void *buf,
 -- >         hid_t buf_type, hid_t space);
-#ccall H5Dfill, Ptr a -> <hid_t> -> Ptr b -> <hid_t> -> <hid_t> -> IO <herr_t>
+#ccall H5Dfill, In a -> <hid_t> -> InOutArray b -> <hid_t> -> <hid_t> -> IO <herr_t>
 
 -- |Modifies the dimensions of a dataset.  Can change to a smaller dimension.
 --

@@ -168,7 +168,7 @@ type H5L_iterate_t a = FunPtr (HId_t -> CString -> In H5L_info_t -> InOut a -> I
 type H5L_elink_traverse_t a = FunPtr (CString 
     -> CString -> CString
     -> CString -> Ptr CUInt -> HId_t
-    -> InOut a -> IO HErr_t)
+    -> Ptr a -> IO HErr_t)
 
 -- |Renames an object within an HDF5 file and moves it to a new
 -- group.  The original name 'src' is unlinked from the group graph
@@ -257,7 +257,7 @@ type H5L_elink_traverse_t a = FunPtr (CString
 -- 
 -- > herr_t H5Lget_val(hid_t loc_id, const char *name, void *buf/*out*/,
 -- >     size_t size, hid_t lapl_id);
-#ccall H5Lget_val, <hid_t> -> CString -> Ptr a -> <size_t> -> <hid_t> -> IO <herr_t>
+#ccall H5Lget_val, <hid_t> -> CString -> OutArray a -> <size_t> -> <hid_t> -> IO <herr_t>
 
 -- |Returns the link value of a link, according to the order of
 -- an index.  For symbolic links, this is the path to which the
@@ -271,7 +271,7 @@ type H5L_elink_traverse_t a = FunPtr (CString
 -- > herr_t H5Lget_val_by_idx(hid_t loc_id, const char *group_name,
 -- >     H5_index_t idx_type, H5_iter_order_t order, hsize_t n,
 -- >     void *buf/*out*/, size_t size, hid_t lapl_id);
-#ccall H5Lget_val_by_idx, <hid_t> -> CString -> <H5_index_t> -> <H5_iter_order_t> -> <hsize_t> -> Ptr a -> CSize -> <hid_t> -> IO <herr_t>
+#ccall H5Lget_val_by_idx, <hid_t> -> CString -> <H5_index_t> -> <H5_iter_order_t> -> <hsize_t> -> OutArray a -> CSize -> <hid_t> -> IO <herr_t>
 
 -- |Checks if a link of a given name exists in a group
 -- 
@@ -456,7 +456,7 @@ type H5L_elink_traverse_t a = FunPtr (CString
 --
 -- > herr_t H5Lunpack_elink_val(const void *ext_linkval/*in*/, size_t link_size,
 -- >    unsigned *flags, const char **filename/*out*/, const char **obj_path /*out*/);
-#ccall H5Lunpack_elink_val, In a -> <size_t> -> Ptr CUInt -> Out CString -> Out CString -> IO <herr_t>
+#ccall H5Lunpack_elink_val, InArray a -> <size_t> -> Out CUInt -> Out (Ptr CChar) -> Out (Ptr CChar) -> IO <herr_t>
 
 -- |Creates an external link from 'link_name' to 'obj_name'.
 --

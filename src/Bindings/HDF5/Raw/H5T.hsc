@@ -380,7 +380,7 @@ h5t_VARIABLE = #const H5T_VARIABLE
 -- TODO: find documentation for this type.
 type H5T_conv_t a b conversionData = FunPtr 
     (HId_t -> HId_t -> Ptr (H5T_cdata_t conversionData)
-    -> CSize -> CSize -> CSize -> Ptr a -> Ptr b -> HId_t
+    -> CSize -> CSize -> CSize -> InOutArray a -> InArray b -> HId_t
     -> IO HErr_t)
 
 -- |Exception handler.  If an exception like overflow happens during conversion,
@@ -1278,7 +1278,7 @@ h5t_MIPS_F64 = h5t_IEEE_F64BE
 -- 
 -- > herr_t H5Tconvert(hid_t src_id, hid_t dst_id, size_t nelmts,
 -- >        void *buf, void *background, hid_t plist_id);
-#ccall H5Tconvert, <hid_t> -> <hid_t> -> <size_t> -> Ptr a -> Ptr b -> <hid_t> -> IO <herr_t>
+#ccall H5Tconvert, <hid_t> -> <hid_t> -> <size_t> -> InOutArray a -> InArray b -> <hid_t> -> IO <herr_t>
 
 #ifndef H5_NO_DEPRECATED_SYMBOLS
 
