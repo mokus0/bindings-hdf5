@@ -30,6 +30,14 @@ Installing this package is not as simple as I'd like.  It uses a pkgconfig depen
     $ vi doc/hdf5.pc    # set prefix=/opt/homebrew/Cellar/hdf5/1.8.8
     $ cp doc/hdf5.pc /opt/homebrew/lib/pkgconfig/
 
+Or on a Linux (using Ubuntu package names and locations here):
+
+    $ sudo apt-get install libhdf5-7 libhdf5-dev
+    $ git clone https://github.com/mokus0/bindings-hdf5.git
+    $ cd bindings-hdf5
+    $ vi doc/hdf5.pc    # set prefix=/usr
+    $ sudo cp doc/hdf5.pc /usr/share/pkgconfig/
+
 Once all that is done:
 
     $ cabal install
