@@ -32,6 +32,8 @@ import Foreign.Ptr.Conventions
 #newtype_const H5FD_mpio_collective_opt_t, H5FD_MPIO_COLLECTIVE_IO
 #newtype_const H5FD_mpio_collective_opt_t, H5FD_MPIO_INDIVIDUAL_IO
 
+#if H5_VERSION_LE(1,8,10)
+
 #ifdef H5_HAVE_PARALLEL
 
 #starttype H5FD_class_mpi_t
@@ -108,3 +110,5 @@ import Foreign.Ptr.Conventions
 #ccall H5FD_mpi_get_comm, In <H5FD_t> -> IO <MPI_Comm>
 
 #endif /* H5_HAVE_PARALLEL */
+
+#endif /* H5_VERSION_LE */

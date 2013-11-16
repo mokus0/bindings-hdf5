@@ -17,6 +17,16 @@ import Foreign.Ptr.Conventions
 
 #endif
 
+#if H5_VERSION_GE(1,8,11)
+
+-- |Property names for H5LTDdirect_chunk_write
+#str H5D_XFER_DIRECT_CHUNK_WRITE_FLAG_NAME
+#str H5D_XFER_DIRECT_CHUNK_WRITE_FILTERS_NAME
+#str H5D_XFER_DIRECT_CHUNK_WRITE_OFFSET_NAME
+#str H5D_XFER_DIRECT_CHUNK_WRITE_DATASIZE_NAME
+
+#endif
+
 -- |Values for the H5D_LAYOUT property
 #newtype H5D_layout_t, Eq
 
@@ -102,6 +112,26 @@ import Foreign.Ptr.Conventions
 -- > typedef herr_t (*H5D_operator_t)(void *elem, hid_t type_id, unsigned ndim,
 -- > 				 const hsize_t *point, void *operator_data);
 type H5D_operator_t a b = FunPtr (InOut a -> HId_t -> CUInt -> InArray HSize_t -> InOut b -> IO HErr_t)
+
+#if H5_VERSION_GE(1,8,11)
+
+-- I don't see any documentation for these callback types in the HDF5 distribution 
+-- (though I didn't look very hard, it might be there somewhere)
+
+-- Define the operator function pointer for H5Dscatter()
+-- 
+-- > typedef herr_t (*H5D_scatter_func_t)(void **src_buf/*out*/,
+-- >                                      size_t *src_buf_bytes_used/*out*/,
+-- >                                      void *op_data);
+type H5D_scatter_func_t a b = FunPtr (Out (Ptr a) -> Out CSize -> InOut b -> IO HErr_t)
+
+-- Define the operator function pointer for H5Dgather()
+-- 
+-- > typedef herr_t (*H5D_gather_func_t)(const void *dst_buf,
+-- >                                     size_t dst_buf_bytes_used, void *op_data);
+type H5D_gather_func_t a b = FunPtr (InArray a -> CSize -> InOut b -> IO HErr_t)
+
+#endif /* H5_VERSION_GE */
 
 -- |Creates a new dataset named 'name' at 'loc_id', opens the
 -- dataset for access, and associates with that dataset constant
@@ -391,6 +421,34 @@ type H5D_operator_t a b = FunPtr (InOut a -> HId_t -> CUInt -> InArray HSize_t -
 --
 -- > herr_t H5Dset_extent(hid_t dset_id, const hsize_t size[]);
 #ccall H5Dset_extent, <hid_t> -> InArray <hsize_t> -> IO <herr_t>
+
+#if H5_VERSION_GE(1,8,11)
+
+-- |Scatters data provided by the callback op to the
+-- destination buffer dst_buf, where the dimensions of
+-- dst_buf and the selection to be scattered to are specified
+-- by the dataspace dst_space_id.  The type of the data to be
+-- scattered is specified by type_id.
+--
+-- Returns non-negative on success, negative on failure
+-- 
+-- > H5_DLL herr_t H5Dscatter(H5D_scatter_func_t op, void *op_data, hid_t type_id,
+-- >     hid_t dst_space_id, void *dst_buf);
+#ccall H5Dscatter, H5D_scatter_func_t a b -> InOut b -> <hid_t> -> <hid_t> -> OutArray a -> IO <herr_t>
+
+-- |Gathers data provided from the source buffer src_buf to
+-- contiguous buffer dst_buf, then calls the callback op.
+-- The dimensions of src_buf and the selection to be gathered
+-- are specified by the dataspace src_space_id.  The type of
+-- the data to be gathered is specified by type_id.
+-- 
+-- Returns non-negative on success, negative on failure
+-- 
+-- > H5_DLL herr_t H5Dgather(hid_t src_space_id, void *src_buf, hid_t type_id,
+-- >     size_t dst_buf_size, void *dst_buf, H5D_gather_func_t op, void *op_data);
+#ccall H5Dgather, <hid_t> -> InArray a -> <hid_t> -> <size_t> -> OutArray a -> H5D_gather_func_t a b -> InOut b -> IO <herr_t>
+
+#endif /* H5_VERSION_GE */
 
 -- |Prints various information about a dataset.  This function is not to be
 -- documented in the API at this time.

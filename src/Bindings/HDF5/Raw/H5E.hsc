@@ -58,7 +58,7 @@ import Foreign.Ptr.Conventions
 -- |Data storage
 #cinline H5E_STORAGE,           <hid_t>
 
--- |File accessability
+-- |File accessibility
 #cinline H5E_FILE,              <hid_t>
 
 -- |Shared Object Header Messages
@@ -66,6 +66,13 @@ import Foreign.Ptr.Conventions
 
 -- |Symbol table
 #cinline H5E_SYM,               <hid_t>
+
+#if H5_VERSION_GE(1,8,11)
+
+-- |Plugin for dynamically loaded library
+#cinline H5E_PLUGIN,            <hid_t>
+
+#endif /* H5_VERSION_GE */
 
 -- |Virtual File Layer
 #cinline H5E_VFL,               <hid_t>
@@ -251,7 +258,14 @@ import Foreign.Ptr.Conventions
 -- ** No error
 #cinline H5E_NONE_MINOR,        <hid_t>
 
--- ** File accessability errors
+#if H5_VERSION_GE(1,8,11)
+
+-- ** Plugin errors
+#cinline H5E_OPENERROR,         <hid_t>
+
+#endif /* H5_VERSION_GE */
+
+-- ** File accessibility errors
 #cinline H5E_FILEEXISTS,        <hid_t>
 #cinline H5E_FILEOPEN,          <hid_t>
 #cinline H5E_CANTCREATE,        <hid_t>

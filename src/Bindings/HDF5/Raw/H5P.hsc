@@ -221,7 +221,10 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> InOut a -> IO HErr_t)
 #newtype_const H5D_mpio_actual_chunk_opt_mode_t, H5D_MPIO_NO_CHUNK_OPTIMIZATION
 #newtype_const H5D_mpio_actual_chunk_opt_mode_t, H5D_MPIO_LINK_CHUNK
 #newtype_const H5D_mpio_actual_chunk_opt_mode_t, H5D_MPIO_MULTI_CHUNK
+
+#if H5_VERSION_LE(1,8,10)
 #newtype_const H5D_mpio_actual_chunk_opt_mode_t, H5D_MPIO_MULTI_CHUNK_NO_OPT
+#endif
 
 -- |The following four values are conveniently defined as a bit field so that
 -- we can switch from the default to indpendent or collective and then to
