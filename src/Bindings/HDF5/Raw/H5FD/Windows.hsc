@@ -20,6 +20,8 @@ import Bindings.HDF5.Raw.H5I
 #mangle_ident "H5FD_WINDOWS"
     = unsafePerformIO (#mangle_ident "H5FD_windows_init")
 
+#if H5_VERSION_LE(1,8,7)
+
 -- |Initialize this driver by registering the driver with the library.
 -- 
 -- > hid_t H5FD_windows_init(void);
@@ -29,6 +31,20 @@ import Bindings.HDF5.Raw.H5I
 -- 
 -- > void H5FD_windows_term(void);
 #ccall H5FD_windows_term, IO ()
+
+#else
+
+-- The code behind the windows VFD has been removed and the windows
+-- VFD initialization has been redirected to the SEC2 driver.  The
+-- "Windows" VFD was actually identical to the SEC2 driver code
+-- (a planned Win32 API driver never happened) so this change
+-- should be transparent to users.
+#mangle_ident H5FD_windows_init :: IO HId_t
+#mangle_ident H5FD_windows_init = #mangle_ident H5FD_sec2_init
+#mangle_ident H5FD_windows_term :: IO ()
+#mangle_ident H5FD_windows_term = #mangle_ident H5FD_sec2_term
+
+#endif
 
 -- |Modify the file access property list to use the H5FD_WINDOWS
 -- driver.  There are no driver-specific properties.

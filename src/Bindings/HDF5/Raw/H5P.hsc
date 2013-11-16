@@ -209,6 +209,38 @@ type H5P_prp_close_func_t a = FunPtr (CString -> CSize -> InOut a -> IO HErr_t)
 -- > typedef herr_t (*H5P_iterate_t)(hid_t id, const char *name, void *iter_data);
 type H5P_iterate_t a = FunPtr (HId_t -> CString -> InOut a -> IO HErr_t)
 
+#if H5_VERSION_GE(1,8,8)
+
+-- |Actual IO mode property
+#newtype H5D_mpio_actual_chunk_opt_mode_t
+
+-- |The default value, H5D_MPIO_NO_CHUNK_OPTIMIZATION, is used for all I/O
+-- operations that do not use chunk optimizations, including non-collective
+-- I/O and contiguous collective I/O.
+#newtype_const H5D_mpio_actual_chunk_opt_mode_t, H5D_MPIO_NO_CHUNK_OPTIMIZATION
+#newtype_const H5D_mpio_actual_chunk_opt_mode_t, H5D_MPIO_LINK_CHUNK
+#newtype_const H5D_mpio_actual_chunk_opt_mode_t, H5D_MPIO_MULTI_CHUNK
+#newtype_const H5D_mpio_actual_chunk_opt_mode_t, H5D_MPIO_MULTI_CHUNK_NO_OPT
+
+-- |The following four values are conveniently defined as a bit field so that
+-- we can switch from the default to indpendent or collective and then to
+-- mixed without having to check the original value. 
+#newtype H5D_mpio_actual_io_mode_t
+
+-- |NO_COLLECTIVE means that either collective I/O wasn't requested or that 
+-- no I/O took place.
+#newtype_const H5D_mpio_actual_io_mode_t, H5D_MPIO_NO_COLLECTIVE
+
+-- |CHUNK_INDEPENDENT means that collective I/O was requested, but the
+-- chunk optimization scheme chose independent I/O for each chunk.
+#newtype_const H5D_mpio_actual_io_mode_t, H5D_MPIO_CHUNK_INDEPENDENT
+#newtype_const H5D_mpio_actual_io_mode_t, H5D_MPIO_CHUNK_COLLECTIVE
+#newtype_const H5D_mpio_actual_io_mode_t, H5D_MPIO_CHUNK_MIXED
+
+-- |The contiguous case is separate from the bit field.
+#newtype_const H5D_mpio_actual_io_mode_t, H5D_MPIO_CONTIGUOUS_COLLECTIVE
+
+#endif
 -- /*********************/
 -- /* Public Prototypes */
 -- /*********************/
@@ -1928,6 +1960,17 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> InOut a -> IO HErr_t)
 -- > herr_t H5Pget_type_conv_cb(hid_t dxpl_id, H5T_conv_except_func_t *op, void** operate_data);
 #ccall H5Pget_type_conv_cb, <hid_t> -> Out (H5T_conv_except_func_t a b) -> Out (InOut b) -> IO <herr_t>
 
+#if H5_VERSION_GE(1,8,8)
+
+#ifdef H5_HAVE_PARALLEL
+
+-- TODO
+H5_DLL herr_t H5Pget_mpio_actual_chunk_opt_mode(hid_t plist_id, H5D_mpio_actual_chunk_opt_mode_t *actual_chunk_opt_mode);
+H5_DLL herr_t H5Pget_mpio_actual_io_mode(hid_t plist_id, H5D_mpio_actual_io_mode_t *actual_io_mode);
+
+#endif /* H5_HAVE_PARALLEL */
+
+#endif
 -- * Link creation property list (LCPL) routines
 
 -- |Set 'crt_intmd_group' so that 'h5l_create_*', 'h5o_link', etc.

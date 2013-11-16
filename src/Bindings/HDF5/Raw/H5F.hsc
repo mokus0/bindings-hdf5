@@ -128,14 +128,27 @@ import Foreign.Ptr.Conventions
 -- should not change other than adding new types to the end. These numbers
 -- might appear in files.
 #newtype H5F_mem_t, Eq
+-- |Data should not appear in the free list.
+-- Must be negative.
 #newtype_const H5F_mem_t, H5FD_MEM_NOLIST
+-- |Value not yet set.  Can also be the
+-- datatype set in a larger allocation
+-- that will be suballocated by the library.
+-- Must be zero.
 #newtype_const H5F_mem_t, H5FD_MEM_DEFAULT
+-- |Superblock data
 #newtype_const H5F_mem_t, H5FD_MEM_SUPER
+-- |B-tree data
 #newtype_const H5F_mem_t, H5FD_MEM_BTREE
+-- |Raw data (content of datasets, etc.)
 #newtype_const H5F_mem_t, H5FD_MEM_DRAW
+-- |Global heap data
 #newtype_const H5F_mem_t, H5FD_MEM_GHEAP
+-- |Local heap data
 #newtype_const H5F_mem_t, H5FD_MEM_LHEAP
+-- |Object header data
 #newtype_const H5F_mem_t, H5FD_MEM_OHDR
+-- |Sentinel value - must be last
 #num H5FD_MEM_NTYPES
 
 #endif
