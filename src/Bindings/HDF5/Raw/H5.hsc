@@ -1,7 +1,7 @@
+module Bindings.HDF5.Raw.H5 where
 #include <bindings.h>
 #include <H5public.h>
 
-module Bindings.HDF5.Raw.H5 where
 #strict_import
 
 import Data.Bits

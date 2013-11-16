@@ -34,14 +34,14 @@
 #define nbitsof(t)      (sizeof(t) * 8)
 #define countof(x)      (sizeof(x) / sizeof((x)[0]))
 
-inline char *dupstr(char *s) {
+char *dupstr(char *s) {
     // don't worry about freeing, this is a throw-away program
     char *t = (char *) malloc(strlen(s) + 1);
     strcpy(t,s);
     return t;
 }
 
-inline char *mapstrn(char *s, unsigned n, int (*f)(int)) {
+char *mapstrn(char *s, unsigned n, int (*f)(int)) {
     unsigned i;
     char *t = dupstr(s);
     
@@ -52,7 +52,7 @@ inline char *mapstrn(char *s, unsigned n, int (*f)(int)) {
     return t;
 }
 
-inline char *concatn(char *s1, unsigned n1, char *s2, unsigned n2) {
+char *concatn(char *s1, unsigned n1, char *s2, unsigned n2) {
     char *t = (char *) malloc(1 + n1 + n2);
     strncpy(t,    s1, n1+1);
     strncpy(t+n1, s2, n2+1);
@@ -60,7 +60,7 @@ inline char *concatn(char *s1, unsigned n1, char *s2, unsigned n2) {
     return t;
 }
 
-inline char *concat(char *s1, char *s2) {
+char *concat(char *s1, char *s2) {
     unsigned n1 = strlen(s1);
     unsigned n2 = strlen(s2);
     return concatn(s1,n1,s2,n2);

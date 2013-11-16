@@ -1,7 +1,7 @@
+module Bindings.HDF5.Raw.H5C where
 #include <bindings.h>
 #include <H5Cpublic.h>
 
-module Bindings.HDF5.Raw.H5C where
 #strict_import
 
 import Bindings.HDF5.Raw.H5

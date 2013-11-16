@@ -18,7 +18,7 @@ static struct {
 // prefix.  That means we don't need to mess with figuring out the length
 // of the prefix.  Just check for a leading 'h' and, if present, uppercase
 // 2 chars instead of 1.
-inline char *uc_prefix(char *s) {
+char *uc_prefix(char *s) {
     if (s[0] == '\0' || isupper(s[0]))
         return s;
     
@@ -29,7 +29,7 @@ inline char *uc_prefix(char *s) {
 }
 
 // the logic used in lc_prefix to identify the prefix.
-inline void skip_prefix(char *s, char **rest, unsigned *prefix_len) {
+void skip_prefix(char *s, char **rest, unsigned *prefix_len) {
     char    *r = s;
     unsigned p = 0;
     unsigned n = *prefix_len;
@@ -53,7 +53,7 @@ inline void skip_prefix(char *s, char **rest, unsigned *prefix_len) {
 //     is 'h5a_create2' the mangling of 'H5Acreate2' or 'H5ACreate2'?
 //     Obviously a human can tell the difference, but a machine can't as 
 //     easily.
-inline char *lc_prefix(char *s) {
+char *lc_prefix(char *s) {
     char *rest;
     unsigned prefix_len = 4;
     
