@@ -432,7 +432,7 @@ type H5D_gather_func_t a b = FunPtr (InArray a -> CSize -> InOut b -> IO HErr_t)
 --
 -- Returns non-negative on success, negative on failure
 -- 
--- > H5_DLL herr_t H5Dscatter(H5D_scatter_func_t op, void *op_data, hid_t type_id,
+-- > herr_t H5Dscatter(H5D_scatter_func_t op, void *op_data, hid_t type_id,
 -- >     hid_t dst_space_id, void *dst_buf);
 #ccall H5Dscatter, H5D_scatter_func_t a b -> InOut b -> <hid_t> -> <hid_t> -> OutArray a -> IO <herr_t>
 
@@ -444,7 +444,7 @@ type H5D_gather_func_t a b = FunPtr (InArray a -> CSize -> InOut b -> IO HErr_t)
 -- 
 -- Returns non-negative on success, negative on failure
 -- 
--- > H5_DLL herr_t H5Dgather(hid_t src_space_id, void *src_buf, hid_t type_id,
+-- > herr_t H5Dgather(hid_t src_space_id, const void *src_buf, hid_t type_id,
 -- >     size_t dst_buf_size, void *dst_buf, H5D_gather_func_t op, void *op_data);
 #ccall H5Dgather, <hid_t> -> InArray a -> <hid_t> -> <size_t> -> OutArray a -> H5D_gather_func_t a b -> InOut b -> IO <herr_t>
 
