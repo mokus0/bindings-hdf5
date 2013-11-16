@@ -211,6 +211,10 @@ import Foreign.Ptr.Conventions
 #cinline H5E_CANTSET,           <hid_t>
 #cinline H5E_DUPCLASS,          <hid_t>
 
+#if H5_VERSION_GE(1,8,9)
+#cinline H5E_SETDISALLOWED,     <hid_t>
+#endif
+
 -- ** Free space errors
 #cinline H5E_CANTMERGE,         <hid_t>
 #cinline H5E_CANTREVIVE,        <hid_t>

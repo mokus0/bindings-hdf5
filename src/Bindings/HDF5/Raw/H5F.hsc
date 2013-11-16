@@ -341,6 +341,46 @@ import Foreign.Ptr.Conventions
 -- > herr_t H5Fget_filesize(hid_t file_id, hsize_t *size);
 #ccall H5Fget_filesize, <hid_t> -> Out <hsize_t> -> IO <herr_t>
 
+#if H5_VERSION_GE(1,8,9)
+
+-- |If a buffer is provided (via the buf_ptr argument) and is 
+-- big enough (size in buf_len argument), load *buf_ptr with
+-- an image of the open file whose ID is provided in the 
+-- file_id parameter, and return the number of bytes copied
+-- to the buffer.
+--
+-- If the buffer exists, but is too small to contain an image
+-- of the indicated file, return a negative number.
+--
+-- Finally, if no buffer is provided, return the size of the 
+-- buffer needed.  This value is simply the eoa of the target 
+-- file.
+--
+-- Note that any user block is skipped.
+--
+-- Also note that the function may not be used on files 
+-- opened with either the split/multi file driver or the
+-- family file driver.
+--
+-- In the former case, the sparse address space makes the 
+-- get file image operation impractical, due to the size of
+-- the image typically required.
+--
+-- In the case of the family file driver, the problem is
+-- the driver message in the super block, which will prevent
+-- the image being opened with any driver other than the
+-- family file driver -- which negates the purpose of the 
+-- operation.  This can be fixed, but no resources for 
+-- this now.
+--
+-- Return:      Success:        Bytes copied / number of bytes needed.
+--              Failure:        negative value
+--
+-- > ssize_t H5Fget_file_image(hid_t file_id, void * buf_ptr, size_t buf_len);
+#ccall H5Fget_file_image, <hid_t> -> InArray a -> <size_t> -> IO <ssize_t>
+
+#endif
+
 -- |Retrieves the current automatic cache resize configuration
 -- from the metadata cache, and return it in 'config_ptr'.
 -- 
@@ -440,4 +480,20 @@ import Foreign.Ptr.Conventions
 --
 -- > herr_t H5Fclear_elink_file_cache(hid_t file_id);
 #ccall H5Fclear_elink_file_cache, <hid_t> -> IO <herr_t>
+#endif
+
+#if H5_VERSION_GE(1,8,9) && H5_HAVE_PARALLEL
+
+-- |Sets the atomicity mode
+--
+-- Returns non-negative on success, negative on failure
+-- > herr_t H5Fset_mpi_atomicity(hid_t file_id, hbool_t flag);
+#ccall H5Fset_mpi_atomicity, <hid_t> -> <hbool_t> -> IO <herr_t>
+
+-- |Returns the atomicity mode
+--
+-- Returns non-negative on success, negative on failure
+-- > herr_t H5Fget_mpi_atomicity(hid_t file_id, hbool_t *flag);
+#ccall H5Fget_mpi_atomicity, <hid_t> -> Out <hbool_t> -> IO <herr_t>
+
 #endif

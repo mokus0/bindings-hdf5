@@ -12,6 +12,7 @@ import Bindings.HDF5.Raw.H5FD
 import Bindings.HDF5.Raw.H5I
 import Bindings.HDF5.Raw.H5L
 import Bindings.HDF5.Raw.H5MM
+import Bindings.HDF5.Raw.H5O
 import Bindings.HDF5.Raw.H5T
 import Bindings.HDF5.Raw.H5Z
 
@@ -1524,6 +1525,65 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> InOut a -> IO HErr_t)
 
 #endif
 
+#if H5_VERSION_GE(1,8,9)
+
+-- |Sets the initial file image. Some file drivers can initialize 
+-- the starting data in a file from a buffer. 
+-- 
+-- Returns non-negative on success, negative on failure
+-- 
+-- > herr_t H5Pset_file_image(hid_t fapl_id, void *buf_ptr, size_t buf_len);
+#ccall H5Pset_file_image, <hid_t> -> Ptr a -> <size_t> -> IO <herr_t>
+
+-- |If the file image exists and buf_ptr_ptr is not NULL, 
+-- allocate a buffer of the correct size, copy the image into 
+-- the new buffer, and return the buffer to the caller in 
+-- *buf_ptr_ptr.  Do this using the file image callbacks
+-- if defined.  
+-- 
+-- NB: It is the responsibility of the caller to free the 
+-- buffer whose address is returned in *buf_ptr_ptr.  Do
+-- this using free if the file image callbacks are not 
+-- defined, or with whatever method is appropriate if 
+-- the callbacks are defined.
+-- 
+-- If buf_ptr_ptr is not NULL, and no image exists, set 
+-- *buf_ptr_ptr to NULL.
+-- 
+-- If buf_len_ptr is not NULL, set *buf_len_ptr equal
+-- to the length of the file image if it exists, and 
+-- to 0 if it does not.
+-- 
+-- Returns non-negative on success, negative on failure
+--
+-- > herr_t H5Pget_file_image(hid_t fapl_id, void **buf_ptr_ptr, size_t *buf_len_ptr);
+#ccall H5Pget_file_image, <hid_t> -> Ptr (Ptr a) -> <size_t> -> IO <herr_t>
+
+-- |Sets the callbacks for file images. Some file drivers allow
+-- the use of user-defined callbacks for allocating, freeing and
+-- copying the drivers internal buffer, potentially allowing a 
+-- clever user to do optimizations such as avoiding large mallocs
+-- and memcpys or to perform detailed logging.
+--
+-- Returns non-negative on success, negative on failure
+--
+-- > herr_t H5Pset_file_image_callbacks(hid_t fapl_id,
+-- >    H5FD_file_image_callbacks_t *callbacks_ptr);
+#ccall H5Pset_file_image_callbacks, <hid_t> -> In H5FD_file_image_callbacks_t -> IO <herr_t>
+
+-- |Sets the callbacks for file images. Some file drivers allow
+-- the use of user-defined callbacks for allocating, freeing and
+-- copying the drivers internal buffer, potentially allowing a 
+-- clever user to do optimizations such as avoiding large mallocs
+--
+-- Returns non-negative on success, negative on failure
+-- 
+-- > herr_t H5Pget_file_image_callbacks(hid_t fapl_id,
+-- >    H5FD_file_image_callbacks_t *callbacks_ptr);
+#ccall H5Pget_file_image_callbacks, <hid_t> -> Out H5FD_file_image_callbacks_t -> IO <herr_t>
+
+#endif
+
 -- * Dataset creation property list (DCPL) routines
 
 -- |Sets the layout of raw data in the file.
@@ -2217,6 +2277,68 @@ H5_DLL herr_t H5Pget_mpio_actual_io_mode(hid_t plist_id, H5D_mpio_actual_io_mode
 -- 
 -- > herr_t H5Pget_copy_object(hid_t plist_id, unsigned *crt_intmd /*out*/);
 #ccall H5Pget_copy_object, <hid_t> -> Out CUInt -> IO <herr_t>
+
+#if H5_VERSION_GE(1,8,9)
+
+-- TODO: finish
+
+-- |Adds path to the list of paths to search first in the
+-- target file when merging committed datatypes during H5Ocopy
+-- (i.e. when using the H5O_COPY_MERGE_COMMITTED_DTYPE_FLAG flag
+-- as set by H5Pset_copy_object).  If the source named
+-- dataype is not found in the list of paths created by this
+-- function, the entire file will be searched.
+--
+-- Usage:       H5Padd_merge_committed_dtype_path(plist_id, path)
+--              hid_t plist_id;                 IN: Property list to copy object
+--              const char *path;               IN: Path to add to list
+-- 
+-- Returns non-negative on success, negative on failure.
+-- 
+-- > herr_t H5Padd_merge_committed_dtype_path(hid_t plist_id, const char *path);
+#ccall H5Padd_merge_committed_dtype_path, <hid_t> -> CString -> IO <herr_t>
+
+-- |Frees and clears the list of paths created by
+-- H5Padd_merge_committed_dtype_path.  A new list may then be
+-- created by calling H5Padd_merge_committed_dtype_path again.
+--
+-- Usage:       H5Pfree_merge_committed_dtype_paths(plist_id)
+--              hid_t plist_id;                 IN: Property list to copy object
+--
+-- Returns non-negative on success, negative on failure.
+-- 
+-- > herr_t H5Pfree_merge_committed_dtype_paths(hid_t plist_id);
+#ccall H5Pfree_merge_committed_dtype_paths, <hid_t> -> IO <herr_t>
+
+-- |Set the callback function when a matching committed datatype is not found
+-- from the list of paths stored in the object copy property list.
+-- H5Ocopy will invoke this callback before searching all committed datatypes
+-- at destination.
+--
+-- Usage:       H5Pset_mcdt_search_cb(plist_id, H5O_mcdt_search_cb_t func, void *op_data)
+--              hid_t plist_id;                 IN: Property list to copy object
+--              H5O_mcdt_search_cb_t func;      IN: The callback function
+--              void *op_data;              IN: The user data
+--
+-- Returns non-negative on success, negative on failure.
+-- 
+-- > herr_t H5Pset_mcdt_search_cb(hid_t plist_id, H5O_mcdt_search_cb_t func, void *op_data);
+#ccall H5Pset_mcdt_search_cb, <hid_t> -> H5O_mcdt_search_cb_t a -> InOut a -> IO <herr_t>
+
+-- |Retrieves the callback function and user data from the specified 
+-- object copy property list.
+--
+-- Usage:       H5Pget_mcdt_search_cb(plist_id, H5O_mcdt_search_cb_t *func, void **op_data)
+--              hid_t plist_id;                 IN: Property list to copy object
+--      H5O_mcdt_search_cb_t *func; OUT: The callback function
+--      void **op_data;         OUT: The user data
+--
+-- Returns non-negative on success, negative on failure.
+-- 
+-- > herr_t H5Pget_mcdt_search_cb(hid_t plist_id, H5O_mcdt_search_cb_t *func, void **op_data);
+#ccall H5Pget_mcdt_search_cb, <hid_t> -> Out (H5O_mcdt_search_cb_t a) -> Out (InOut a) -> IO <herr_t>
+
+#endif
 
 #ifndef H5_NO_DEPRECATED_SYMBOLS
 

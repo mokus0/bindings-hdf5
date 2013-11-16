@@ -187,6 +187,20 @@ type H5FD_mem_t = H5F_mem_t
 
 #endif
 
+#if H5_VERSION_GE(1,8,9)
+
+-- |Defining the H5FD_FEAT_ALLOW_FILE_IMAGE for a VFL driver means that
+-- the driver is able to use a file image in the fapl as the initial
+-- contents of a file.
+#num H5FD_FEAT_ALLOW_FILE_IMAGE
+
+-- |Defining the H5FD_FEAT_CAN_USE_FILE_IMAGE_CALLBACKS for a VFL driver
+-- means that the driver is able to use callbacks to make a copy of the
+-- image to store in memory.
+#num H5FD_FEAT_CAN_USE_FILE_IMAGE_CALLBACKS
+
+#endif
+
 -- |Class information for each file driver
 #starttype H5FD_class_t
 #field name,            CString
@@ -271,6 +285,40 @@ type H5FD_mem_t = H5F_mem_t
 #field alignment,       <hsize_t>
 #stoptype
 
+#if H5_VERSION_GE(1,8,9)
+
+-- |enum for the source of file image callbacks
+#newtype H5FD_file_image_op_t
+
+#newtype_const H5FD_file_image_op_t, H5FD_FILE_IMAGE_OP_NO_OP
+#newtype_const H5FD_file_image_op_t, H5FD_FILE_IMAGE_OP_PROPERTY_LIST_SET
+#newtype_const H5FD_file_image_op_t, H5FD_FILE_IMAGE_OP_PROPERTY_LIST_COPY
+#newtype_const H5FD_file_image_op_t, H5FD_FILE_IMAGE_OP_PROPERTY_LIST_GET
+#newtype_const H5FD_file_image_op_t, H5FD_FILE_IMAGE_OP_PROPERTY_LIST_CLOSE
+#newtype_const H5FD_file_image_op_t, H5FD_FILE_IMAGE_OP_FILE_OPEN
+#newtype_const H5FD_file_image_op_t, H5FD_FILE_IMAGE_OP_FILE_RESIZE
+#newtype_const H5FD_file_image_op_t, H5FD_FILE_IMAGE_OP_FILE_CLOSE
+
+-- |TODO: wrap this.  not tackling it now, because there are a lot of 
+-- pointer types to pin down.
+data H5FD_file_image_callbacks_t = H5FD_file_image_callbacks_t
+
+-- /* Define structure to hold file image callbacks */
+-- typedef struct {
+--     void   *(*image_malloc)(size_t size, H5FD_file_image_op_t file_image_op, 
+--                             void *udata);
+--     void   *(*image_memcpy)(void *dest, const void *src, size_t size,
+--                             H5FD_file_image_op_t file_image_op, void *udata);
+--     void   *(*image_realloc)(void *ptr, size_t size, 
+--                             H5FD_file_image_op_t file_image_op, void *udata);
+--     herr_t  (*image_free)(void *ptr, H5FD_file_image_op_t file_image_op, 
+--                           void *udata);
+--     void   *(*udata_copy)(void *udata);
+--     herr_t  (*udata_free)(void *udata);
+--     void *udata;
+-- } H5FD_file_image_callbacks_t;
+
+#endif
 
 -- |Registers a new file driver as a member of the virtual file
 -- driver class.  Certain fields of the class struct are

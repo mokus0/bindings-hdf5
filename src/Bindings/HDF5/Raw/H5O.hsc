@@ -32,6 +32,13 @@ import Foreign.Ptr.Conventions
 -- |Copy NULL messages (empty space)
 #num H5O_COPY_PRESERVE_NULL_FLAG
 
+#if H5_VERSION_GE(1,8,9)
+
+-- |Merge committed datatypes in dest file
+#num H5O_COPY_MERGE_COMMITTED_DTYPE_FLAG
+
+#endif
+
 -- |All object copying flags (for internal checking)
 #num H5O_COPY_ALL
 
@@ -228,6 +235,22 @@ import Foreign.Ptr.Conventions
 
 -- |Prototype for 'h5o_visit' / 'h5o_visit_by_name' operator
 type H5O_iterate_t a = FunPtr (HId_t -> CString -> In H5O_info_t -> InOut a -> IO HErr_t)
+
+#newtype H5O_mcdt_search_ret_t
+
+-- |Abort H5Ocopy
+#newtype_const H5O_mcdt_search_ret_t, H5O_MCDT_SEARCH_ERROR
+
+-- |Continue the global search of all committed datatypes in the destination file
+#newtype_const H5O_mcdt_search_ret_t, H5O_MCDT_SEARCH_CONT
+
+-- |Stop the search, but continue copying.  The committed datatype will be copied but not merged.
+#newtype_const H5O_mcdt_search_ret_t, H5O_MCDT_SEARCH_STOP
+
+-- |Callback to invoke when completing the search for a matching committed datatype from the committed dtype list
+--
+-- > typedef H5O_mcdt_search_ret_t (*H5O_mcdt_search_cb_t)(void *op_data);
+type H5O_mcdt_search_cb_t a = FunPtr (InOut a -> IO H5O_mcdt_search_ret_t)
 
 -- * Functions
 
