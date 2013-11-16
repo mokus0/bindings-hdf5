@@ -1,5 +1,5 @@
 name:                   bindings-hdf5
-version:                1.8.9
+version:                1.8.10-patch1
 stability:              provisional
 
 cabal-version:          >= 1.6

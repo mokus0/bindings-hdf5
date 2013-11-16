@@ -242,6 +242,24 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> InOut a -> IO HErr_t)
 #newtype_const H5D_mpio_actual_io_mode_t, H5D_MPIO_CONTIGUOUS_COLLECTIVE
 
 #endif
+
+#if H5_VERSION_GE(1,8,10)
+
+-- | Broken collective IO property
+#newtype H5D_mpio_no_collective_cause_t
+
+#newtype_const H5D_mpio_no_collective_cause_t, H5D_MPIO_COLLECTIVE
+#newtype_const H5D_mpio_no_collective_cause_t, H5D_MPIO_SET_INDEPENDENT
+#newtype_const H5D_mpio_no_collective_cause_t, H5D_MPIO_DATATYPE_CONVERSION
+#newtype_const H5D_mpio_no_collective_cause_t, H5D_MPIO_DATA_TRANSFORMS
+#newtype_const H5D_mpio_no_collective_cause_t, H5D_MPIO_SET_MPIPOSIX
+#newtype_const H5D_mpio_no_collective_cause_t, H5D_MPIO_NOT_SIMPLE_OR_SCALAR_DATASPACES
+#newtype_const H5D_mpio_no_collective_cause_t, H5D_MPIO_POINT_SELECTIONS
+#newtype_const H5D_mpio_no_collective_cause_t, H5D_MPIO_NOT_CONTIGUOUS_OR_CHUNKED_DATASET
+#newtype_const H5D_mpio_no_collective_cause_t, H5D_MPIO_FILTERS
+
+#endif
+
 -- /*********************/
 -- /* Public Prototypes */
 -- /*********************/
@@ -2020,17 +2038,29 @@ type H5P_iterate_t a = FunPtr (HId_t -> CString -> InOut a -> IO HErr_t)
 -- > herr_t H5Pget_type_conv_cb(hid_t dxpl_id, H5T_conv_except_func_t *op, void** operate_data);
 #ccall H5Pget_type_conv_cb, <hid_t> -> Out (H5T_conv_except_func_t a b) -> Out (InOut b) -> IO <herr_t>
 
-#if H5_VERSION_GE(1,8,8)
-
 #ifdef H5_HAVE_PARALLEL
 
--- TODO
-H5_DLL herr_t H5Pget_mpio_actual_chunk_opt_mode(hid_t plist_id, H5D_mpio_actual_chunk_opt_mode_t *actual_chunk_opt_mode);
-H5_DLL herr_t H5Pget_mpio_actual_io_mode(hid_t plist_id, H5D_mpio_actual_io_mode_t *actual_io_mode);
+#if H5_VERSION_GE(1,8,8)
+
+-- TODO: docs
+-- > herr_t H5Pget_mpio_actual_chunk_opt_mode(hid_t plist_id, H5D_mpio_actual_chunk_opt_mode_t *actual_chunk_opt_mode);
+#ccall H5Pget_mpio_actual_chunk_opt_mode, <hid_t> -> Out H5D_mpio_actual_chunk_opt_mode_t -> IO <herr_t>
+
+-- > herr_t H5Pget_mpio_actual_io_mode(hid_t plist_id, H5D_mpio_actual_io_mode_t *actual_io_mode);
+#ccall H5Pget_mpio_actual_io_mode, <hid_t> -> Out H5D_mpio_actual_io_mode_t -> IO <herr_t>
+
+#endif
+
+#if H5_VERSION_GE(1,8,10)
+
+-- TODO: ensure ptr sizes match and change Word32 to H5D_mpio_no_collective_cause_t
+-- > herr_t H5Pget_mpio_no_collective_cause(hid_t plist_id, uint32_t *local_no_collective_cause, uint32_t *global_no_collective_cause);
+#ccall H5Pget_mpio_no_collective_cause, <hid_t> -> Out Word32 -> Out Word32 -> IO <herr_t>
+
+#endif
 
 #endif /* H5_HAVE_PARALLEL */
 
-#endif
 -- * Link creation property list (LCPL) routines
 
 -- |Set 'crt_intmd_group' so that 'h5l_create_*', 'h5o_link', etc.

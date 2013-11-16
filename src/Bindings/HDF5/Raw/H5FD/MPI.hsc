@@ -50,10 +50,8 @@ import Foreign.Ptr.Conventions
 #ifdef H5_HAVE_PARALLEL
 
 #str H5FD_MPI_XFER_MEM_MPI_TYPE_NAME
-#num H5FD_MPI_XFER_MEM_MPI_TYPE_SIZE
 
 #str H5FD_MPI_XFER_FILE_MPI_TYPE_NAME
-#num H5FD_MPI_XFER_FILE_MPI_TYPE_SIZE
 
 #cinline H5FD_mpi_native_g, CString
 
@@ -81,12 +79,22 @@ import Foreign.Ptr.Conventions
 
 #endif /* NOT_YET */
 
+#if H5_VERSION_GE(1,8,10)
+
+-- herr_t H5FD_mpi_setup_collective(hid_t dxpl_id, MPI_Datatype *btype,
+--     MPI_Datatype *ftype);
+#ccall H5FD_mpi_setup_collective, <hid_t> -> Ptr <MPI_Datatype> -> Ptr <MPI_Datatype> -> IO <herr_t>
+
+#else
+
 -- herr_t H5FD_mpi_setup_collective(hid_t dxpl_id, MPI_Datatype btype,
 --     MPI_Datatype ftype);
 #ccall H5FD_mpi_setup_collective, <hid_t> -> <MPI_Datatype> -> <MPI_Datatype> -> IO <herr_t>
 
 -- herr_t H5FD_mpi_teardown_collective(hid_t dxpl_id);
 #ccall H5FD_mpi_teardown_collective, <hid_t> -> IO <herr_t>
+
+#endif
 
 
 -- /* Driver specific methods */

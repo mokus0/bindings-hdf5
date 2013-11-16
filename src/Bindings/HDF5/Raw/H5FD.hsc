@@ -29,7 +29,11 @@ type H5FD_mem_t = H5F_mem_t
 
 #newtype_const H5FD_mem_t, H5FD_MEM_NOLIST
 #newtype_const H5FD_mem_t, H5FD_MEM_DEFAULT
+
+#if H5_VERSION_LE(1,8,9)
 #newtype_const H5FD_mem_t, H5FD_MEM_SUPER
+#endif
+
 #newtype_const H5FD_mem_t, H5FD_MEM_BTREE
 #newtype_const H5FD_mem_t, H5FD_MEM_DRAW
 #newtype_const H5FD_mem_t, H5FD_MEM_GHEAP
